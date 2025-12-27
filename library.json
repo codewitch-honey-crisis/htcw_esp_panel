@@ -1,6 +1,6 @@
 {
     "name": "htcw_esp_panel",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Provides an easy to use configuration system for display, input, and power management with out of the box support for several devkits.",
     "keywords": ["esp32","lcd","input","button","touch","power"],
     "authors": {
@@ -21,6 +21,15 @@
             "base": "examples/diagnostic",
             "files": [
                 "platformio.ini",
+                "sdkconfig.esp-usb-otg",
+                "sdkconfig.esp32-c6-devkitc-1",
+                "sdkconfig.freenove-s3-devkit",
+                "sdkconfig.heltec_wifi_lora_32_V2",
+                "sdkconfig.m5stack-core2",
+                "sdkconfig.matouch-esp_display-parallel-43",
+                "sdkconfig.ttgo-t1",
+                "sdkconfig.waveshare-p4-smart86box",
+                "sdkconfig.waveshare-s3-43-devkit",
                 "include/custom_panel.h",
                 "include/icons_gsc.h",
                 "include/icons_rgb.h",
