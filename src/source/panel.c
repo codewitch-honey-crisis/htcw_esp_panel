@@ -894,7 +894,7 @@ void panel_touch_read_raw(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,u
     }
     *in_out_count = count;
 }
-void touch_read(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,uint16_t* out_strength) {
+void panel_touch_read(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,uint16_t* out_strength) {
     panel_touch_read_raw(in_out_count,out_x,out_y,out_strength);
 #if defined(LCD_BUS) && (TOUCH_WIDTH!=LCD_WIDTH||TOUCH_HEIGHT!=LCD_HEIGHT || TOUCH_LEFT_OVERHANG!=0 ||TOUCH_RIGHT_OVERHANG!=0||TOUCH_TOP_OVERHANG!=0||TOUCH_BOTTOM_OVERHANG!=0)
     for(size_t i = 0;i<*in_out_count;++i) {
