@@ -59,16 +59,24 @@ static void draw_icon(size_t index) {
 #if defined(GSC) && LCD_BIT_DEPTH == 1
     uint8_t accum = 0;
     int bits = 0;
+    bool chroma;
     static const size_t icon_bytes = 128*32/2;
     for(int i = 0;i<icon_bytes;++i) {
         const uint8_t data = *p++;
         const uint8_t low = data & 0x0F;
         const uint8_t high = (data & 0xF0)>>4;
         accum<<=1;
-        accum|= (high>7);
+        chroma = (high>7);
+        accum|= chroma;
         ++bits;
+        if(bits==8) {
+            bits=0;
+            *t++=accum;
+            accum = 0;
+        }
         accum<<=1;
-        accum|= (low>7);
+        chroma = (low>7);
+        accum|= chroma;
         ++bits;
         if(bits==8) {
             bits=0;
@@ -158,7 +166,7 @@ void app_main(void)
     
 #endif
     static const uint16_t xoffs = (LCD_WIDTH-128)/2;
-    static const uint16_t yoffs = (LCD_HEIGHT-32)/2;            
+    static const uint16_t yoffs = (LCD_HEIGHT-32)/2;
     while(1) {
         TickType_t ts = xTaskGetTickCount();
         // feed the watchdog timer to prevent a reboot
@@ -173,6 +181,7 @@ void app_main(void)
                 // draw the screen
                 const size_t index= (iter++)%colors_size;
                 PX_TYPE color = colors[index].color;
+                while(flushing) portYIELD(); 
                 PX_TYPE* buf = (PX_TYPE*)lcd_transfer_buffer();
 #ifdef RGB_OR_BGR_16
 #ifdef LITTLE_ENDIAN   
@@ -186,11 +195,12 @@ void app_main(void)
                 }
 #endif
 #if defined(GSC)
-                uint8_t c = color >> (8-LCD_BIT_DEPTH);
-                int bits = (8-LCD_BIT_DEPTH);
+                uint8_t c = 0;
+                int bits = 0;
                 while(bits<8) {
-                    c |= ((color >> (8-LCD_BIT_DEPTH)) << bits);
-                    bits += (8-LCD_BIT_DEPTH);
+                    c<<=LCD_BIT_DEPTH;
+                    c |= color;
+                    bits += LCD_BIT_DEPTH;
                 }
                 for(int i = 0;i<LCD_TRANSFER_SIZE;++i) {
                     *buf++=c;
