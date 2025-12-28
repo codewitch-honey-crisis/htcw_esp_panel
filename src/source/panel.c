@@ -903,7 +903,16 @@ void panel_touch_read(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,uint1
 #endif
 }
 void panel_touch_update(void) {
+#if defined(TOUCH_UPDATE_LIMIT_MS) && TOUCH_UPDATE_LIMIT_TS > 0
+    static TickType_t limit_ts = 0;
+    TickType_t ticks = xTaskGetTickCount();
+    if(ticks>limit_ts+pdMS_TO_TICKS(TOUCH_UPDATE_LIMIT_MS)) {
+        limit_ts = ticks;
+#endif
     esp_lcd_touch_read_data(touch_handle);
+#if defined(TOUCH_UPDATE_LIMIT_MS) && TOUCH_UPDATE_LIMIT_TS > 0
+    }
+#endif
 }
 #endif
 
