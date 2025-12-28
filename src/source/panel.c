@@ -315,7 +315,7 @@ static void i2c_init() {
 #endif
 
 #ifdef LCD_BUS
-size_t lcd_vsync_flush_count(void) { 
+size_t panel_lcd_vsync_flush_count(void) { 
 #ifdef LCD_PIN_NUM_VSYNC
     return vsync_count; 
 #else
@@ -323,7 +323,7 @@ size_t lcd_vsync_flush_count(void) {
 #endif
 }
 
-void lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void *bitmap)
+void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void *bitmap)
 {
     if(lcd_handle==NULL) {
         ESP_LOGE(TAG,"lcd_flush() was invoked but lcd_init() was never called.");
@@ -343,7 +343,7 @@ void lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void *bitmap)
 // LCD Panel API calls this
 static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_handle_t panel, const esp_lcd_rgb_panel_event_data_t *edata, void *user_ctx) {
     // let the display know the flush has finished
-    lcd_flush_complete();
+    panel_lcd_flush_complete();
     return true;
 }
 // LCD Panel API calls this
@@ -355,18 +355,18 @@ static IRAM_ATTR bool on_vsync(esp_lcd_panel_handle_t panel, const esp_lcd_rgb_p
 #if !defined(LCD_NO_DMA) && (LCD_BUS==PANEL_BUS_SPI || LCD_BUS==PANEL_BUS_I2C || LCD_BUS==PANEL_BUS_I8080)
 static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_io_handle_t lcd_io, esp_lcd_panel_io_event_data_t* edata, void* user_ctx) {
     // let the display know the flush has finished
-    lcd_flush_complete();
+    panel_lcd_flush_complete();
     return true;
 }
 #endif
 #if !defined(LCD_NO_DMA) && LCD_BUS == PANEL_BUS_MIPI
 static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_handle_t panel, esp_lcd_dpi_panel_event_data_t *edata, void *user_ctx) {
     // let the display know the flush has finished
-    lcd_flush_complete();
+    panel_lcd_flush_complete();
     return true;
 }
 #endif
-void lcd_init(void) {
+void panel_lcd_init(void) {
     if(lcd_handle!=NULL) {
         ESP_LOGW(TAG,"lcd_init() was already called");
         return; // already initialized
@@ -788,9 +788,9 @@ void lcd_init(void) {
 #endif
 }
 #if LCD_TRANSFER_SIZE > 0
-void* lcd_transfer_buffer(void) { return draw_buffer; }
+void* panel_lcd_transfer_buffer(void) { return draw_buffer; }
 #ifndef LCD_NO_DMA
-void* lcd_transfer_buffer2(void) { return draw_buffer2; }
+void* panel_lcd_transfer_buffer2(void) { return draw_buffer2; }
 #endif
 #endif
 #endif
@@ -802,7 +802,7 @@ static void on_touch(esp_lcd_touch_handle_t tp) {
     // TODO: do something here
 }
 #endif
-void touch_init(void) {
+void panel_touch_init(void) {
     if(touch_handle!=NULL) {
         ESP_LOGW(TAG,"lcd_touch_init() was already called");
         return; // already initialized
@@ -886,12 +886,7 @@ void touch_init(void) {
 #endif
     ESP_ERROR_CHECK(TOUCH_PANEL(touch_io_handle,&touch_cfg,&touch_handle));
 }
-void touch_read_raw(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,uint16_t* out_strength) {
-    if(ESP_OK!=esp_lcd_touch_read_data(touch_handle)) {
-        ESP_LOGE(TAG,"touch read error");
-        *in_out_count = 0;
-        return;
-    }
+void panel_touch_read_raw(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,uint16_t* out_strength) {
     uint8_t count=*in_out_count;
     if(!esp_lcd_touch_get_coordinates(touch_handle,out_x,out_y,out_strength,&count,count)) {
         *in_out_count = 0;
@@ -900,7 +895,7 @@ void touch_read_raw(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,uint16_
     *in_out_count = count;
 }
 void touch_read(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,uint16_t* out_strength) {
-    touch_read_raw(in_out_count,out_x,out_y,out_strength);
+    panel_touch_read_raw(in_out_count,out_x,out_y,out_strength);
 #if defined(LCD_BUS) && (TOUCH_WIDTH!=LCD_WIDTH||TOUCH_HEIGHT!=LCD_HEIGHT || TOUCH_LEFT_OVERHANG!=0 ||TOUCH_RIGHT_OVERHANG!=0||TOUCH_TOP_OVERHANG!=0||TOUCH_BOTTOM_OVERHANG!=0)
     for(size_t i = 0;i<*in_out_count;++i) {
         // the panel may have a different res than the screen
@@ -909,13 +904,13 @@ void touch_read(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,uint16_t* o
     }
 #endif
 }
-void touch_update(void) {
+void panel_touch_update(void) {
     esp_lcd_touch_read_data(touch_handle);
 }
 #endif
 
 #ifdef BUTTON
-void button_init(void) {
+void panel_button_init(void) {
     gpio_config_t cfg;
     memset(&cfg,0,sizeof(cfg));
     cfg.mode = GPIO_MODE_INPUT;
@@ -929,19 +924,19 @@ void button_init(void) {
 #endif
     ESP_ERROR_CHECK(gpio_config(&cfg));
 }
-bool button_read(uint8_t pin) {
+bool panel_button_read(uint8_t pin) {
 #if BUTTON_ON_LEVEL == 1
     return gpio_get_level((gpio_num_t)pin);
 #else
     return !gpio_get_level((gpio_num_t)pin);
 #endif
 }
-uint64_t button_read_all(void) {
+uint64_t panel_button_read_all(void) {
     uint64_t result = 0;
     for(int i = 0;i<GPIO_NUM_MAX;++i) {
         uint64_t mask = ((uint64_t)1)<<i;
         if(mask & BUTTON_MASK) {
-            if(button_read(i)) {
+            if(panel_button_read(i)) {
                 result |= mask;
             }
         }
@@ -950,7 +945,7 @@ uint64_t button_read_all(void) {
 }
 #endif
 #ifdef POWER
-void power_init(void) {
+void panel_power_init(void) {
 #if defined(POWER_BUS) && (POWER_BUS == PANEL_BUS_SPI)
     spi_init();
 #endif

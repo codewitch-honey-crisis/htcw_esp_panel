@@ -215,64 +215,64 @@ extern "C" {
 // END fill ins for defauls (don't mess!)
 #ifdef LCD_BUS
 /// @brief Initializes the display
-void lcd_init(void);
+void panel_lcd_init(void);
 /// @brief Sends a bitmap to the display
 /// @param x1 The x1 coord
 /// @param y1 The y1 coord
 /// @param x2 The x2 coord
 /// @param y2 The y2 coord
 /// @param bitmap The bitmap data
-void lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void* bitmap);
+void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void* bitmap);
 #if LCD_TRANSFER_SIZE > 0
 /// @brief Returns the transfer buffer 
 /// @return A pointer to the transfer buffer, of size LCD_TRANSFER_SIZE
-void* lcd_transfer_buffer(void);
+void* panel_lcd_transfer_buffer(void);
 #ifndef LCD_NO_DMA
 /// @brief Returns the secondary transfer buffer 
 /// @return A pointer to the secondary transfer buffer, of size LCD_TRANSFER_SIZE
-void* lcd_transfer_buffer2(void);
+void* panel_lcd_transfer_buffer2(void);
 #endif
 #endif
 #ifndef LCD_NO_DMA
-/// @brief Called when a transfer is complete. To be implemented by the lcd_init() caller
-void lcd_flush_complete(void);
+/// @brief Called when a transfer is complete. To be implemented by the panel_lcd_init() caller
+void panel_lcd_flush_complete(void);
 #endif
 /// @brief Indicates how many flushes have occurred since the vblanking period was active
 /// @return The number of draws that have occurred, or 0 if not supported
-size_t lcd_vsync_flush_count(void);
+size_t panel_lcd_vsync_flush_count(void);
 #endif
 #ifdef TOUCH_BUS
 /// @brief Initializes the touch panel
-void touch_init(void);
+void panel_touch_init(void);
 /// @brief Updated the touch panel data
-void touch_update(void);
+void panel_touch_update(void);
 /// @brief Reads the touch scaled to the LCD (if present, otherwise, same as touch_read_raw)
 /// @param in_out_count The touch count
 /// @param out_x The x array
 /// @param out_y The y array
 /// @param out_strength The strength array
-void touch_read(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y, uint16_t* out_strength);
+void panel_touch_read(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y, uint16_t* out_strength);
 /// @brief Reads the touch unscaled
 /// @param in_out_count The touch count
 /// @param out_x The x array
 /// @param out_y The y array
 /// @param out_strength The strength array
-void touch_read_raw(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y, uint16_t* out_strength);
+void panel_touch_read_raw(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y, uint16_t* out_strength);
 #endif
 #ifdef BUTTON
 /// @brief Initializes the buttons
-void button_init(void);
+void panel_button_init(void);
 /// @brief Indicates which buttons are pressed
 /// @param pin The pin to read
 /// @return True if pressed, otherwise false
-bool button_read(uint8_t pin);
+bool panel_button_read(uint8_t pin);
 /// @brief Reads all the buttons and returns a mask
 /// @return A mask indicating the pins of the pressed buttons
-uint64_t button_read_all(void);
+uint64_t panel_button_read_all(void);
 #endif
 #ifdef POWER
 /// @brief Initializes the power subsystem
-void power_init(void);
+void panel_power_init(void);
 #endif
 #ifdef __cplusplus
 }

@@ -33,7 +33,7 @@
 
 #ifdef LCD_BUS
 volatile int flushing = 0;
-void lcd_flush_complete(void) {
+void panel_lcd_flush_complete(void) {
     flushing = 0;
 }
 #endif
@@ -53,9 +53,9 @@ static const col_entry_t colors[] = {
 static const size_t colors_size = sizeof(colors)/sizeof(colors[0]);
 
 static void draw_icon(size_t index) {
-    memset(lcd_transfer_buffer(),0,LCD_TRANSFER_SIZE);
+    memset(panel_lcd_transfer_buffer(),0,LCD_TRANSFER_SIZE);
     const uint8_t *p = colors[index].icon;
-    PX_TYPE* t = (PX_TYPE*)lcd_transfer_buffer();
+    PX_TYPE* t = (PX_TYPE*)panel_lcd_transfer_buffer();
 #if defined(GSC) && LCD_BIT_DEPTH == 1
     uint8_t accum = 0;
     int bits = 0;
@@ -129,16 +129,16 @@ static void draw_icon(size_t index) {
 
 static void poll_input() {
 #ifdef TOUCH_BUS
-        touch_update();
+        panel_touch_update();
         size_t count = 5;
         uint16_t x[5],y[5],s[5];
-        touch_read(&count,x,y,s);
+        panel_touch_read(&count,x,y,s);
         if(count) {
             printf("touch: (%d, %d)\n",x[0],y[0]);
         }
 #endif
 #ifdef BUTTON
-        uint64_t button_mask = button_read_all();
+        uint64_t button_mask = panel_button_read_all();
         if(button_mask>0) {
             printf("Pressed mask: 0x%llx (%lld)\n",button_mask,button_mask);
         }
@@ -148,16 +148,16 @@ static void poll_input() {
 void app_main(void)
 {
 #ifdef POWER
-    power_init();
+    panel_power_init();
 #endif
 #ifdef LCD_BUS
-    lcd_init();
+    panel_lcd_init();
 #endif
 #ifdef TOUCH_BUS
-    touch_init();
+    panel_touch_init();
 #endif
 #ifdef BUTTON
-    button_init();
+    panel_button_init();
 #endif
 #ifdef COLOR_BLACK // we have a suported color model
     TickType_t screen_ts = 0;
@@ -175,14 +175,14 @@ void app_main(void)
             vTaskDelay(5);
         }
 #ifdef COLOR_BLACK
-        if(!lcd_vsync_flush_count()) {
+        if(!panel_lcd_vsync_flush_count()) {
             if(ts>=screen_ts+pdMS_TO_TICKS(CLEAR_DELAY)) {
                 screen_ts = ts;
                 // draw the screen
                 const size_t index= (iter++)%colors_size;
                 PX_TYPE color = colors[index].color;
                 while(flushing) portYIELD(); 
-                PX_TYPE* buf = (PX_TYPE*)lcd_transfer_buffer();
+                PX_TYPE* buf = (PX_TYPE*)panel_lcd_transfer_buffer();
 #ifdef RGB_OR_BGR_16
 #ifdef LITTLE_ENDIAN   
                 const PX_TYPE px = color;
@@ -214,14 +214,14 @@ void app_main(void)
                     }
                     while(flushing) portYIELD(); 
                     flushing = 1;
-                    lcd_flush(0,y,LCD_WIDTH-1,yend,lcd_transfer_buffer());
+                    panel_lcd_flush(0,y,LCD_WIDTH-1,yend,panel_lcd_transfer_buffer());
                     y= yend+1;
-                    while(lcd_vsync_flush_count()) { poll_input(); portYIELD(); }
+                    while(panel_lcd_vsync_flush_count()) { poll_input(); portYIELD(); }
                 }
                 while(flushing) portYIELD(); 
                 flushing = 1;
                 draw_icon(index);
-                lcd_flush(xoffs,yoffs,xoffs+127,yoffs+31,lcd_transfer_buffer());
+                panel_lcd_flush(xoffs,yoffs,xoffs+127,yoffs+31,panel_lcd_transfer_buffer());
             }
         }
 #endif

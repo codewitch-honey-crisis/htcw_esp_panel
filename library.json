@@ -1,6 +1,6 @@
 {
     "name": "htcw_esp_panel",
-    "version": "0.1.3",
+    "version": "0.2.0",
     "description": "Provides an easy to use configuration system for display, input, and power management with out of the box support for several devkits.",
     "keywords": ["esp32","lcd","input","button","touch","power"],
     "authors": {
