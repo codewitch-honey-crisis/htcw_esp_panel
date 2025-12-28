@@ -622,25 +622,40 @@ st7703_vendor_config_t vendor_config = { \
 #define LCD_CLOCK_HZ (400 * 1000)
 #define LCD_GAP_X 0
 #define LCD_GAP_Y 0
+#define LCD_INVERT_COLOR false
+#define LCD_SWAP_XY false
 #define LCD_MIRROR_X true
 #define LCD_MIRROR_Y true
-#define LCD_INVERT_COLOR true
+#define LCD_INVERT_COLOR false
 #define LCD_SWAP_XY false
+#define LCD_DIVISOR 1
+#define LCD_Y_ALIGN 8
 #define LCD_VENDOR_CONFIG esp_lcd_panel_ssd1306_config_t vendor_config = {\
     .height = LCD_VRES,\
-#define LCD_TRANSLATE static uint8_t ssd1306_buffer[(LCD_HRES*LCD_VRES*LCD_BIT_DEPTH+7)/8];\
-     for (int y = y1; y <= y2; y++) {\
-        for (int x = x1; x <= x2; x++) {\
-            bool chroma_color = (((uint8_t*)bitmap)[(LCD_HRES >> 3) * (y - y1)  + ((x - x1) >> 3)] & 1 << (7 - (x - x1) % 8));\
-            uint8_t *buf = ssd1306_buffer + LCD_HRES * (y >> 3) + (x);\
-            if (chroma_color) {\
-                (*buf) &= ~(1 << (y % 8));\
-            } else {\
-                (*buf) |= (1 << (y % 8));\
+};
+#define LCD_TRANSLATE static uint8_t ssd1306_buffer[LCD_TRANSFER_SIZE];\
+     int src_width = x2 - x1 + 1;\
+     int dst_width = src_width;\
+     int dst_height_pages = (y2 - y1 + 1) >> 3;  /* Height in pages (8-pixel groups) */\
+     \
+     for (int page = 0; page < dst_height_pages; page++) {\
+        for (int x = 0; x < dst_width; x++) {\
+            uint8_t dst_byte = 0;\
+            for (int bit = 0; bit < 8; bit++) {\
+                /* Calculate source bit position */\
+                int src_y = page * 8 + bit;\
+                int total_bit_offset = src_y * src_width + x;\
+                int src_byte_index = total_bit_offset >> 3;\
+                int src_bit = 7 - (total_bit_offset & 7);\
+                \
+                if (((uint8_t*)bitmap)[src_byte_index] & (1 << src_bit)) {\
+                    dst_byte |= (1 << bit);\
+                }\
             }\
+            ssd1306_buffer[page * dst_width + x] = dst_byte;\
         }\
-    }\
-    bitmap = ssd1306_buffer + LCD_HRES * (y1 >> 3) + (x1);
+     }\
+     bitmap = ssd1306_buffer;
 #endif // HELTEC_WIFI_LORA_KIT_V2
 
 #ifdef FREENOVE_S3_DEVKIT // Works (This is their full development kit with the integrated display, not just the s3 devkit)

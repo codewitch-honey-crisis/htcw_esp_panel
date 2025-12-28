@@ -755,9 +755,7 @@ void panel_lcd_init(void) {
     esp_lcd_panel_mirror(lcd_handle,mirror_x,mirror_y);
     
 #ifdef LCD_INVERT_COLOR
-#if LCD_INVERT_COLOR
-    ESP_ERROR_CHECK(esp_lcd_panel_invert_color(lcd_handle,true));
-#endif
+    ESP_ERROR_CHECK(esp_lcd_panel_invert_color(lcd_handle,LCD_INVERT_COLOR));
 #endif
 #if LCD_BUS != PANEL_BUS_RGB
     ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(lcd_handle, true));
