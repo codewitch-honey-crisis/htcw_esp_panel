@@ -1,3 +1,4 @@
+#define PANEL_DEPENDENCIES
 #include "panel.h"
 #include <memory.h>
 #include "esp_log.h"

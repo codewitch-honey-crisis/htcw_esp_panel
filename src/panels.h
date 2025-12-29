@@ -82,8 +82,10 @@
 #endif // T_QT_PRO
 
 #ifdef ESP_WROVER_KIT // Should work (Mine has a short)
+#ifdef PANEL_DEPENDENCIES
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_panel_ili9341
 #include "esp_lcd_panel_ili9341.h"
+#endif
 #define LCD_BCKL_ON_LEVEL 0
 #define LCD_SPI_HOST    SPI3_HOST
 #define LCD_PIN_NUM_MISO 25
@@ -132,12 +134,14 @@
 #endif // ESP_USB_OTG
 
 #ifdef M5STACK_CORE2 // Works
+#ifdef PANEL_DEPENDENCIES
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_touch_ft6x36
 //            codewitch-honey-crisis/htcw_esp_lcd_panel_ili9342
 //            codewitch-honey-crisis/htcw_m5_stack_core2_power
 #include "esp_lcd_panel_ili9342.h"
 #include "esp_lcd_touch_ft6x36.h"
 #include "m5_stack_core2_power.h"
+#endif
 #define LCD_SPI_HOST    SPI3_HOST
 #define LCD_PIN_NUM_MOSI 23
 #define LCD_PIN_NUM_CLK 18
@@ -176,8 +180,10 @@
 #endif // M5STACK_CORE2
 
 #ifdef M5STACK_FIRE // Mine bricked so it's untested
+#ifdef PANEL_DEPENDENCIES
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_panel_ili9342
 #include "esp_lcd_panel_ili9342.h"
+#endif
 #define LCD_SPI_HOST    SPI3_HOST
 #define LCD_PIN_NUM_MOSI 23
 #define LCD_PIN_NUM_CLK 18
@@ -224,10 +230,12 @@
 #endif // M5STACK_S3_ATOM
 
 #ifdef MATOUCH_ESP_DISPLAY_PARALLEL_35 // Untested. Mine died eventually
+#ifdef PANEL_DEPENDENCIES
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_panel_ili9488
 //      codewitch-honey-crisis/htcw_esp_lcd_touch_ft6x36
 #include "esp_lcd_panel_ili9488.h"
 #include "esp_lcd_touch_ft6x36.h"
+#endif
 #define LCD_PIN_NUM_CS 37
 #define LCD_PIN_NUM_WR 35
 #define LCD_PIN_NUM_RD 48
@@ -275,8 +283,10 @@
 #endif // MATOUCH_ESP_DISPLAY_PARALLEL_35
 
 #ifdef MATOUCH_ESP_DISPLAY_PARALLEL_4 // Untested (I have one but it's in use right now, and inside something so I can't test touch)
+#ifdef PANEL_DEPENDENCIES
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_touch_gt911
 #include "esp_lcd_touch_gt911.h"
+#endif
 #define LCD_PIN_NUM_CS 1
 #define LCD_PIN_NUM_SCK 12
 #define LCD_PIN_NUM_SDA 11 
@@ -339,8 +349,10 @@
 #endif // MATOUCH_ESP_DISPLAY_PARALLEL_4
 
 #ifdef MATOUCH_ESP_DISPLAY_PARALLEL_43 // Works
+#ifdef PANEL_DEPENDENCIES
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_touch_gt911
 #include "esp_lcd_touch_gt911.h"
+#endif
 #define LCD_PIN_NUM_DE 40
 #define LCD_PIN_NUM_VSYNC 41
 #define LCD_PIN_NUM_HSYNC 39
@@ -463,7 +475,9 @@
 #endif // MATOUCH_ESP_DISPLAY_PARALLEL_7
 
 #ifdef WAVESHARE_S3_43_DEVKIT // works, sometimes reboots on initting the touch controller
+#ifdef PANEL_DEPENDENCIES
 #include "esp_lcd_touch_gt911.h"
+#endif
 #define LCD_PIN_NUM_DE 5
 #define LCD_PIN_NUM_VSYNC 3
 #define LCD_PIN_NUM_HSYNC 46
@@ -561,10 +575,12 @@
 #endif // WAVESHARE_S3_43_DEVKIT
 
 #ifdef WAVESHARE_P4_SMART86BOX // Works
+#ifdef PANEL_DEPENDENCIES
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_st7703
 //    codewitch-honey-crisis/htcw_esp_lcd_touch_gt911
 #include "esp_lcd_st7703.h"
 #include "esp_lcd_touch_gt911.h"
+#endif
 #define LCD_TRANSFER_IN_SPIRAM
 #define LCD_BCKL_ON_LEVEL 0
 #define LCD_HRES 720
@@ -662,8 +678,10 @@ st7703_vendor_config_t vendor_config = { \
 #endif // HELTEC_WIFI_LORA_KIT_V2
 
 #ifdef FREENOVE_S3_DEVKIT // Works (This is their full development kit with the integrated display, not just the s3 devkit)
+#ifdef PANEL_DEPENDENCIES
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_touch_ft6x36
 #include "esp_lcd_touch_ft6x36.h"
+#endif
 #define LCD_SPI_HOST SPI3_HOST
 #define LCD_PIN_NUM_DC 0
 #define LCD_PIN_NUM_CS 47
