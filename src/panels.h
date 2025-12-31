@@ -177,6 +177,10 @@
 #define POWER_CLOCK_HZ (200*1000) 
 #define POWER_I2C_PULLUP 1
 #define POWER_INIT m5_stack_core2_power_init(false)
+#define SD_SPI_HOST SPI_3
+#define SD_PIN_NUM_CS 4
+#define SD_PIN_NUM_MOSI 23
+#define SD_PIN_NUM_MISO 38
 #endif // M5STACK_CORE2
 
 #ifdef M5STACK_FIRE // Mine bricked so it's untested
