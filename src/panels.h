@@ -131,6 +131,12 @@
 #define LCD_SWAP_XY false
 #define BUTTON_MASK (BUTTON_PIN(0)|BUTTON_PIN(10)|BUTTON_PIN(11)|BUTTON_PIN(14))
 #define BUTTON_ON_LEVEL 0
+#define SD_PIN_NUM_CLK 36
+#define SD_PIN_NUM_D00 37
+#define SD_PIN_NUM_D01 38
+#define SD_PIN_NUM_D02 33
+#define SD_PIN_NUM_D03 34
+#define SD_CLOCK_HZ (40*1000)
 #endif // ESP_USB_OTG
 
 #ifdef M5STACK_CORE2 // Works
@@ -208,6 +214,11 @@
 #define LCD_SWAP_XY false
 #define BUTTON_MASK (BUTTON_PIN(39)|BUTTON_PIN(38)|BUTTON_PIN(37))
 #define BUTTON_ON_LEVEL 0
+#define SD_SPI_HOST    SPI_3
+#define SD_PIN_NUM_MOSI 23
+#define SD_PIN_NUM_MISO 19
+#define SD_PIN_NUM_CLK 18
+#define SD_PIN_NUM_CS 4
 #endif // M5STACK_FIRE
 
 #ifdef M5STACK_S3_ATOM // Untested (mine is bricked)
@@ -292,8 +303,8 @@
 #include "esp_lcd_touch_gt911.h"
 #endif
 #define LCD_PIN_NUM_CS 1
-#define LCD_PIN_NUM_SCK 12
-#define LCD_PIN_NUM_SDA 11 
+#define LCD_PIN_NUM_CLK 12
+#define LCD_PIN_NUM_MOSI 11 
 #define LCD_PIN_NUM_DE 45
 #define LCD_PIN_NUM_VSYNC 4
 #define LCD_PIN_NUM_HSYNC 5
@@ -350,6 +361,11 @@
 #define TOUCH_CMD_BITS 16
 #define TOUCH_PARAM_BITS 0
 #define TOUCH_DISABLE_CONTROL_PHASE
+#define SD_PIN_NUM_CLK 12
+#define SD_PIN_NUM_MISO 13
+#define SD_PIN_NUM_MOSI 11
+#define SD_PIN_NUM_CS 10
+
 #endif // MATOUCH_ESP_DISPLAY_PARALLEL_4
 
 #ifdef MATOUCH_ESP_DISPLAY_PARALLEL_43 // Works
@@ -414,6 +430,11 @@
 #define TOUCH_CMD_BITS 16
 #define TOUCH_PARAM_BITS 0
 #define TOUCH_DISABLE_CONTROL_PHASE
+#define SD_SPI_HOST SPI_3
+#define SD_PIN_NUM_CLK 12
+#define SD_PIN_NUM_MISO 13
+#define SD_PIN_NUM_MOSI 11
+#define SD_PIN_NUM_CS 10
 #endif // MATOUCH_ESP_DISPLAY_PARALLEL_43
 
 #ifdef MATOUCH_ESP_DISPLAY_PARALLEL_7 // untested 1024x600 only (I gave mine away)
@@ -476,6 +497,10 @@
 #define TOUCH_CMD_BITS 16
 #define TOUCH_PARAM_BITS 0
 #define TOUCH_DISABLE_CONTROL_PHASE
+#define SD_PIN_NUM_CMD 11
+#define SD_PIN_NUM_CLK 12
+#define SD_PIN_NUM_D00 13
+#define SD_CLOCK_HZ (40*1000)
 #endif // MATOUCH_ESP_DISPLAY_PARALLEL_7
 
 #ifdef WAVESHARE_S3_43_DEVKIT // works, sometimes reboots on initting the touch controller
@@ -576,6 +601,11 @@
     ESP_ERROR_CHECK(i2c_master_write_to_device((i2c_port_t)TOUCH_I2C_HOST,0x38,&write_buf,1,portMAX_DELAY));\
     esp_rom_delay_us(200 * 1000)
 #endif
+#define SD_SPI_HOST SPI_3
+#define SD_PIN_NUM_CS 4 
+#define SD_PIN_NUM_MOSI 11    // SD card master output slave input pin
+#define SD_PIN_NUM_CLK  12    // SD card clock pin
+#define SD_PIN_NUM_MISO 13    // SD card master input slave output pin
 #endif // WAVESHARE_S3_43_DEVKIT
 
 #ifdef WAVESHARE_P4_SMART86BOX // Works
