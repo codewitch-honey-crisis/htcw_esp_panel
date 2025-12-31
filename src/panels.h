@@ -174,8 +174,8 @@
 #define POWER_I2C_HOST I2C_1
 #define POWER_PIN_NUM_SDA 21
 #define POWER_PIN_NUM_SCL 22
-#define POWER_CLOCK_HZ (200*1000) // must be the same as others for LEGACY_I2C to work
-#define POWER_I2C_PULLUP
+#define POWER_CLOCK_HZ (200*1000) 
+#define POWER_I2C_PULLUP 1
 #define POWER_INIT m5_stack_core2_power_init(false)
 #endif // M5STACK_CORE2
 
@@ -523,7 +523,7 @@
 #define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SCL           9
 #define TOUCH_PIN_NUM_SDA           8
-#define TOUCH_I2C_PULLUP
+#define TOUCH_I2C_PULLUP 1
 #define TOUCH_PANEL esp_lcd_touch_new_i2c_gt911
 #define TOUCH_I2C_ADDR ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
 #define TOUCH_CLOCK_HZ (400*1000)
