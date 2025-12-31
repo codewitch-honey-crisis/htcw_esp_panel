@@ -18,6 +18,8 @@ For touch it supports I2C or SPI
 
 Buttons are presently GPIO
 
+SD supports SPI or MMC
+
 If you need more display or touch controller support, you can do what i did, download the ESP LCD Panel API component or related touch component and create a platformIO library out of it. You can then use it in your project. Of course, if you're just using idf.py you can use the component directly.
 
 Documentation is presently somewhat lacking, but it is fairly easy to copy from an existing device and use its configuration as a template.
@@ -176,3 +178,6 @@ These default to `0`
 
 Example setting: `40`
 
+### SD
+
+For SD just define the pins, and the `SP_SPI_HOST` if it's SPI. Otherwise it uses SDMMC. `SD_PIN_NUM_WP` and `SD_PIN_NUM_CD` are for write protection and line change detection, respectively
