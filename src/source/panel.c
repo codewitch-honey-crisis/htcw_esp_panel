@@ -975,21 +975,22 @@ return true;
 #endif
     slot_config.d0 = SD_PIN_NUM_D00;
     slot_config.width = 1;
-#ifdef SD_PIN_NUM_D03
+#ifdef SD_PIN_NUM_D07
     slot_config.d1 = SD_PIN_NUM_D01;
     slot_config.d2 = SD_PIN_NUM_D02;
     slot_config.d3 = SD_PIN_NUM_D03;
-#ifdef SD_PIN_NUM_D07
     slot_config.d4 = SD_PIN_NUM_D04;
     slot_config.d5 = SD_PIN_NUM_D05;
     slot_config.d6 = SD_PIN_NUM_D06;
     slot_config.d7 = SD_PIN_NUM_D07;
     slot_config.width = 8;
     host.flags = SDMMC_HOST_FLAG_8BIT; //use 4-line SD/MMC mode
-#else
+#elif defined(SD_PIN_NUM_D03)
+    slot_config.d1 = SD_PIN_NUM_D01;
+    slot_config.d2 = SD_PIN_NUM_D02;
+    slot_config.d3 = SD_PIN_NUM_D03;
     slot_config.width = 4;
     host.flags = SDMMC_HOST_FLAG_4BIT; //use 4-line SD/MMC mode
-#endif
 #endif
 #if defined(SD_NO_DDR) 
     host.flags &= ~SDMMC_HOST_FLAG_DDR;
