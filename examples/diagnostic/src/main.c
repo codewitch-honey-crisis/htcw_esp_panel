@@ -159,6 +159,9 @@ void app_main(void)
 #ifdef BUTTON
     panel_button_init();
 #endif
+#ifdef SD_BUS
+    panel_sd_init(false,0,0);
+#endif
 #ifdef COLOR_BLACK // we have a suported color model
     TickType_t screen_ts = 0;
     TickType_t wdt_ts = xTaskGetTickCount();

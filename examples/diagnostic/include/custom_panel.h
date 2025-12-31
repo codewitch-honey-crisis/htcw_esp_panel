@@ -1,9 +1,9 @@
 // you don't actually need a #ifdef guard on a custom panel for many projects, only for projects where you might support more than one device (either custom, or otherwise)
 #ifdef C6DEVKITC1 // Works, but is a custom kit
-#define LCD_I2C_HOST    0
+#define LCD_I2C_HOST    I2C_1
 #define LCD_DMA
 #define LCD_I2C_ADDR 0x3C
-#define LCD_I2C_PULLUP
+#define LCD_I2C_PULLUP 1
 #define LCD_CONTROL_PHASE_BYTES 1
 #define LCD_DC_BIT_OFFSET 6
 #define LCD_BIT_DEPTH 1

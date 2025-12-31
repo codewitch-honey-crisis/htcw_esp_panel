@@ -1,5 +1,15 @@
 #ifndef PANEL_DEFS_H
 #define PANEL_DEFS_H
+#define SPI_1 0
+#define SPI_2 1
+#define SPI_3 2
+#define SPI_4 3
+#define I2C_1 0
+#define I2C_2 1
+#define MMC_1 0
+#define MMC_2 1
+
+
 #include "panels.h"
 #if __has_include("custom_panel.h")
 #include "custom_panel.h"
@@ -19,6 +29,24 @@
 #define BUTTON_OFF_LEVEL (!BUTTON_ON_LEVEL)
 #endif
 #endif
+
+#ifndef LCD_BUS
+#if defined(LCD_SPI_HOST)
+#define LCD_BUS PANEL_BUS_SPI
+#else
+#if defined(LCD_HSYNC_FRONT_PORCH) && defined(LCD_PIN_NUM_D00)
+#define LCD_BUS PANEL_BUS_RGB
+#elif defined(LCD_HSYNC_FRONT_PORCH) 
+#define LCD_BUS PANEL_BUS_MIPI
+#elif defined(LCD_PIN_NUM_D00)
+#define LCD_BUS PANEL_BUS_I8080
+#elif defined(LCD_I2C_HOST)
+#define LCD_BUS PANEL_BUS_I2C
+#endif
+#endif
+#endif
+
+#ifdef LCD_BUS
 
 #ifndef LCD_WIDTH
 #ifdef LCD_SWAP_XY
@@ -70,19 +98,6 @@
 #endif
 #ifndef LCD_TRANSFER_SIZE
 #define LCD_TRANSFER_SIZE (((((LCD_WIDTH*(LCD_HEIGHT+(0!=(LCD_HEIGHT%LCD_DIVISOR)))*LCD_BIT_DEPTH+(LCD_DIVISOR-1))/LCD_DIVISOR))+7)/8)
-#endif
-
-#ifndef LCD_BUS
-#if defined(LCD_HSYNC_FRONT_PORCH) && defined(LCD_PIN_NUM_D00)
-#define LCD_BUS PANEL_BUS_RGB
-#elif defined(LCD_HSYNC_FRONT_PORCH) 
-#define LCD_BUS PANEL_BUS_MIPI
-#elif defined(LCD_PIN_NUM_D00)
-#define LCD_BUS PANEL_BUS_I8080
-#elif defined(LCD_SPI_HOST)
-#define LCD_BUS PANEL_BUS_SPI
-#elif defined(LCD_I2C_HOST)
-#define LCD_BUS PANEL_BUS_I2C
 #endif
 #endif
 
@@ -179,6 +194,7 @@
 #define PANEL_BUS_I8080 3
 #define PANEL_BUS_RGB 4
 #define PANEL_BUS_MIPI 5
+#define PANEL_BUS_MMC 6
 
 #if LCD_BUS == PANEL_BUS_MIPI
 #if LCD_BIT_DEPTH == 24
@@ -207,4 +223,153 @@
 #endif
 
 // END fill ins for defauls (don't mess!)
+
+// ============================================================================
+// SPI PIN ALIAS MAPPING
+// ============================================================================
+
+// ------------- LCD SPI pin aliases -------------
+#ifdef LCD_SPI_HOST
+#ifdef LCD_PIN_NUM_MOSI
+#ifdef LCD_PIN_NUM_D00
+#error "LCD_PIN_NUM_D00 and LCD_PIN_NUM_MOSI are both defined"
+#else 
+#define LCD_PIN_NUM_D00 LCD_PIN_NUM_MOSI
+#endif
+#endif
+#ifdef LCD_PIN_NUM_MISO
+#ifdef LCD_PIN_NUM_D01
+#error "LCD_PIN_NUM_D01 and LCD_PIN_NUM_MISO are both defined"
+#else 
+#define LCD_PIN_NUM_D01 LCD_PIN_NUM_MISO
+#endif
+#endif
+#ifdef LCD_PIN_NUM_QUADWP
+#ifdef LCD_PIN_NUM_D02
+#error "LCD_PIN_NUM_D02 and LCD_PIN_NUM_QUADWP are both defined"
+#else
+#define LCD_PIN_NUM_D02 LCD_PIN_NUM_QUADWP
+#endif
+#endif
+#ifdef LCD_PIN_NUM_QUADHD
+#ifdef LCD_PIN_NUM_D03
+#error "LCD_PIN_NUM_D03 and LCD_PIN_NUM_QUADHD are both defined"
+#else
+#define LCD_PIN_NUM_D03 LCD_PIN_NUM_QUADHD
+#endif
+#endif
+#endif
+
+// ------------- TOUCH SPI pin aliases -------------
+#ifdef TOUCH_SPI_HOST
+#ifdef TOUCH_PIN_NUM_MOSI
+#ifdef TOUCH_PIN_NUM_D00
+#error "TOUCH_PIN_NUM_D00 and TOUCH_PIN_NUM_MOSI are both defined"
+#else 
+#define TOUCH_PIN_NUM_D00 TOUCH_PIN_NUM_MOSI
+#endif
+#endif
+#ifdef TOUCH_PIN_NUM_MISO
+#ifdef TOUCH_PIN_NUM_D01
+#error "TOUCH_PIN_NUM_D01 and TOUCH_PIN_NUM_MISO are both defined"
+#else 
+#define TOUCH_PIN_NUM_D01 TOUCH_PIN_NUM_MISO
+#endif
+#endif
+#ifdef TOUCH_PIN_NUM_QUADWP
+#ifdef TOUCH_PIN_NUM_D02
+#error "TOUCH_PIN_NUM_D02 and TOUCH_PIN_NUM_QUADWP are both defined"
+#else
+#define TOUCH_PIN_NUM_D02 TOUCH_PIN_NUM_QUADWP
+#endif
+#endif
+#ifdef TOUCH_PIN_NUM_QUADHD
+#ifdef TOUCH_PIN_NUM_D03
+#error "TOUCH_PIN_NUM_D03 and TOUCH_PIN_NUM_QUADHD are both defined"
+#else
+#define TOUCH_PIN_NUM_D03 TOUCH_PIN_NUM_QUADHD
+#endif
+#endif
+#endif
+
+// ------------- POWER SPI pin aliases -------------
+#ifdef POWER_SPI_HOST
+#ifdef POWER_PIN_NUM_MOSI
+#ifdef POWER_PIN_NUM_D00
+#error "POWER_PIN_NUM_D00 and POWER_PIN_NUM_MOSI are both defined"
+#else 
+#define POWER_PIN_NUM_D00 POWER_PIN_NUM_MOSI
+#endif
+#endif
+#ifdef POWER_PIN_NUM_MISO
+#ifdef POWER_PIN_NUM_D01
+#error "POWER_PIN_NUM_D01 and POWER_PIN_NUM_MISO are both defined"
+#else 
+#define POWER_PIN_NUM_D01 POWER_PIN_NUM_MISO
+#endif
+#endif
+#ifdef POWER_PIN_NUM_QUADWP
+#ifdef POWER_PIN_NUM_D02
+#error "POWER_PIN_NUM_D02 and POWER_PIN_NUM_QUADWP are both defined"
+#else
+#define POWER_PIN_NUM_D02 POWER_PIN_NUM_QUADWP
+#endif
+#endif
+#ifdef POWER_PIN_NUM_QUADHD
+#ifdef POWER_PIN_NUM_D03
+#error "POWER_PIN_NUM_D03 and POWER_PIN_NUM_QUADHD are both defined"
+#else
+#define POWER_PIN_NUM_D03 POWER_PIN_NUM_QUADHD
+#endif
+#endif
+#endif
+
+// ------------- SD SPI pin aliases -------------
+#ifdef SD_SPI_HOST
+#ifdef SD_PIN_NUM_MOSI
+#ifdef SD_PIN_NUM_D00
+#error "SD_PIN_NUM_D00 and SD_PIN_NUM_MOSI are both defined"
+#else 
+#define SD_PIN_NUM_D00 SD_PIN_NUM_MOSI
+#endif
+#endif
+#ifdef SD_PIN_NUM_MISO
+#ifdef SD_PIN_NUM_D01
+#error "SD_PIN_NUM_D01 and SD_PIN_NUM_MISO are both defined"
+#else 
+#define SD_PIN_NUM_D01 SD_PIN_NUM_MISO
+#endif
+#endif
+#ifdef SD_PIN_NUM_QUADWP
+#ifdef SD_PIN_NUM_D02
+#error "SD_PIN_NUM_D02 and SD_PIN_NUM_QUADWP are both defined"
+#else
+#define SD_PIN_NUM_D02 SD_PIN_NUM_QUADWP
+#endif
+#endif
+#ifdef SD_PIN_NUM_QUADHD
+#ifdef SD_PIN_NUM_D03
+#error "SD_PIN_NUM_D03 and SD_PIN_NUM_QUADHD are both defined"
+#else
+#define SD_PIN_NUM_D03 SD_PIN_NUM_QUADHD
+#endif
+#endif
+#endif
+
+#if defined(SD_SPI_HOST) || defined(SD_PIN_NUM_D00)
+#ifdef SD_SPI_HOST
+#define SD_BUS PANEL_BUS_SPI
+#else
+#define SD_BUS PANEL_BUS_MMC
+#ifndef SD_MMC_HOST
+#define SD_MMC_HOST MMC_1
+#endif
+#endif
+#ifndef SD_MOUNT_POINT
+#define SD_MOUNT_POINT "/sdcard"
+#endif
+
+#endif
+
+
 #endif // PANEL_DEFS_H

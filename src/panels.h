@@ -4,7 +4,7 @@
 // BEGIN devices (add more)
 
 #ifdef TTGO_T1 // Works
-#define LCD_SPI_HOST    SPI3_HOST
+#define LCD_SPI_HOST    SPI_3
 #define LCD_PIN_NUM_MOSI 19
 #define LCD_PIN_NUM_CLK 18
 #define LCD_PIN_NUM_CS 5
@@ -58,7 +58,7 @@
 #endif // T_DISPLAY_S3
 
 #ifdef T_QT_PRO // Untested (mine is lost)
-#define LCD_SPI_HOST    SPI3_HOST
+#define LCD_SPI_HOST    SPI_3
 #define LCD_BCKL_ON_LEVEL 0
 #define LCD_PIN_NUM_MOSI 2
 #define LCD_PIN_NUM_CLK 3
@@ -87,7 +87,7 @@
 #include "esp_lcd_panel_ili9341.h"
 #endif
 #define LCD_BCKL_ON_LEVEL 0
-#define LCD_SPI_HOST    SPI3_HOST
+#define LCD_SPI_HOST    SPI_3
 #define LCD_PIN_NUM_MISO 25
 #define LCD_PIN_NUM_MOSI 23
 #define LCD_PIN_NUM_CLK  19
@@ -111,7 +111,7 @@
 #endif // ESP_WROVER_KIT
 
 #ifdef ESP_USB_OTG // Works
-#define LCD_SPI_HOST    SPI2_HOST
+#define LCD_SPI_HOST    SPI_2
 #define LCD_PIN_NUM_MOSI 7
 #define LCD_PIN_NUM_CLK 6
 #define LCD_PIN_NUM_CS 5
@@ -142,7 +142,7 @@
 #include "esp_lcd_touch_ft6x36.h"
 #include "m5_stack_core2_power.h"
 #endif
-#define LCD_SPI_HOST    SPI3_HOST
+#define LCD_SPI_HOST    SPI_3
 #define LCD_PIN_NUM_MOSI 23
 #define LCD_PIN_NUM_CLK 18
 #define LCD_PIN_NUM_CS 5
@@ -158,7 +158,7 @@
 #define LCD_MIRROR_Y false
 #define LCD_INVERT_COLOR true
 #define LCD_SWAP_XY false
-#define TOUCH_I2C_HOST I2C_NUM_0
+#define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SDA 21
 #define TOUCH_PIN_NUM_SCL 22
 #define TOUCH_PANEL esp_lcd_touch_new_i2c_ft6x36
@@ -171,7 +171,7 @@
 #define TOUCH_PIN_NUM_RST -1
 #define TOUCH_VRES 280
 #define TOUCH_BOTTOM_OVERHANG 40
-#define POWER_I2C_HOST I2C_NUM_0
+#define POWER_I2C_HOST I2C_1
 #define POWER_PIN_NUM_SDA 21
 #define POWER_PIN_NUM_SCL 22
 #define POWER_CLOCK_HZ (200*1000) // must be the same as others for LEGACY_I2C to work
@@ -184,7 +184,7 @@
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_panel_ili9342
 #include "esp_lcd_panel_ili9342.h"
 #endif
-#define LCD_SPI_HOST    SPI3_HOST
+#define LCD_SPI_HOST    SPI_3
 #define LCD_PIN_NUM_MOSI 23
 #define LCD_PIN_NUM_CLK 18
 #define LCD_PIN_NUM_CS 14
@@ -207,7 +207,7 @@
 #endif // M5STACK_FIRE
 
 #ifdef M5STACK_S3_ATOM // Untested (mine is bricked)
-#define LCD_SPI_HOST    SPI3_HOST
+#define LCD_SPI_HOST    SPI_3
 #define LCD_PIN_NUM_MOSI 21
 #define LCD_PIN_NUM_CLK 17
 #define LCD_PIN_NUM_CS 15
@@ -269,7 +269,7 @@
 #define LCD_INVERT_COLOR false
 #define LCD_SWAP_XY true
 #define LCD_SWAP_COLOR_BYTES true
-#define TOUCH_I2C_HOST I2C_NUM_0
+#define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SCL 39
 #define TOUCH_PIN_NUM_SDA 38
 #define TOUCH_PANEL esp_lcd_touch_new_i2c_ft6x36
@@ -332,7 +332,7 @@
 #else
     #define LCD_CLOCK_HZ (10 * 1000 * 1000)
 #endif
-#define TOUCH_I2C_HOST I2C_NUM_0
+#define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SDA 17
 #define TOUCH_PIN_NUM_SCL 18
 #define TOUCH_PIN_NUM_INT -1
@@ -395,7 +395,7 @@
 #else
     #define LCD_CLOCK_HZ (16 * 1000 * 1000)
 #endif
-#define TOUCH_I2C_HOST I2C_NUM_0
+#define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SCL 18
 #define TOUCH_PIN_NUM_SDA 17
 #define TOUCH_PANEL esp_lcd_touch_new_i2c_gt911
@@ -457,7 +457,7 @@
 #else
     #define LCD_CLOCK_HZ (10 * 1000 * 1000)
 #endif
-#define TOUCH_I2C_HOST I2C_NUM_0
+#define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SCL 18
 #define TOUCH_PIN_NUM_SDA 17
 #define TOUCH_PANEL esp_lcd_touch_new_i2c_gt911
@@ -520,7 +520,7 @@
 #else
     #define LCD_CLOCK_HZ (14 * 1000 * 1000)
 #endif
-#define TOUCH_I2C_HOST I2C_NUM_0
+#define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SCL           9
 #define TOUCH_PIN_NUM_SDA           8
 #define TOUCH_I2C_PULLUP
@@ -611,7 +611,7 @@ st7703_vendor_config_t vendor_config = { \
 #define LCD_PIN_NUM_BCKL 26
 #define LCD_PHY_PWR_LDO_CHAN
 #define LCD_CLOCK_HZ (46 * 1000 * 1000)
-#define TOUCH_I2C_HOST I2C_NUM_0
+#define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SDA 7
 #define TOUCH_PIN_NUM_SCL 8
 #define TOUCH_CLOCK_HZ (100*1000)
@@ -626,7 +626,7 @@ st7703_vendor_config_t vendor_config = { \
 #endif // WAVESHARE_P4_SMART86BOX
 
 #ifdef HELTEC_WIFI_LORA_KIT_V2 // should work. the display broke on mine though
-#define LCD_I2C_HOST    0
+#define LCD_I2C_HOST    I2C_1
 #define LCD_I2C_ADDR 0x3C
 #define LCD_CONTROL_PHASE_BYTES 1
 #define LCD_DC_BIT_OFFSET 6
@@ -682,7 +682,7 @@ st7703_vendor_config_t vendor_config = { \
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_touch_ft6x36
 #include "esp_lcd_touch_ft6x36.h"
 #endif
-#define LCD_SPI_HOST SPI3_HOST
+#define LCD_SPI_HOST SPI_3
 #define LCD_PIN_NUM_DC 0
 #define LCD_PIN_NUM_CS 47
 #define LCD_PIN_NUM_MOSI 20
@@ -696,7 +696,8 @@ st7703_vendor_config_t vendor_config = { \
 #define LCD_PANEL esp_lcd_new_panel_st7789
 #define LCD_INVERT_COLOR false
 #define LCD_SWAP_XY true
-#define TOUCH_I2C_HOST I2C_NUM_0
+#define TOUCH_I2C_HOST I2C_1
+#define TOUCH_I2C_PULLUP 1
 #define TOUCH_PIN_NUM_SCL 1
 #define TOUCH_PIN_NUM_SDA 2
 #define TOUCH_PANEL esp_lcd_touch_new_i2c_ft6x36
@@ -707,6 +708,10 @@ st7703_vendor_config_t vendor_config = { \
 #define TOUCH_DISABLE_CONTROL_PHASE
 #define TOUCH_CLOCK_HZ (200*1000)
 #define TOUCH_PIN_NUM_RST -1
+#define SD_PIN_NUM_D00 40
+#define SD_PIN_NUM_CMD 38
+#define SD_PIN_NUM_CLK 39
+#define SD_CLOCK_HZ (40*1000)
 #endif // FREENOVE_S3_DEVKIT
 
 // END devices

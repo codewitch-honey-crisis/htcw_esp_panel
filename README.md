@@ -134,7 +134,7 @@ Some panels have a funny memory buffer, and the flushing doesn't consume regular
 ### TOUCH_SPI_HOST
 The SPI host for the touch panel connected via SPI
 
-Example setting: `SPI3_HOST`
+Example setting: `SPI_3`
 
 Requires `TOUCH_PIN_NUM_MISO`,`TOUCH_PIN_NUM_CLK`
 
@@ -145,7 +145,7 @@ Note that if you're sharing the SPI bus with something that needs output like an
 ### TOUCH_I2C_HOST
 The I2C host for the touch panel connected via I2C
 
-Example setting: `I2C_NUM_0`
+Example setting: `I2C_1`
 
 Requires `TOUCH_PIN_NUM_SDA`, and `TOUCH_PIN_NUM_SCL`, `TOUCH_I2C_ADDR`
 

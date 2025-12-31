@@ -1,0 +1,89 @@
+#ifndef PANEL_PIN_ALIASES_H
+#define PANEL_PIN_ALIASES_H
+#ifndef LCD_PIN_NUM_D00
+#ifdef LCD_PIN_NUM_MOSI
+#define LCD_PIN_NUM_D00 LCD_PIN_NUM_MOSI
+#endif
+#endif
+#ifndef LCD_PIN_NUM_D01
+#ifdef LCD_PIN_NUM_MISO
+#define LCD_PIN_NUM_D01 LCD_PIN_NUM_MISO
+#endif
+#endif
+#ifndef LCD_PIN_NUM_D02
+#ifdef LCD_PIN_NUM_QUADWP
+#define LCD_PIN_NUM_D02 LCD_PIN_NUM_QUADWP
+#endif
+#endif
+#ifndef LCD_PIN_NUM_D03
+#ifdef LCD_PIN_NUM_QUADHD
+#define LCD_PIN_NUM_D03 LCD_PIN_NUM_QUADHD
+#endif
+#endif
+
+#ifndef TOUCH_PIN_NUM_D00
+#ifdef TOUCH_PIN_NUM_MOSI
+#define TOUCH_PIN_NUM_D00 TOUCH_PIN_NUM_MOSI
+#endif
+#endif
+#ifndef TOUCH_PIN_NUM_D01
+#ifdef TOUCH_PIN_NUM_MISO
+#define TOUCH_PIN_NUM_D01 TOUCH_PIN_NUM_MISO
+#endif
+#endif
+#ifndef TOUCH_PIN_NUM_D02
+#ifdef TOUCH_PIN_NUM_QUADWP
+#define TOUCH_PIN_NUM_D02 TOUCH_PIN_NUM_QUADWP
+#endif
+#endif
+#ifndef TOUCH_PIN_NUM_D03
+#ifdef TOUCH_PIN_NUM_QUADHD
+#define TOUCH_PIN_NUM_D03 TOUCH_PIN_NUM_QUADHD
+#endif
+#endif
+
+#ifndef POWER_PIN_NUM_D00
+#ifdef POWER_PIN_NUM_MOSI
+#define POWER_PIN_NUM_D00 POWER_PIN_NUM_MOSI
+#endif
+#endif
+#ifndef POWER_PIN_NUM_D01
+#ifdef POWER_PIN_NUM_MISO
+#define POWER_PIN_NUM_D01 POWER_PIN_NUM_MISO
+#endif
+#endif
+#ifndef POWER_PIN_NUM_D02
+#ifdef POWER_PIN_NUM_QUADWP
+#define POWER_PIN_NUM_D02 POWER_PIN_NUM_QUADWP
+#endif
+#endif
+#ifndef POWER_PIN_NUM_D03
+#ifdef POWER_PIN_NUM_QUADHD
+#define POWER_PIN_NUM_D03 POWER_PIN_NUM_QUADHD
+#endif
+#endif
+
+#ifndef SD_PIN_NUM_D00
+#ifdef SD_PIN_NUM_MOSI
+#define SD_PIN_NUM_D00 SD_PIN_NUM_MOSI
+#endif
+#endif
+#ifndef SD_PIN_NUM_D01
+#ifdef SD_PIN_NUM_MISO
+#define SD_PIN_NUM_D01 SD_PIN_NUM_MISO
+#endif
+#endif
+#ifndef SD_PIN_NUM_D02
+#ifdef SD_PIN_NUM_QUADWP
+#define SD_PIN_NUM_D02 SD_PIN_NUM_QUADWP
+#endif
+#endif
+#ifndef SD_PIN_NUM_D03
+#ifdef SD_PIN_NUM_QUADHD
+#define SD_PIN_NUM_D03 SD_PIN_NUM_QUADHD
+#endif
+#endif
+
+
+
+#endif // PANEL_PIN_ALIASES_H

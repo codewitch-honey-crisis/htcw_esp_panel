@@ -1,9 +1,21 @@
 #ifndef PANEL_H
 #define PANEL_H
-#include "panel_defs.h"
+#include "driver/spi_master.h"
+#ifdef LEGACY_I2C
+    #include "driver/i2c.h"
+#else
+    #include "driver/i2c_master.h"
+#endif
+#include "panel_maxes.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#ifdef SD_BUS
+#include "esp_vfs_fat.h"
+#include "sdmmc_cmd.h"
+#include "driver/sdmmc_host.h"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -69,7 +81,20 @@ uint64_t panel_button_read_all(void);
 /// @brief Initializes the power subsystem
 void panel_power_init(void);
 #endif
+#ifdef SD_BUS
+/// @brief Returns the handle for the mounted SD card
+/// @return The handle, or NULL of no SD is mounted
+sdmmc_card_t* panel_sd_handle();
+/// @brief Unmounts any mounted SD card
+void panel_sd_end();
+/// @brief Mounts the SD card
+/// @param format_on_fail True to format if the mount fails, otherwise false
+/// @param max_files The max number of open files, or 0 for the default
+/// @param alloc_unit_size The allocation unit size, or 0 for the default
+/// @return True if successfully mounted, otherwise false
+bool panel_sd_init(bool format_on_fail, size_t max_files, size_t alloc_unit_size);
+#endif
 #ifdef __cplusplus
 }
 #endif
-#endif // LCD_H
+#endif // PANEL_H

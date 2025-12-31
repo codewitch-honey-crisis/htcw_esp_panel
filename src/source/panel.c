@@ -6,15 +6,20 @@
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_vendor.h"
-#if LCD_BUS == PANEL_BUS_SPI || TOUCH_BUS == PANEL_BUS_SPI || POWER_BUS == PANEL_BUS_SPI
+#ifdef PANEL_USE_SPI
 #include "driver/spi_master.h"
 #endif
-#if LCD_BUS == PANEL_BUS_I2C || TOUCH_BUS == PANEL_BUS_I2C || POWER_BUS == PANEL_BUS_I2C
+#ifdef PANEL_USE_I2C
 #ifndef LEGACY_I2C
 #include "driver/i2c_master.h"
 #else
 #include "driver/i2c.h"
 #endif
+#endif
+#ifdef SD_BUS
+#include "esp_vfs_fat.h"
+#include "sdmmc_cmd.h"
+#include "driver/sdmmc_host.h"
 #endif
 #ifdef LCD_PHY_PWR_LDO_CHAN
 #include "esp_ldo_regulator.h"
@@ -45,276 +50,200 @@ static void* draw_buffer2 = NULL;
 static volatile bool vsync_count = 0;
 #endif
 
-#if (defined(LCD_BUS) && LCD_BUS == PANEL_BUS_SPI) || (defined(TOUCH_BUS) && TOUCH_BUS == PANEL_BUS_SPI) || (defined(POWER_BUS) && POWER_BUS == PANEL_BUS_SPI)
-static bool spi_initialized[4] = { false };
+#ifdef PANEL_USE_SPI
+static bool spi_initialized = false;
 static void spi_init() {
-#ifdef LCD_BUS
-#if LCD_BUS == PANEL_BUS_SPI
-    if(!spi_initialized[LCD_SPI_HOST]) {    
-        spi_bus_config_t spi_cfg;
+    if(spi_initialized) {
+        return;
+    }
+    spi_bus_config_t spi_cfg;
+    uint32_t spi_sz;
+#ifdef SPI_1_HOST_USED
         memset(&spi_cfg,0,sizeof(spi_cfg));
-        #if LCD_TRANSFER_SIZE > 0
-        uint32_t spi_sz = LCD_TRANSFER_SIZE+8;
-        #else
-        uint32_t spi_sz = 32*1024;
-        #endif
+#if SPI_1_TRANSFER_SIZE > 0
+        spi_sz = SPI_1_TRANSFER_SIZE+8;
+#else
+        spi_sz = 32*1024;
+#endif
         if(spi_sz>32*1024) {
-            ESP_LOGW(TAG,"SPI transfer size is limited to 32KB, but draw buffer demands more. Increase the LCD_DIVISOR");
+            ESP_LOGW(TAG,"SPI transfer size is limited to 32KB, but a SPI host 1 device demands more.");
             spi_sz = 32*1024;
         }
         spi_cfg.max_transfer_sz = spi_sz;
-        spi_cfg.data0_io_num = -1;
-        spi_cfg.data1_io_num = -1;
-        spi_cfg.data2_io_num = -1;
-        spi_cfg.data3_io_num = -1;
-        spi_cfg.data4_io_num = -1;
-        spi_cfg.data5_io_num = -1;
-        spi_cfg.data6_io_num = -1;
-        spi_cfg.data7_io_num = -1;
-        spi_cfg.quadhd_io_num = -1;
-        spi_cfg.quadwp_io_num = -1;
-        spi_cfg.mosi_io_num = LCD_PIN_NUM_MOSI;
-        spi_cfg.sclk_io_num = LCD_PIN_NUM_CLK;
-#ifdef LCD_PIN_NUM_MISO
-        spi_cfg.miso_io_num = LCD_PIN_NUM_MISO;
-#else    
-        spi_cfg.miso_io_num = -1;
+        spi_cfg.data0_io_num = SPI_1_PIN_NUM_D00;
+        spi_cfg.data1_io_num = SPI_1_PIN_NUM_D01;
+        spi_cfg.data2_io_num = SPI_1_PIN_NUM_D02;
+        spi_cfg.data3_io_num = SPI_1_PIN_NUM_D03;
+        spi_cfg.data4_io_num = SPI_1_PIN_NUM_D04;
+        spi_cfg.data5_io_num = SPI_1_PIN_NUM_D05;
+        spi_cfg.data6_io_num = SPI_1_PIN_NUM_D06;
+        spi_cfg.data7_io_num = SPI_1_PIN_NUM_D07;
+        spi_cfg.sclk_io_num = SPI_1_PIN_NUM_CLK;
+        ESP_ERROR_CHECK(spi_bus_initialize((spi_host_device_t)SPI_1,&spi_cfg,SPI_DMA_CH_AUTO));    
 #endif
-        ESP_ERROR_CHECK(spi_bus_initialize((spi_host_device_t)LCD_SPI_HOST,&spi_cfg,SPI_DMA_CH_AUTO));
-        spi_initialized[LCD_SPI_HOST] = true;
-    }
+#ifdef SPI_2_HOST_USED
+        memset(&spi_cfg,0,sizeof(spi_cfg));
+#if SPI_2_TRANSFER_SIZE > 0
+        spi_sz = SPI_2_TRANSFER_SIZE+8;
+#else
+        spi_sz = 32*1024;
+#endif
+        if(spi_sz>32*1024) {
+            ESP_LOGW(TAG,"SPI transfer size is limited to 32KB, but a SPI host 2 device demands more.");
+            spi_sz = 32*1024;
+        }
+        spi_cfg.max_transfer_sz = spi_sz;
+        spi_cfg.data0_io_num = SPI_2_PIN_NUM_D00;
+        spi_cfg.data1_io_num = SPI_2_PIN_NUM_D01;
+        spi_cfg.data2_io_num = SPI_2_PIN_NUM_D02;
+        spi_cfg.data3_io_num = SPI_2_PIN_NUM_D03;
+        spi_cfg.data4_io_num = SPI_2_PIN_NUM_D04;
+        spi_cfg.data5_io_num = SPI_2_PIN_NUM_D05;
+        spi_cfg.data6_io_num = SPI_2_PIN_NUM_D06;
+        spi_cfg.data7_io_num = SPI_2_PIN_NUM_D07;
+        spi_cfg.sclk_io_num = SPI_2_PIN_NUM_CLK;
+        ESP_ERROR_CHECK(spi_bus_initialize((spi_host_device_t)SPI_2,&spi_cfg,SPI_DMA_CH_AUTO));    
 #endif
 
-#ifdef TOUCH_BUS
-#if TOUCH_BUS == PANEL_BUS_SPI
-    if(!spi_initialized[TOUCH_SPI_HOST]) {    
-        spi_bus_config_t spi_cfg;
+#ifdef SPI_3_HOST_USED
         memset(&spi_cfg,0,sizeof(spi_cfg));
-        uint32_t spi_sz = TOUCH_TRANSFER_SIZE+8;
+#if SPI_3_TRANSFER_SIZE > 0
+        spi_sz = SPI_3_TRANSFER_SIZE+8;
+#else
+        spi_sz = 32*1024;
+#endif
         if(spi_sz>32*1024) {
-            ESP_LOGW(TAG,"SPI transfer size is limited to 32KB, but touch device is set to more. Decrease TOUCH_TRANSFER_SIZE");
+            ESP_LOGW(TAG,"SPI transfer size is limited to 32KB, but a SPI host 3 device demands more.");
             spi_sz = 32*1024;
         }
         spi_cfg.max_transfer_sz = spi_sz;
-        spi_cfg.data0_io_num = -1;
-        spi_cfg.data1_io_num = -1;
-        spi_cfg.data2_io_num = -1;
-        spi_cfg.data3_io_num = -1;
-        spi_cfg.data4_io_num = -1;
-        spi_cfg.data5_io_num = -1;
-        spi_cfg.data6_io_num = -1;
-        spi_cfg.data7_io_num = -1;
-        spi_cfg.quadhd_io_num = -1;
-        spi_cfg.quadwp_io_num = -1;
-#ifdef TOUCH_PIN_NUM_MOSI
-        spi_cfg.mosi_io_num = TOUCH_PIN_NUM_MOSI;
+        spi_cfg.data0_io_num = SPI_3_PIN_NUM_D00;
+        spi_cfg.data1_io_num = SPI_3_PIN_NUM_D01;
+        spi_cfg.data2_io_num = SPI_3_PIN_NUM_D02;
+        spi_cfg.data3_io_num = SPI_3_PIN_NUM_D03;
+        spi_cfg.data4_io_num = SPI_3_PIN_NUM_D04;
+        spi_cfg.data5_io_num = SPI_3_PIN_NUM_D05;
+        spi_cfg.data6_io_num = SPI_3_PIN_NUM_D06;
+        spi_cfg.data7_io_num = SPI_3_PIN_NUM_D07;
+        spi_cfg.sclk_io_num = SPI_3_PIN_NUM_CLK;
+        ESP_ERROR_CHECK(spi_bus_initialize((spi_host_device_t)SPI_3,&spi_cfg,SPI_DMA_CH_AUTO));    
 #endif
-        spi_cfg.sclk_io_num = TOUCH_PIN_NUM_CLK;
-        spi_cfg.miso_io_num = TOUCH_PIN_NUM_MISO;
-        ESP_ERROR_CHECK(spi_bus_initialize((spi_host_device_t)TOUCH_SPI_HOST,&spi_cfg,SPI_DMA_CH_AUTO));
-        spi_initialized[TOUCH_SPI_HOST] = true;
-    }
-#endif
-#endif
-
-#ifdef POWER_BUS
-#if POWER_BUS == PANEL_BUS_SPI
-    if(!spi_initialized[POWER_SPI_HOST]) {    
-        spi_bus_config_t spi_cfg;
+#ifdef SPI_4_HOST_USED
         memset(&spi_cfg,0,sizeof(spi_cfg));
-        uint32_t spi_sz = POWER_TRANSFER_SIZE+8;
+#if SPI_4_TRANSFER_SIZE > 0
+        spi_sz = SPI_4_TRANSFER_SIZE+8;
+#else
+        spi_sz = 32*1024;
+#endif
         if(spi_sz>32*1024) {
-            ESP_LOGW(TAG,"SPI transfer size is limited to 32KB, but power device is set to more. Decrease POWER_TRANSFER_SIZE");
+            ESP_LOGW(TAG,"SPI transfer size is limited to 32KB, but a SPI host 4 device demands more.");
             spi_sz = 32*1024;
         }
         spi_cfg.max_transfer_sz = spi_sz;
-        spi_cfg.data0_io_num = -1;
-        spi_cfg.data1_io_num = -1;
-        spi_cfg.data2_io_num = -1;
-        spi_cfg.data3_io_num = -1;
-        spi_cfg.data4_io_num = -1;
-        spi_cfg.data5_io_num = -1;
-        spi_cfg.data6_io_num = -1;
-        spi_cfg.data7_io_num = -1;
-        spi_cfg.quadhd_io_num = -1;
-        spi_cfg.quadwp_io_num = -1;
-#ifdef POWER_PIN_NUM_MOSI
-        spi_cfg.mosi_io_num = POWER_PIN_NUM_MOSI;
+        spi_cfg.data0_io_num = SPI_4_PIN_NUM_D00;
+        spi_cfg.data1_io_num = SPI_4_PIN_NUM_D01;
+        spi_cfg.data2_io_num = SPI_4_PIN_NUM_D02;
+        spi_cfg.data3_io_num = SPI_4_PIN_NUM_D03;
+        spi_cfg.data4_io_num = SPI_4_PIN_NUM_D04;
+        spi_cfg.data5_io_num = SPI_4_PIN_NUM_D05;
+        spi_cfg.data6_io_num = SPI_4_PIN_NUM_D06;
+        spi_cfg.data7_io_num = SPI_4_PIN_NUM_D07;
+        spi_cfg.sclk_io_num = SPI_4_PIN_NUM_CLK;
+        ESP_ERROR_CHECK(spi_bus_initialize((spi_host_device_t)SPI_4,&spi_cfg,SPI_DMA_CH_AUTO));    
 #endif
-        spi_cfg.sclk_io_num = POWER_PIN_NUM_CLK;
-#ifdef POWER_PIN_NUM_MISO
-        spi_cfg.miso_io_num = POWER_PIN_NUM_MISO;
-#endif
-        ESP_ERROR_CHECK(spi_bus_initialize((spi_host_device_t)POWER_SPI_HOST,&spi_cfg,SPI_DMA_CH_AUTO));
-        spi_initialized[POWER_SPI_HOST] = true;
-    }
-#endif
-#endif
+        spi_initialized = true;
 }
 #endif
-#endif
 
-#if (defined(LCD_BUS) && LCD_BUS == PANEL_BUS_I2C) || (defined(TOUCH_BUS) && TOUCH_BUS == PANEL_BUS_I2C) || (defined(POWER_BUS) && POWER_BUS == PANEL_BUS_I2C)
-static bool i2c_initialized[2] = { false };
+#ifdef PANEL_USE_I2C
+static bool i2c_initialized = false;
 static void i2c_init() {
-#ifdef LCD_BUS
-#if LCD_BUS == PANEL_BUS_I2C
-    if(!i2c_initialized[LCD_I2C_HOST]) {    
+    if(i2c_initialized) {
+        return;
+    }
 #ifndef LEGACY_I2C
-        i2c_master_bus_config_t i2c_cfg;
-        i2c_master_bus_handle_t i2c_bus_handle;
+    i2c_master_bus_config_t i2c_cfg;
+    i2c_master_bus_handle_t i2c_bus_handle;
+#else
+    i2c_config_t i2c_cfg;
+#endif
+#ifdef I2C_1_HOST_USED
         memset(&i2c_cfg,0,sizeof(i2c_cfg));
+#ifndef LEGACY_I2C
         i2c_cfg.clk_source = I2C_CLK_SRC_DEFAULT;
         i2c_cfg.glitch_ignore_cnt = 7;
-        i2c_cfg.i2c_port = (i2c_port_num_t)LCD_I2C_HOST;
-        // Doesn't actually work, which is why it's commented out.
-// #ifndef LCD_NO_DMA
-//      i2c_cfg.trans_queue_depth = 10;
-// #endif
-        i2c_cfg.sda_io_num = (gpio_num_t)LCD_PIN_NUM_SDA;
-        i2c_cfg.scl_io_num = (gpio_num_t)LCD_PIN_NUM_SCL;
-        // TODO: make configurable
-#if defined(LCD_I2C_PULLUP)
-        i2c_cfg.flags.enable_internal_pullup = 1;
+        i2c_cfg.i2c_port = (i2c_port_num_t)I2C_1;
+        i2c_cfg.sda_io_num = I2C_1_PIN_NUM_SDA;
+        i2c_cfg.scl_io_num = I2C_1_PIN_NUM_SCL;
+#if defined(I2C_1_PULLUP)
+        i2c_cfg.flags.enable_internal_pullup = I2C_1_PULLUP;
 #else
         i2c_cfg.flags.enable_internal_pullup = 0;
 #endif
-
         ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_cfg,&i2c_bus_handle));
-#else
-        i2c_config_t i2c_cfg;
-        memset(&i2c_cfg,0,sizeof(i2c_cfg));
-#ifdef LCD_CLOCK_HZ
-        i2c_cfg.master.clk_speed = LCD_CLOCK_HZ;
+#else // legacy code
+#ifdef I2C_1_CLOCK_HZ
+        i2c_cfg.master.clk_speed = I2C_1_CLOCK_HZ;
 #else
         i2c_cfg.master.clk_speed = 100 * 1000;
 #endif
         i2c_cfg.mode = I2C_MODE_MASTER;
-        i2c_cfg.sda_io_num = LCD_PIN_NUM_SDA;
-#if defined(LCD_I2C_PULLUP)
-        i2c_cfg.sda_pullup_en = 1;
+        i2c_cfg.sda_io_num = I2C_1_PIN_NUM_SDA;
+#if defined(I2C_1_PULLUP)
+        i2c_cfg.sda_pullup_en = I2C_1_PULLUP;
 #else
         i2c_cfg.sda_pullup_en = 0;
 #endif
-
-        i2c_cfg.scl_io_num = LCD_PIN_NUM_SCL;
-#if defined(LCD_I2C_PULLUP)
-        i2c_cfg.scl_pullup_en = 1;
+        i2c_cfg.scl_io_num = I2C_1_PIN_NUM_SCL;
+#if defined(I2C_1_PULLUP)
+        i2c_cfg.scl_pullup_en = I2C_1_PULLUP;
 #else
         i2c_cfg.scl_pullup_en = 0;
 #endif
-        ESP_ERROR_CHECK(i2c_param_config((i2c_port_t)LCD_I2C_HOST,&i2c_cfg));
-        ESP_ERROR_CHECK(i2c_driver_install((i2c_port_t)LCD_I2C_HOST,I2C_MODE_MASTER,0,0,0));
-#endif    
-        i2c_initialized[LCD_I2C_HOST] = true;
-    }
-#endif
-
-#ifdef TOUCH_BUS
-#if TOUCH_BUS == PANEL_BUS_I2C
-    if(!i2c_initialized[TOUCH_I2C_HOST]) {    
-#ifndef LEGACY_I2C
-        i2c_master_bus_config_t i2c_cfg;
-        i2c_master_bus_handle_t i2c_bus_handle;
+        ESP_ERROR_CHECK(i2c_driver_install((i2c_port_t)I2C_1,I2C_MODE_MASTER,0,0,0));
+        ESP_ERROR_CHECK(i2c_param_config((i2c_port_t)I2C_1,&i2c_cfg));
+#endif 
+#endif // I2C_1_HOST_USED
+#ifdef I2C_2_HOST_USED
         memset(&i2c_cfg,0,sizeof(i2c_cfg));
+#ifndef LEGACY_I2C
         i2c_cfg.clk_source = I2C_CLK_SRC_DEFAULT;
         i2c_cfg.glitch_ignore_cnt = 7;
-        i2c_cfg.i2c_port = (i2c_port_num_t)TOUCH_I2C_HOST;
-        i2c_cfg.sda_io_num = (gpio_num_t)TOUCH_PIN_NUM_SDA;
-        i2c_cfg.scl_io_num = (gpio_num_t)TOUCH_PIN_NUM_SCL;
-        // TODO: make configurable
-#if defined(TOUCH_I2C_PULLUP)
-        i2c_cfg.flags.enable_internal_pullup = 1;
+        i2c_cfg.i2c_port = (i2c_port_num_t)I2C_2;
+        i2c_cfg.sda_io_num = I2C_2_PIN_NUM_SDA;
+        i2c_cfg.scl_io_num = I2C_2_PIN_NUM_SCL;
+#if defined(I2C_2_PULLUP)
+        i2c_cfg.flags.enable_internal_pullup = I2C_2_PULLUP;
 #else
         i2c_cfg.flags.enable_internal_pullup = 0;
 #endif
-
-
         ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_cfg,&i2c_bus_handle));
-#else
-        i2c_config_t i2c_cfg;
-        memset(&i2c_cfg,0,sizeof(i2c_cfg));
-#ifdef TOUCH_CLOCK_HZ
-        i2c_cfg.master.clk_speed = TOUCH_CLOCK_HZ;
+#else // legacy code
+#ifdef I2C_2_CLOCK_HZ
+        i2c_cfg.master.clk_speed = I2C_2_CLOCK_HZ;
 #else
         i2c_cfg.master.clk_speed = 100 * 1000;
 #endif
         i2c_cfg.mode = I2C_MODE_MASTER;
-        i2c_cfg.sda_io_num = TOUCH_PIN_NUM_SDA;
-#if defined(TOUCH_I2C_PULLUP)
-        i2c_cfg.sda_pullup_en = 1;
+        i2c_cfg.sda_io_num = I2C_2_PIN_NUM_SDA;
+#if defined(I2C_2_PULLUP)
+        i2c_cfg.sda_pullup_en = I2C_2_PULLUP;
 #else
         i2c_cfg.sda_pullup_en = 0;
 #endif
-        i2c_cfg.scl_io_num = TOUCH_PIN_NUM_SCL;
-#if defined(TOUCH_I2C_PULLUP)
-        i2c_cfg.scl_pullup_en = 1;
+        i2c_cfg.scl_io_num = I2C_2_PIN_NUM_SCL;
+#if defined(I2C_2_PULLUP)
+        i2c_cfg.scl_pullup_en = I2C_2_PULLUP;
 #else
         i2c_cfg.scl_pullup_en = 0;
 #endif
-
-        ESP_ERROR_CHECK(i2c_driver_install((i2c_port_t)TOUCH_I2C_HOST,I2C_MODE_MASTER,0,0,0));
-        ESP_ERROR_CHECK(i2c_param_config((i2c_port_t)TOUCH_I2C_HOST,&i2c_cfg));
-#endif    
-        i2c_initialized[TOUCH_I2C_HOST] = true;
+        ESP_ERROR_CHECK(i2c_driver_install((i2c_port_t)I2C_2,I2C_MODE_MASTER,0,0,0));
+        ESP_ERROR_CHECK(i2c_param_config((i2c_port_t)I2C_2,&i2c_cfg));
+#endif 
+#endif // I2C_2_HOST_USED
+        i2c_initialized=true;
     }
-#endif
-#endif
-
-#ifdef POWER_BUS
-#if POWER_BUS == PANEL_BUS_I2C
-    if(!i2c_initialized[POWER_I2C_HOST]) {    
-#ifndef LEGACY_I2C
-        i2c_master_bus_config_t i2c_cfg;
-        i2c_master_bus_handle_t i2c_bus_handle;
-        memset(&i2c_cfg,0,sizeof(i2c_cfg));
-        i2c_cfg.clk_source = I2C_CLK_SRC_DEFAULT;
-        i2c_cfg.glitch_ignore_cnt = 7;
-        i2c_cfg.i2c_port = (i2c_port_num_t)POWER_I2C_HOST;
-        i2c_cfg.sda_io_num = (gpio_num_t)POWER_PIN_NUM_SDA;
-        i2c_cfg.scl_io_num = (gpio_num_t)POWER_PIN_NUM_SCL;
-        // TODO: make configurable
-#ifdef POWER_I2C_PULLUP
-        i2c_cfg.flags.enable_internal_pullup = 1;
-#else
-        i2c_cfg.flags.enable_internal_pullup = 0;
-#endif
-
-
-        ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_cfg,&i2c_bus_handle));
-#else
-        i2c_config_t i2c_cfg;
-        memset(&i2c_cfg,0,sizeof(i2c_cfg));
-#ifdef POWER_CLOCK_HZ
-        i2c_cfg.master.clk_speed = POWER_CLOCK_HZ;
-#else
-        i2c_cfg.master.clk_speed = 100 * 1000;
-#endif
-        i2c_cfg.mode = I2C_MODE_MASTER;
-        i2c_cfg.sda_io_num = POWER_PIN_NUM_SDA;
-#ifdef POWER_I2C_PULLUP
-        i2c_cfg.sda_pullup_en = 1;
-#else
-        i2c_cfg.sda_pullup_en = 0;
-#endif
-        i2c_cfg.scl_io_num = POWER_PIN_NUM_SCL;
-#if defined(POWER_I2C_PULLUP)
-        i2c_cfg.scl_pullup_en = 1;
-#else
-        i2c_cfg.scl_pullup_en = 0;
-#endif
-
-        ESP_ERROR_CHECK(i2c_driver_install((i2c_port_t)POWER_I2C_HOST,I2C_MODE_MASTER,0,0,0));
-        ESP_ERROR_CHECK(i2c_param_config((i2c_port_t)POWER_I2C_HOST,&i2c_cfg));
-#endif    
-        i2c_initialized[POWER_I2C_HOST] = true;
-    }
-#endif
-#endif
-}
-#endif
-#endif
-
+#endif 
 #ifdef LCD_BUS
 size_t panel_lcd_vsync_flush_count(void) { 
 #ifdef LCD_PIN_NUM_VSYNC
@@ -962,6 +891,118 @@ void panel_power_init(void) {
 #endif
 #ifdef POWER_INIT
     POWER_INIT;
+#endif
+}
+#endif
+#ifdef SD_BUS
+static sdmmc_card_t* sd_card_handle = NULL;
+sdmmc_card_t* panel_sd_handle() {
+    return sd_card_handle;
+}
+void panel_sd_end() {
+    if(sd_card_handle==NULL) {
+        return;
+    }
+    ESP_ERROR_CHECK(esp_vfs_fat_sdcard_unmount(SD_MOUNT_POINT,sd_card_handle));
+    sd_card_handle = NULL;
+}
+bool panel_sd_init(bool format_on_fail, size_t max_files, size_t alloc_unit_size) {
+    if(sd_card_handle!=NULL) {
+        panel_sd_end();
+    }
+    if(max_files==0) {
+        max_files = 5;
+    }
+    esp_vfs_fat_sdmmc_mount_config_t mount_config = {
+        .format_if_mount_failed = format_on_fail,
+        .max_files = (int)max_files,
+        .allocation_unit_size = alloc_unit_size
+    };
+#if SD_BUS == PANEL_BUS_SPI
+    sdmmc_host_t host = SDSPI_HOST_DEFAULT();
+    host.slot = SD_SPI_HOST;
+    sdspi_device_config_t slot_config;
+    memset(&slot_config, 0, sizeof(slot_config));
+    slot_config.host_id = (spi_host_device_t)SD_SPI_HOST;
+#ifdef SD_PIN_NUM_CS
+    slot_config.gpio_cs = (gpio_num_t)SD_PIN_NUM_CS;
+#else
+    slot_config.gpio_cs = (gpio_num_t)-1;
+#endif
+#ifdef SD_PIN_NUM_WP
+    slot_config.gpio_wp = (gpio_num_t)SD_PIN_NUM_WP;
+#else
+    slot_config.gpio_wp = GPIO_NUM_NC;
+#endif
+#if defined(SD_WP_ON_LEVEL) && SD_WP_ON_LEVEL == 0 
+    slot_config.gpio_wp_polarity = 1;
+#endif
+#ifdef SD_PIN_NUM_CD
+    slot_config.gpio_cd = (gpio_num_t)SD_PIN_NUM_CD;
+#else
+    slot_config.gpio_cd = GPIO_NUM_NC;
+#endif
+#ifdef SD_PIN_NUM_INT
+    slot_config.gpio_int = (gpio_num_t)SD_PIN_NUM_INT;
+#else
+    slot_config.gpio_int = GPIO_NUM_NC;
+#endif
+ if (ESP_OK != esp_vfs_fat_sdspi_mount(SD_MOUNT_POINT, &host, &slot_config,
+                                          &mount_config, &sd_card_handle)) {
+        return false;
+}
+return true;
+
+    
+#endif
+
+#if SD_BUS == PANEL_BUS_MMC
+    sdmmc_host_t host = SDMMC_HOST_DEFAULT();
+    host.flags = SDMMC_HOST_FLAG_1BIT; //use 1-line SD/MMC mode
+    host.max_freq_khz =SD_CLOCK_HZ;
+    sdmmc_slot_config_t slot_config = SDMMC_SLOT_CONFIG_DEFAULT();
+    slot_config.clk = SD_PIN_NUM_CLK;
+    slot_config.cmd = SD_PIN_NUM_CMD;
+#ifdef SD_PIN_NUM_WP
+    slot_config.wp = SD_PIN_NUM_WP;
+#else
+    slot_config.wp = -1;
+#endif
+#ifdef SD_PIN_NUM_CD
+    slot_config.cd = SD_PIN_NUM_CD;
+#else
+    slot_config.cd = -1;
+#endif
+    slot_config.d0 = SD_PIN_NUM_D00;
+    slot_config.width = 1;
+#ifdef SD_PIN_NUM_D03
+    slot_config.d1 = SD_PIN_NUM_D01;
+    slot_config.d2 = SD_PIN_NUM_D02;
+    slot_config.d3 = SD_PIN_NUM_D03;
+#ifdef SD_PIN_NUM_D07
+    slot_config.d4 = SD_PIN_NUM_D04;
+    slot_config.d5 = SD_PIN_NUM_D05;
+    slot_config.d6 = SD_PIN_NUM_D06;
+    slot_config.d7 = SD_PIN_NUM_D07;
+    slot_config.width = 8;
+    host.flags = SDMMC_HOST_FLAG_8BIT; //use 4-line SD/MMC mode
+#else
+    slot_config.width = 4;
+    host.flags = SDMMC_HOST_FLAG_4BIT; //use 4-line SD/MMC mode
+#endif
+#endif
+#if defined(SD_NO_DDR) 
+    host.flags &= ~SDMMC_HOST_FLAG_DDR;
+#endif
+    // assuming the board is built correctly, we don't need this:
+#if defined(SD_PULLUP) && SD_PULLUP
+    slot_config.flags |= SDMMC_SLOT_FLAG_INTERNAL_PULLUP;
+#endif
+    esp_err_t ret = esp_vfs_fat_sdmmc_mount(SD_MOUNT_POINT, &host, &slot_config, &mount_config, &sd_card_handle);
+    if(ret!=ESP_OK) {
+        return false;
+    }
+    return true;
 #endif
 }
 #endif
