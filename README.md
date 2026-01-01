@@ -142,7 +142,7 @@ Some panels have a custom structure you must fill in with extra details about th
 
 Some panels have a funny memory buffer, and the flushing doesn't consume regular bitmaps. Defining code in this macro will allow insert it into the flushing pipeline to do pre-flush translation. See the existing definitions in panels.h for examples. For LVGL, which includes a palette for `LCD_BIT_DEPTH < 8`, you'll need to advance the `buffer` pointer by the number of bytes in the palette (ex: 8 for 2-color monochrome), like 
 ```c
-#define LCD_TRANSLATE buffer = ((uint8_t*)buffer) + 8;
+#define LCD_TRANSLATE bitmap = ((uint8_t*)bitmap) + 8;
 ```
 
 ### TOUCH_SPI_HOST
