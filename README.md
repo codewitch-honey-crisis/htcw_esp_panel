@@ -30,6 +30,13 @@ Use the example code therein to get started
 
 ## Configuration
 
+To support a custom panel in you project, include custom_panel.h in your project somewhere in the compilers include folders.
+
+For PlatformIO you can put it in `/include` and then add `build_flags =Iinclude` to your platformio.ini entry.
+
+I recommend you start with an entry from `src/panels.h` copy that into your `custom_panel.h` and then modify it from there.
+
+
 ### LCD SPI, I2C RGB, MIPI and I8080 Display bus detection
 
 Depending on the values you set, the `LCD_BUS` will be set to `PANEL_BUS_I2C`, `PANEL_BUS_SPI`, `PANEL_BUS_I8080` `PANEL_BUS_RGB`, or `PANEL_BUS_MIPI`
