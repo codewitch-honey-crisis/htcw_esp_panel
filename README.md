@@ -71,7 +71,7 @@ The LCD panel call to instantiate the panel
 
 Example setting: `esp_lcd_new_panel_st7789`
 
-Note: The ST7789 is built in, but if you need to use an external LCD driver component, you can add it to the project `./components` folder or to the `./platformio.ini` as a `lib_deps` entry, and add the `#include` for the component here. 
+Note: The ST7789 is built in, but if you need to use an external LCD driver component, you can add it to the project `./components` folder or to the `./platformio.ini` as a `lib_deps` entry, and add the `#include` for the component here. All includes must be wrapped in an `#ifdef PANEL_DEPENDENCIES` guard to ensure that headers don't get includeed when simply looking for configuration settings during for example, the LVGL build process when `lv_conf.h`, including `#include "panel_defs.h` is consumed by the compiler. (You don't have to use `lv_conf.h` this way, but I allow for it)
 
 ### LCD_HRES, LCD_VRES
 
@@ -112,6 +112,8 @@ Indicates the color depth of the frame buffer
 ### LCD_TRANSFER_SIZE
 
 Can be any number of bytes. `0` disables provisioning of transfer buffers. The default is computed based on a fractional part of the display resolution, as indicated by `LCD_DIVISOR`
+
+Note that LVGL includes a palette in the transfer buffer for `LCD_BIT_DEPTH < 8`. Any screens at that bit depth must account for this by setting `LCD_TRANSFER_SIZE` explicitly and including the space for the palette. I may make some facilities to help with this in the future, but for example, to hold the entire SSD1306 frame buffer + palette (2 32-bit color entries), you'd set `LCD_TRANSFER_SIZE` to `(LCD_WIDTH*LCD_HEIGHT*LCD_BIT_DEPTH+7)/8+8` where the `+8` makes room for the palette data.
 
 ### LCD_TRANSFER_IN_SPIRAM
 
