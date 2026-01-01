@@ -180,4 +180,4 @@ Example setting: `40`
 
 ### SD
 
-For SD just define the pins, and the `SP_SPI_HOST` if it's SPI. Otherwise it uses SDMMC. `SD_PIN_NUM_WP` and `SD_PIN_NUM_CD` are for write protection and line change detection, respectively
+For SD just define the pins, and the `SD_SPI_HOST` if it's SPI. Otherwise it uses SDMMC. `SD_PIN_NUM_WP` and `SD_PIN_NUM_CD` are for write protection and line change detection, respectively
