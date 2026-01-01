@@ -45,18 +45,18 @@ These internal determinations may change in the future if more bus types are add
 ### LCD_SPI_HOST
 The SPI host for the display connected via SPI
 
-Example setting: `SPI3_HOST`
+Example setting: `SPI_2`
 
 Requires `LCD_PIN_NUM_MOSI`,`LCD_PIN_NUM_CLK`,`LCD_PIN_NUM_DC`
 
 Can also have `LCD_PIN_NUM_CS`,`LCD_PIN_NUM_RST`, `LCD_PIN_NUM_BCKL`, `LCD_BCKL_ON_LEVEL`, often `LCD_CLOCK_HZ` and sometimes `LCD_PIN_NUM_MISO`
 
-Note that if you're sharing the SPI bus with something that needs input like a touch device or SD reader, you should provide a MISO pin definition here.
+Note that if you're sharing the SPI bus with something that needs input like a touch device or SD reader, its MISO pin if defined will be attached to the same bus
 
 ### LCD_I2C_HOST
 The I2C host for the display connected via I2C
 
-Example setting: `I2C_NUM_0`
+Example setting: `I2C_1`
 
 Requires `LCD_PIN_NUM_SDA`, and `LCD_PIN_NUM_SCL`, `LCD_I2C_ADDR`
 
