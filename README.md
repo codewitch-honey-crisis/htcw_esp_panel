@@ -64,7 +64,7 @@ Can also have `LCD_I2C_PICKUP`, `LCD_CLOCK_HZ`, `LCD_DC_BIT_OFFSET`, `LCD_CMD_BI
 
 Notes: Some devices do not like the newer ESP32 I2C facilities. If you run into trouble, try defining `LEGACY_I2C` - note that this impacts all the code in the system.
 
-If you have multiple devices connected to the same I2C bus, and `LEGACY_I2C` is defined (or you want your config to be able to work with it), use the lowest frequency setting supported by any device on that bus, because the old I2C does not have per device speed settings.
+If you have multiple devices connected to the same I2C bus, and `LEGACY_I2C` is defined (or you want your config to be able to work with it), it will use the lowest frequency setting supported by any device on that bus, because the old I2C does not have per device speed settings.
 
 ### LCD_PANEL
 The LCD panel call to instantiate the panel 
