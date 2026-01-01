@@ -32,7 +32,7 @@ Use the example code therein to get started
 
 To support a custom panel in you project, include custom_panel.h in your project somewhere in the compilers include folders.
 
-For PlatformIO you can put it in `/include` and then add `build_flags =Iinclude` to your platformio.ini entry.
+For PlatformIO you can put it in `/include` and then add `build_flags= -Iinclude` to your platformio.ini entry.
 
 I recommend you start with an entry from `src/panels.h` copy that into your `custom_panel.h` and then modify it from there.
 
