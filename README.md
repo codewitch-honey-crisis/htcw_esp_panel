@@ -181,3 +181,100 @@ Example setting: `40`
 ### SD
 
 For SD just define the pins, and the `SD_SPI_HOST` if it's SPI. Otherwise it uses SDMMC. `SD_PIN_NUM_WP` and `SD_PIN_NUM_CD` are for write protection and line change detection, respectively
+
+## Using the API
+
+The LCD API is only available when an LCD has been configured. You can determine this by checking if `LCD_BUS` is defined.
+
+```c
+void panel_lcd_init(void);
+```
+This initializes the display and transfer buffers. Call this before using any other `panel_lcd` functions.
+
+```c
+void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void* bitmap);
+```
+This function flushes a bitmap to the display at the specified coordinates. The bitmap must be the size of the logical rectangle indicated by the coordinates, otherwise the behavior is undefined.
+
+```c
+void* panel_lcd_transfer_buffer(void);
+void* panel_lcd_transfer_buffer2(void);
+```
+These functions return the transfer buffers that can be used by libraries like LVGL to create bitmaps to send to the display. `LCD_TRANSFER_SIZE` indicates the size of each buffer. Set it to zero to disable this feature.
+
+```c
+void panel_lcd_flush_complete(void);
+```
+This function must be implemented by you. It notifies you when the last call to `panel_lcd_flush()` is completed.
+
+```c
+size_t panel_lcd_vsync_flush_count(void);
+```
+With supported displays, this will return the number of calls to `panel_lcd_flush_complete()` since the last display vertical sync. On displays where it's not supported, it will always be zero.
+
+
+The touch API is only available when a touch panel has been configured. You can check this by seeing if `TOUCH_BUS` is defined.
+
+```c
+void panel_touch_init(void);
+```
+This function initializes the touch panel. Call this before calling any other touch functions.
+
+```c
+void panel_touch_update(void);
+```
+This function fetches the latest touch information from the touch panel. Call this before calling `panel_touch_read()` or `panel_touch_read_raw()`.
+
+```c
+void panel_touch_read(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y, uint16_t* out_strength);
+```
+This function reads the panel data, doing any necessary scaling to match the size of the display, plus overhang. The first argument takes the maximum count of buttons to check, and on return contains the actual number of buttons to check. The rest of the arguments are arrays of size `in_out_count` containing the X, Y and strength values for each touch point.
+
+```c
+void panel_touch_read_raw(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y, uint16_t* out_strength);
+```
+This function reads the touch panel without doing any rescaling.
+
+
+The button API is only available if buttons have been configured. You can check if `BUTTON` is defined to determine this.
+```c
+void panel_button_init(void);
+```
+
+Call this function to initialize the buttons, before using any other button functions.
+
+```c
+bool panel_button_read(uint8_t pin);
+```
+This reads the state of the button at the given pin.
+
+```c
+uint64_t panel_button_read_all(void);
+```
+This function reads all of the buttons and returns a mask of the pressed buttons as a series of bits - 1 bit set for each pin of a pressed button, at the bit position of the GPIO pin for the button.
+
+The power API is only available if a power setup has been configured. You can determine this by checking if `POWER` is defined.
+
+```c
+void panel_power_init(void);
+```
+This function initializes the power management subsystem. It should be called before other initialization functions in case it needs to turn peripherals on.
+
+The SD API is only available if an SD reader/writer has been configured. You can determine this by checking if `SD_BUS` is defined.
+
+```c
+bool panel_sd_init(bool format_on_fail, size_t max_files, size_t alloc_unit_size);
+```
+Use this function to attempt to mount an SD card. You can indicate whether or not to attempt to format the card if the mount failed, the maximum open file count or zero to use the default of 5, and the allocation unit size, which can be 0 in order to use the default value of 512.
+
+Once mounted, file operations are supported through the C/++ runtimes and POSIX system calls off of the path indicated by `SD_MOUNT_POINT` which defaults to `/sdcard`.
+
+```c
+void panel_sd_end();
+```
+Unmounts a mounted SD card.
+
+```c
+sdmmc_card_t* panel_sd_handle();
+```
+Gets the handle to the SD card which can be used for things like querying the card storage capacity.
