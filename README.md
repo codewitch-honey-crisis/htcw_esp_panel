@@ -167,6 +167,8 @@ Example setting: `esp_lcd_touch_new_i2c_ft6x36`
 
 Note: You can add any necessary touch component to the project `./components` folder or to the `./platformio.ini` as a `lib_deps` entry, and add the `#include` for the component here. 
 
+Again, wrap any includes in an `#ifdef PANEL_DEPENDENCIES`
+
 ### TOUCH_HRES, TOUCH_VRES
 
 The native horizontal and vertical resolutions. This is pre-swapped or adjusted - just what the controller natively registers as. If not specified these will be the same as the LCD, if defined.
