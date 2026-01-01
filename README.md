@@ -167,7 +167,7 @@ Example setting: `esp_lcd_touch_new_i2c_ft6x36`
 
 Note: You can add any necessary touch component to the project `./components` folder or to the `./platformio.ini` as a `lib_deps` entry, and add the `#include` for the component here. 
 
-Again, wrap any includes in an `#ifdef PANEL_DEPENDENCIES`
+Again, wrap any includes in a `#ifdef PANEL_DEPENDENCIES` guard.
 
 ### TOUCH_HRES, TOUCH_VRES
 
