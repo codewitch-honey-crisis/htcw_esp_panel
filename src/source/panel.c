@@ -44,9 +44,10 @@ static esp_lcd_dsi_bus_handle_t mipi_dsi_bus = NULL;
 static void* draw_buffer = NULL;
 #ifndef LCD_NO_DMA
 static void* draw_buffer2 = NULL;
-#else
-static volatile int lcd_flushing = 0;
 #endif
+#endif
+#ifdef LCD_NO_DMA
+static volatile int lcd_flushing = 0;
 #endif
 #ifdef LCD_PIN_NUM_VSYNC
 static volatile bool vsync_count = 0;
@@ -258,7 +259,7 @@ size_t panel_lcd_vsync_flush_count(void) {
 void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void *bitmap)
 {
     if(lcd_handle==NULL) {
-        ESP_LOGE(TAG,"lcd_flush() was invoked but lcd_init() was never called.");
+        ESP_LOGE(TAG,"panel_lcd_flush() was invoked but panel_lcd_init() was never called.");
         return;
     }
 #ifdef LCD_NO_DMA
@@ -266,9 +267,7 @@ void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void *b
 #endif
 #ifdef LCD_TRANSLATE
     LCD_TRANSLATE;
-#endif
-    
-    // pass the draw buffer to the driver
+#endif    
     ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(lcd_handle, x1, y1, x2 + 1, y2 + 1, bitmap));
 #ifdef LCD_NO_DMA
     while(lcd_flushing) portYIELD();
@@ -278,9 +277,6 @@ void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void *b
     vsync_count = vsync_count + 1;
 #endif
 }
-#if !defined(LCD_NO_DMA) && defined(LCD_BUS)
-static volatile int lcd_flushing = 0;
-#endif
 #if  LCD_BUS == PANEL_BUS_RGB
 // LCD Panel API calls this
 static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_handle_t panel, const esp_lcd_rgb_panel_event_data_t *edata, void *user_ctx) {
