@@ -607,7 +607,6 @@ void panel_lcd_init(void) {
     lcd_i2c_cfg.lcd_cmd_bits = LCD_CMD_BITS;
     lcd_i2c_cfg.lcd_param_bits = LCD_PARAM_BITS;
     lcd_i2c_cfg.on_color_trans_done = on_flush_complete;
-    lcd_i2c_cfg.on_color_trans_done = NULL;
 #ifndef LEGACY_I2C
 #ifdef LCD_CLOCK_HZ
     lcd_i2c_cfg.scl_speed_hz = LCD_CLOCK_HZ;
