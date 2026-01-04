@@ -1822,7 +1822,10 @@
             const prefix = device.toUpperCase()+"_";
             const nonPrefix = prefix + "PIN_NUM_";
             for (const [key, value] of Object.entries(config)) {
-                if(!key.endsWith("_INCLUDES")) {
+                console.log(key);
+                if(key===prefix+"MOUNT_POINT" && !isFieldHidden(key)) {
+                    lines.push(`#define ${key} "${value}"`);
+                } else if(!key.endsWith("_INCLUDES")) {
                     if (!key.startsWith(nonPrefix) && key.startsWith(prefix) && !isFieldHidden(key)) {
                         if(key.slice(prefix.length)==="CLOCK_HZ_"+type.toUpperCase()) {
                             if(type.toUpperCase()=="I2C") {
@@ -1836,7 +1839,7 @@
                                 lines.push(`#define ${key} ${makeValue(value)}`);
                             }
                         } else if(key.endsWith("_"+type.toUpperCase())) {
-                            if(!key.startsWith(`${prefix}CLOCK_HZ_`)) {
+                            if(!key.startsWith(`${prefix}CLOCK_HZ_`) && key!==prefix+"MOUNT_POINT") {
                                 lines.push(`#define ${key.slice(0,key.lastIndexOf("_"))} ${makeValue(value)}`);
                             }
                         }
