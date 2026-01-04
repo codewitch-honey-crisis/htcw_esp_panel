@@ -26,7 +26,9 @@ Documentation is presently somewhat lacking, but it is fairly easy to copy from 
 
 PlatformIO lib is `codewitch-honey-crisis/htcw_esp_panel`
 
-Use the example code therein to get started
+Use the example code therein to get started.
+
+You can also use the [Panel Generator Tool](panel_gen.html) to produce a `custom_panel.h` for your project. It runs locally in a browser.
 
 ## Configuration
 
@@ -65,7 +67,7 @@ The I2C host for the display connected via I2C
 
 Example setting: `I2C_1`
 
-Requires `LCD_PIN_NUM_SDA`, and `LCD_PIN_NUM_SCL`, `LCD_I2C_ADDR`
+Requires `LCD_PIN_NUM_SDA`, and `LCD_PIN_NUM_SCL`, `LCD_I2C_ADDRESS`
 
 Can also have `LCD_I2C_PICKUP`, `LCD_CLOCK_HZ`, `LCD_DC_BIT_OFFSET`, `LCD_CMD_BITS`, `LCD_PARAM_BITS`, and `LCD_DISABLE_CONTROL_PHASE`
 
@@ -73,7 +75,7 @@ Notes: Some devices do not like the newer ESP32 I2C facilities. If you run into 
 
 If you have multiple devices connected to the same I2C bus, and `LEGACY_I2C` is defined (or you want your config to be able to work with it), it will use the lowest frequency setting supported by any device on that bus, because the old I2C does not have per device speed settings.
 
-### LCD_PANEL
+### LCD_INIT
 The LCD panel call to instantiate the panel 
 
 Example setting: `esp_lcd_new_panel_st7789`
@@ -161,13 +163,13 @@ The I2C host for the touch panel connected via I2C
 
 Example setting: `I2C_1`
 
-Requires `TOUCH_PIN_NUM_SDA`, and `TOUCH_PIN_NUM_SCL`, `TOUCH_I2C_ADDR`
+Requires `TOUCH_PIN_NUM_SDA`, and `TOUCH_PIN_NUM_SCL`, `TOUCH_I2C_ADDRESS`
 
 Can also have `TOUCH_I2C_PICKUP`, `TOUCH_CLOCK_HZ`, `TOUCH_DC_BIT_OFFSET`, `TOUCH_CMD_BITS`, `TOUCH_PARAM_BITS`, and `TOUCH_DISABLE_CONTROL_PHASE`
 
 Note: Some devices do not like the newer ESP32 I2C facilities. If you run into trouble, try defining `LEGACY_I2C` - note that this impacts all the code in the system.
 
-### TOUCH_PANEL
+### TOUCH_INIT
 The touch panel call to instantiate the panel 
 
 Example setting: `esp_lcd_touch_new_i2c_ft6x36`

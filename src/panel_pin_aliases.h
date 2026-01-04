@@ -1,5 +1,11 @@
 #ifndef PANEL_PIN_ALIASES_H
 #define PANEL_PIN_ALIASES_H
+#ifdef LCD_PIN_NUM_RS
+#ifndef LCD_PIN_NUM_DC
+#define LCD_PIN_NUM_DC LCD_PIN_NUM_RS
+#endif
+#endif
+
 #ifndef LCD_PIN_NUM_D00
 #ifdef LCD_PIN_NUM_MOSI
 #define LCD_PIN_NUM_D00 LCD_PIN_NUM_MOSI

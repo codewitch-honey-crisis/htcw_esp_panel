@@ -47,7 +47,9 @@
 #endif
 
 #ifdef LCD_BUS
-
+#ifndef LCD_DISABLE_CONTROL_PHASE
+#define LCD_DISABLE_CONTROL_PHASE 0
+#endif 
 #ifndef LCD_WIDTH
 #ifdef LCD_SWAP_XY
 #if LCD_SWAP_XY
@@ -112,6 +114,9 @@
 #endif
 #endif
 #ifdef TOUCH_BUS
+#ifndef TOUCH_DISABLE_CONTROL_PHASE
+#define TOUCH_DISABLE_CONTROL_PHASE 0
+#endif 
 #ifndef TOUCH_DC_BIT_OFFSET
 #define TOUCH_DC_BIT_OFFSET 0
 #endif

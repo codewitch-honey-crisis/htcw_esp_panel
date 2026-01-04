@@ -34,13 +34,13 @@ void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void* b
 /// @brief Returns the transfer buffer 
 /// @return A pointer to the transfer buffer, of size LCD_TRANSFER_SIZE
 void* panel_lcd_transfer_buffer(void);
-#ifndef LCD_NO_DMA
+#ifndef LCD_SYNC_TRANSFER
 /// @brief Returns the secondary transfer buffer 
 /// @return A pointer to the secondary transfer buffer, of size LCD_TRANSFER_SIZE
 void* panel_lcd_transfer_buffer2(void);
 #endif
 #endif
-#ifndef LCD_NO_DMA
+#ifndef LCD_SYNC_TRANSFER
 /// @brief Called when a transfer is complete. To be implemented by the panel_lcd_init() caller
 void panel_lcd_flush_complete(void);
 #endif

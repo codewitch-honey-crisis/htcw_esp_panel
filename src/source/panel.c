@@ -21,7 +21,7 @@
 #include "sdmmc_cmd.h"
 #include "driver/sdmmc_host.h"
 #endif
-#ifdef LCD_PHY_PWR_LDO_CHAN
+#if defined(LCD_MIPI_DSI_PHY_PWR_LDO_CHAN) && LCD_MIPI_DSI_PHY_PWR_LDO_CHAN!=-1
 #include "esp_ldo_regulator.h"
 #endif
 #if LCD_BUS == PANEL_BUS_MIPI
@@ -42,11 +42,11 @@ static esp_lcd_dsi_bus_handle_t mipi_dsi_bus = NULL;
 #endif
 #if LCD_TRANSFER_SIZE > 0
 static void* draw_buffer = NULL;
-#ifndef LCD_NO_DMA
+#ifndef LCD_SYNC_TRANSFER
 static void* draw_buffer2 = NULL;
 #endif
 #endif
-#ifdef LCD_NO_DMA
+#ifdef LCD_SYNC_TRANSFER
 static volatile int lcd_flushing = 0;
 #endif
 #ifdef LCD_PIN_NUM_VSYNC
@@ -262,14 +262,14 @@ void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void *b
         ESP_LOGE(TAG,"panel_lcd_flush() was invoked but panel_lcd_init() was never called.");
         return;
     }
-#ifdef LCD_NO_DMA
+#ifdef LCD_SYNC_TRANSFER
     lcd_flushing = 1;
 #endif
 #ifdef LCD_TRANSLATE
     LCD_TRANSLATE;
 #endif    
     ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(lcd_handle, x1, y1, x2 + 1, y2 + 1, bitmap));
-#ifdef LCD_NO_DMA
+#ifdef LCD_SYNC_TRANSFER
     while(lcd_flushing) portYIELD();
 #endif
 
@@ -281,7 +281,7 @@ void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void *b
 // LCD Panel API calls this
 static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_handle_t panel, const esp_lcd_rgb_panel_event_data_t *edata, void *user_ctx) {
     // let the display know the flush has finished
-#ifndef LCD_NO_DMA
+#ifndef LCD_SYNC_TRANSFER
     panel_lcd_flush_complete();
 #else
     lcd_flushing = 0;
@@ -297,7 +297,7 @@ static IRAM_ATTR bool on_vsync(esp_lcd_panel_handle_t panel, const esp_lcd_rgb_p
 #if (LCD_BUS==PANEL_BUS_SPI || LCD_BUS==PANEL_BUS_I2C || LCD_BUS==PANEL_BUS_I8080)
 static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_io_handle_t lcd_io, esp_lcd_panel_io_event_data_t* edata, void* user_ctx) {
     // let the display know the flush has finished
-#ifndef LCD_NO_DMA
+#ifndef LCD_SYNC_TRANSFER
     panel_lcd_flush_complete();
 #else
     lcd_flushing = 0;
@@ -308,7 +308,7 @@ static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_io_handle_t lcd_io, esp_lc
 #if LCD_BUS == PANEL_BUS_MIPI
 static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_handle_t panel, esp_lcd_dpi_panel_event_data_t *edata, void *user_ctx) {
     // let the display know the flush has finished
-#ifndef LCD_NO_DMA
+#ifndef LCD_SYNC_TRANSFER
     panel_lcd_flush_complete();
 #else
     lcd_flushing = 0;
@@ -321,9 +321,6 @@ void panel_lcd_init(void) {
         ESP_LOGW(TAG,"lcd_init() was already called");
         return; // already initialized
     }
-#ifdef LCD_RESET
-    LCD_RESET;
-#endif
 #ifdef LCD_PIN_NUM_BCKL
 #if LCD_PIN_NUM_BCKL >= 0
     gpio_config_t bk_gpio_config;
@@ -335,7 +332,7 @@ void panel_lcd_init(void) {
 #endif
 #endif
     // Turn on the power for MIPI DSI PHY, so it can go from "No Power" state to "Shutdown" state
-#ifdef LCD_PHY_PWR_LDO_CHAN
+#if defined(LCD_MIPI_DSI_PHY_PWR_LDO_CHAN) && LCD_MIPI_DSI_PHY_PWR_LDO_CHAN!=-1
     esp_ldo_channel_config_t ldo_mipi_phy_config = {
         .chan_id = LCD_MIPI_DSI_PHY_PWR_LDO_CHAN,
         .voltage_mv = LCD_MIPI_DSI_PHY_PWR_LDO_VOLTAGE_MV,
@@ -345,6 +342,9 @@ void panel_lcd_init(void) {
 #if LCD_BUS == PANEL_BUS_I8080
     gpio_set_direction((gpio_num_t)LCD_PIN_NUM_RD, GPIO_MODE_OUTPUT);
     gpio_set_level((gpio_num_t)LCD_PIN_NUM_RD, 1);
+#ifdef LCD_RESET
+    LCD_RESET;
+#endif
     esp_lcd_i80_bus_handle_t i80_bus = NULL;
     esp_lcd_i80_bus_config_t i80_cfg;
     memset(&i80_cfg, 0, sizeof(i80_cfg));
@@ -389,9 +389,17 @@ void panel_lcd_init(void) {
     i80_io_cfg.trans_queue_depth = 20;
     i80_io_cfg.dc_levels.dc_idle_level = 0;
     i80_io_cfg.dc_levels.dc_idle_level = 0;
+#ifdef LCD_DC_ON_LEVEL
+    i80_io_cfg.dc_levels.dc_cmd_level = !LCD_DC_ON_LEVEL;
+#else
     i80_io_cfg.dc_levels.dc_cmd_level = 0;
+#endif
     i80_io_cfg.dc_levels.dc_dummy_level = 0;
+#ifdef LCD_DC_ON_LEVEL
+    i80_io_cfg.dc_levels.dc_data_level = LCD_DC_ON_LEVEL;
+#else
     i80_io_cfg.dc_levels.dc_data_level = 1;
+#endif
     i80_io_cfg.lcd_cmd_bits = LCD_CMD_BITS;
     i80_io_cfg.lcd_param_bits = LCD_PARAM_BITS;
     i80_io_cfg.on_color_trans_done = on_flush_complete;
@@ -401,23 +409,34 @@ void panel_lcd_init(void) {
 #else
     io_config.flags.swap_color_bytes = false;
 #endif  // LCD_SWAP_COLOR_BYTES
-    // TODO: make the following configurable
-    i80_io_cfg.flags.cs_active_high = false;
-    i80_io_cfg.flags.reverse_color_bits = false;
+#ifdef LCD_CS_ON_LEVEL
+    i80_io_cfg.flags.cs_active_high = LCD_CS_ON_LEVEL;
+#else
+    i80_io_cfg.flags.cs_active_high = 0;
+#endif
+#ifdef LCD_REVERSE_COLOR_BITS
+    i80_io_cfg.flags.reverse_color_bits = LCD_REVERSE_COLOR_BITS;
+#endif
+
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_i80(i80_bus, &i80_io_cfg, &lcd_io_handle));
 #endif
 #if LCD_BUS == PANEL_BUS_RGB
+#ifdef LCD_RESET
+    LCD_RESET;
+#endif
     esp_lcd_rgb_panel_config_t rgb_panel_cfg;
     memset(&rgb_panel_cfg,0,sizeof(esp_lcd_rgb_panel_config_t));
-    rgb_panel_cfg.data_width = 16; // RGB565 in parallel mode, thus 16bit in width
-    //rgb_panel_cfg.dma_burst_size = 64;
-    rgb_panel_cfg.num_fbs = 1,
-    rgb_panel_cfg.clk_src = LCD_CLK_SRC_DEFAULT,
-    rgb_panel_cfg.disp_gpio_num = -1,
-    rgb_panel_cfg.pclk_gpio_num = LCD_PIN_NUM_CLK,
-    rgb_panel_cfg.vsync_gpio_num = LCD_PIN_NUM_VSYNC,
-    rgb_panel_cfg.hsync_gpio_num = LCD_PIN_NUM_HSYNC,
-    rgb_panel_cfg.de_gpio_num = LCD_PIN_NUM_DE,
+    rgb_panel_cfg.data_width = LCD_BIT_DEPTH; // RGB565 in parallel mode, thus 16bit in width;
+    rgb_panel_cfg.clk_src = LCD_CLK_SRC_DEFAULT;
+#ifdef LCD_PIN_NUM_DISP
+    rgb_panel_cfg.disp_gpio_num = LCD_PIN_NUM_DISP;
+#else
+    rgb_panel_cfg.disp_gpio_num = -1;
+#endif
+    rgb_panel_cfg.pclk_gpio_num = LCD_PIN_NUM_CLK;
+    rgb_panel_cfg.vsync_gpio_num = LCD_PIN_NUM_VSYNC;
+    rgb_panel_cfg.hsync_gpio_num = LCD_PIN_NUM_HSYNC;
+    rgb_panel_cfg.de_gpio_num = LCD_PIN_NUM_DE;
 #if LCD_BIT_DEPTH == 8
     rgb_panel_cfg.data_gpio_nums[8]=LCD_PIN_NUM_D08;
     rgb_panel_cfg.data_gpio_nums[9]=LCD_PIN_NUM_D09;
@@ -511,24 +530,47 @@ void panel_lcd_init(void) {
     rgb_panel_cfg.timings.vsync_back_porch = LCD_VSYNC_BACK_PORCH;
     rgb_panel_cfg.timings.vsync_front_porch = LCD_VSYNC_FRONT_PORCH;
     rgb_panel_cfg.timings.vsync_pulse_width = LCD_VSYNC_PULSE_WIDTH;
-    rgb_panel_cfg.timings.flags.pclk_active_neg = true;
+#ifdef LCD_CLK_ACTIVE_NEG
+    rgb_panel_cfg.timings.flags.pclk_active_neg = LCD_CLK_ACTIVE_NEG;
+#endif
     rgb_panel_cfg.timings.flags.hsync_idle_low = false;
-    rgb_panel_cfg.timings.flags.pclk_idle_high = LCD_CLK_IDLE_HIGH;
-    rgb_panel_cfg.timings.flags.de_idle_high = LCD_DE_IDLE_HIGH;
-    rgb_panel_cfg.timings.flags.vsync_idle_low = false;
-    rgb_panel_cfg.flags.bb_invalidate_cache = true;
-    rgb_panel_cfg.flags.disp_active_low = false;
+#ifdef LCD_CLK_ON_LEVEL
+    rgb_panel_cfg.timings.flags.pclk_idle_high = !LCD_CLK_ON_LEVEL;
+#else
+    rgb_panel_cfg.timings.flags.pclk_idle_high = 0;
+#endif
+#ifdef LCD_DE_ON_LEVEL
+    rgb_panel_cfg.timings.flags.de_idle_high = !LCD_DE_ON_LEVEL;
+#else
+    rgb_panel_cfg.timings.flags.de_idle_high = 0;
+#endif
+#ifdef LCD_VSYNC_ON_LEVEL
+    rgb_panel_cfg.timings.flags.vsync_idle_low = LCD_VSYNC_ON_LEVEL;
+#else
+    rgb_panel_cfg.timings.flags.vsync_idle_low = 0;
+#endif
+    rgb_panel_cfg.flags.bb_invalidate_cache = 1;
+#ifdef LCD_DISP_ON_LEVEL
+    rgb_panel_cfg.flags.disp_active_low = LCD_DISP_ON_LEVEL;
+#endif
     rgb_panel_cfg.flags.double_fb = false;
     rgb_panel_cfg.flags.no_fb = false;
     rgb_panel_cfg.flags.refresh_on_demand = false;
     rgb_panel_cfg.flags.fb_in_psram = true; // allocate frame buffer in PSRAM
     //rgb_panel_cfg.sram_trans_align = 4;
     //rgb_panel_cfg.psram_trans_align = 64;
-    rgb_panel_cfg.num_fbs = 2;
+#ifdef LCD_FRAMEBUFFER_COUNT
+    rgb_panel_cfg.num_fbs = LCD_FRAMEBUFFER_COUNT;
+#else
+    rgb_panel_cfg.num_fbs = 1;
+#endif
     rgb_panel_cfg.bounce_buffer_size_px = LCD_HRES*(LCD_VRES/LCD_DIVISOR);
 #endif
 #if LCD_BUS == PANEL_BUS_SPI
     spi_init();
+#ifdef LCD_RESET
+    LCD_RESET;
+#endif
     esp_lcd_panel_io_spi_config_t lcd_spi_cfg;
     memset(&lcd_spi_cfg,0,sizeof(lcd_spi_cfg));
     lcd_spi_cfg.cs_gpio_num = LCD_PIN_NUM_CS;
@@ -551,12 +593,15 @@ void panel_lcd_init(void) {
 #endif
 #if LCD_BUS == PANEL_BUS_I2C
     i2c_init();
+#ifdef LCD_RESET
+    LCD_RESET;
+#endif
     esp_lcd_panel_io_i2c_config_t lcd_i2c_cfg;
     memset(&lcd_i2c_cfg,0,sizeof(lcd_i2c_cfg));
     lcd_i2c_cfg.control_phase_bytes = LCD_CONTROL_PHASE_BYTES;
     lcd_i2c_cfg.dc_bit_offset = LCD_DC_BIT_OFFSET;
-    lcd_i2c_cfg.dev_addr = LCD_I2C_ADDR;
-#ifdef LCD_DISABLE_CONTROL_PHASE
+    lcd_i2c_cfg.dev_addr = LCD_I2C_ADDRESS;
+#if LCD_DISABLE_CONTROL_PHASE > 0
     lcd_i2c_cfg.flags.disable_control_phase = true;
 #endif
     lcd_i2c_cfg.lcd_cmd_bits = LCD_CMD_BITS;
@@ -601,8 +646,12 @@ void panel_lcd_init(void) {
         .virtual_channel = LCD_MIPI_CHANNEL,                                                                             
         .dpi_clk_src = MIPI_DSI_DPI_CLK_SRC_DEFAULT,     
         .dpi_clock_freq_mhz = LCD_CLOCK_HZ/(1000 * 1000),                        
-        .pixel_format = MIPI_DPI_PX_FORMAT,         
+        .pixel_format = MIPI_DPI_PX_FORMAT,        
+#ifdef LCD_FRAMEBUFFER_COUNT
+        .num_fbs = LCD_FRAMEBUFFER_COUNT,    
+#else 
         .num_fbs = 1,                                    
+#endif
         .video_timing = {                                
             .h_size = LCD_HRES,                               
             .v_size = LCD_VRES,                               
@@ -613,8 +662,8 @@ void panel_lcd_init(void) {
             .vsync_back_porch = LCD_VSYNC_BACK_PORCH,                      
             .vsync_front_porch = LCD_VSYNC_FRONT_PORCH,                     
         },           
-#ifdef LCD_MIPI_DMA2D                                    
-        .flags.use_dma2d = 1,
+#if defined(LCD_MIPI_DMA2D)
+        .flags.use_dma2d = LCD_MIPI_DMA2D,
 #endif
     };
 
@@ -630,6 +679,10 @@ void panel_lcd_init(void) {
 #else
     panel_config.reset_gpio_num = -1;
 #endif
+#if defined(LCD_RST_ON_LEVEL)
+    panel_config.flags.reset_active_high = LCD_RST_ON_LEVEL;
+#endif
+    
 #if LCD_COLOR_SPACE == LCD_COLOR_RGB
     panel_config.rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB;
 #elif LCD_COLOR_SPACE == LCD_COLOR_BGR
@@ -649,12 +702,12 @@ void panel_lcd_init(void) {
 #else
     panel_config.vendor_config = NULL;
 #endif
-    ESP_ERROR_CHECK(LCD_PANEL(lcd_io_handle, &panel_config, &lcd_handle));
+    ESP_ERROR_CHECK(LCD_INIT(lcd_io_handle, &panel_config, &lcd_handle));
 #else
     ESP_ERROR_CHECK(esp_lcd_new_rgb_panel(&rgb_panel_cfg, &lcd_handle));   
     esp_lcd_rgb_panel_event_callbacks_t rgb_cbs;
     memset(&rgb_cbs,0,sizeof(rgb_cbs));
-#ifndef LCD_NO_DMA
+#ifndef LCD_SYNC_TRANSFER
     rgb_cbs.on_color_trans_done = on_flush_complete;
 #endif
     rgb_cbs.on_vsync = on_vsync;
@@ -663,7 +716,7 @@ void panel_lcd_init(void) {
 #endif
     ESP_ERROR_CHECK(esp_lcd_panel_reset(lcd_handle));
     ESP_ERROR_CHECK(esp_lcd_panel_init(lcd_handle));
-#if LCD_BUS == PANEL_BUS_MIPI && !defined(LCD_NO_DMA)
+#if LCD_BUS == PANEL_BUS_MIPI && !defined(LCD_SYNC_TRANSFER)
     esp_lcd_dpi_panel_event_callbacks_t mipi_cbs = {
         .on_color_trans_done = on_flush_complete,
     };
@@ -720,7 +773,7 @@ void panel_lcd_init(void) {
     if(draw_buffer==NULL) {
         ESP_ERROR_CHECK(ESP_ERR_NO_MEM);
     }
-#ifndef LCD_NO_DMA
+#ifndef LCD_SYNC_TRANSFER
     draw_buffer2 = heap_caps_malloc(LCD_TRANSFER_SIZE, heap_caps);
     if(draw_buffer2==NULL) {
         ESP_ERROR_CHECK(ESP_ERR_NO_MEM);
@@ -730,7 +783,7 @@ void panel_lcd_init(void) {
 }
 #if LCD_TRANSFER_SIZE > 0
 void* panel_lcd_transfer_buffer(void) { return draw_buffer; }
-#ifndef LCD_NO_DMA
+#ifndef LCD_SYNC_TRANSFER
 void* panel_lcd_transfer_buffer2(void) { return draw_buffer2; }
 #endif
 #endif
@@ -806,7 +859,7 @@ void panel_touch_init(void) {
     esp_lcd_panel_io_i2c_config_t touch_i2c_cfg;
     touch_i2c_cfg.control_phase_bytes = TOUCH_CONTROL_PHASE_BYTES;
     touch_i2c_cfg.dc_bit_offset = TOUCH_DC_BIT_OFFSET;
-    touch_i2c_cfg.dev_addr = TOUCH_I2C_ADDR;
+    touch_i2c_cfg.dev_addr = TOUCH_I2C_ADDRESS;
 #ifdef TOUCH_DISABLE_CONTROL_PHASE
     touch_i2c_cfg.flags.disable_control_phase = true;
 #endif
@@ -825,7 +878,7 @@ void panel_touch_init(void) {
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_i2c_v1((uint32_t)TOUCH_I2C_HOST, &touch_i2c_cfg, &touch_io_handle));
 #endif
 #endif
-    ESP_ERROR_CHECK(TOUCH_PANEL(touch_io_handle,&touch_cfg,&touch_handle));
+    ESP_ERROR_CHECK(TOUCH_INIT(touch_io_handle,&touch_cfg,&touch_handle));
 }
 void panel_touch_read_raw(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,uint16_t* out_strength) {
     uint8_t count=*in_out_count;
@@ -934,6 +987,9 @@ bool panel_sd_init(bool format_on_fail, size_t max_files, size_t alloc_unit_size
 #if SD_BUS == PANEL_BUS_SPI
     sdmmc_host_t host = SDSPI_HOST_DEFAULT();
     host.slot = SD_SPI_HOST;
+#ifdef SD_CLOCK_HZ
+    host.max_freq_khz = ((SD_CLOCK_HZ)/1000);
+#endif
     sdspi_device_config_t slot_config;
     memset(&slot_config, 0, sizeof(slot_config));
     slot_config.host_id = (spi_host_device_t)SD_SPI_HOST;
@@ -941,6 +997,7 @@ bool panel_sd_init(bool format_on_fail, size_t max_files, size_t alloc_unit_size
     slot_config.gpio_cs = (gpio_num_t)SD_PIN_NUM_CS;
 #else
     slot_config.gpio_cs = (gpio_num_t)-1;
+    
 #endif
 #ifdef SD_PIN_NUM_WP
     slot_config.gpio_wp = (gpio_num_t)SD_PIN_NUM_WP;
@@ -972,7 +1029,12 @@ return true;
 #if SD_BUS == PANEL_BUS_MMC
     sdmmc_host_t host = SDMMC_HOST_DEFAULT();
     host.flags = SDMMC_HOST_FLAG_1BIT; //use 1-line SD/MMC mode
-    host.max_freq_khz =SD_CLOCK_HZ;
+#ifdef SD_CLOCK_HZ
+    host.max_freq_khz = ((SD_CLOCK_HZ)/1000);
+#endif
+#ifdef SD_MMC_HOST
+    host.slot = SD_MMC_HOST
+#endif
     sdmmc_slot_config_t slot_config = SDMMC_SLOT_CONFIG_DEFAULT();
     slot_config.clk = SD_PIN_NUM_CLK;
     slot_config.cmd = SD_PIN_NUM_CMD;

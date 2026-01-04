@@ -11,17 +11,17 @@
 #define LCD_PIN_NUM_DC 16
 #define LCD_PIN_NUM_RST 23
 #define LCD_PIN_NUM_BCKL 4
-#define LCD_PANEL esp_lcd_new_panel_st7789
+#define LCD_INIT esp_lcd_new_panel_st7789
 #define LCD_HRES 135
 #define LCD_VRES 240
 #define LCD_COLOR_SPACE LCD_COLOR_RGB
 #define LCD_CLOCK_HZ (40 * 1000 * 1000)
 #define LCD_GAP_X 40
 #define LCD_GAP_Y 52
-#define LCD_MIRROR_X false
-#define LCD_MIRROR_Y true
-#define LCD_INVERT_COLOR true
-#define LCD_SWAP_XY true
+#define LCD_MIRROR_X 0
+#define LCD_MIRROR_Y 1
+#define LCD_INVERT_COLOR 1
+#define LCD_SWAP_XY 1
 #define LCD_DIVISOR 2
 #define BUTTON_MASK (BUTTON_PIN(0)|BUTTON_PIN(35))
 #define BUTTON_ON_LEVEL 0
@@ -42,17 +42,17 @@
 #define LCD_PIN_NUM_D06 47
 #define LCD_PIN_NUM_D07 48
 #define LCD_PIN_NUM_BCKL 38
-#define LCD_PANEL esp_lcd_new_panel_st7789
+#define LCD_INIT esp_lcd_new_panel_st7789
 #define LCD_HRES 170
 #define LCD_VRES 320
 #define LCD_COLOR_SPACE LCD_COLOR_RGB
 #define LCD_CLOCK_HZ (6528 * 1000)
 #define LCD_GAP_X 0
 #define LCD_GAP_Y 35
-#define LCD_MIRROR_X false
-#define LCD_MIRROR_Y true
-#define LCD_INVERT_COLOR true
-#define LCD_SWAP_XY true
+#define LCD_MIRROR_X 0
+#define LCD_MIRROR_Y 1
+#define LCD_INVERT_COLOR 1
+#define LCD_SWAP_XY 1
 #define BUTTON_MASK (BUTTON_PIN(0)|BUTTON_PIN(14))
 #define BUTTON_ON_LEVEL 0
 #endif // T_DISPLAY_S3
@@ -66,17 +66,17 @@
 #define LCD_PIN_NUM_DC 6
 #define LCD_PIN_NUM_RST 1
 #define LCD_PIN_NUM_BCKL 10
-#define LCD_PANEL esp_lcd_new_panel_st7789
+#define LCD_INIT esp_lcd_new_panel_st7789
 #define LCD_HRES 128
 #define LCD_VRES 128
 #define LCD_COLOR_SPACE LCD_COLOR_BGR
 #define LCD_CLOCK_HZ (40 * 1000 * 1000)
 #define LCD_GAP_X 2
 #define LCD_GAP_Y 1
-#define LCD_MIRROR_X true
-#define LCD_MIRROR_Y true
-#define LCD_INVERT_COLOR true
-#define LCD_SWAP_XY false
+#define LCD_MIRROR_X 1
+#define LCD_MIRROR_Y 1
+#define LCD_INVERT_COLOR 1
+#define LCD_SWAP_XY 0
 #define BUTTON_MASK (BUTTON_PIN(0)|BUTTON_PIN(47))
 #define BUTTON_ON_LEVEL 0
 #endif // T_QT_PRO
@@ -95,17 +95,17 @@
 #define LCD_PIN_NUM_DC   21
 #define LCD_PIN_NUM_RST  18
 #define LCD_PIN_NUM_BCKL 5
-#define LCD_PANEL esp_lcd_new_panel_ili9341
+#define LCD_INIT esp_lcd_new_panel_ili9341
 #define LCD_HRES 240
 #define LCD_VRES 320
 #define LCD_COLOR_SPACE LCD_COLOR_BGR
 #define LCD_CLOCK_HZ (40 * 1000 * 1000)
 #define LCD_GAP_X 0
 #define LCD_GAP_Y 0
-#define LCD_MIRROR_X false
-#define LCD_MIRROR_Y false
-#define LCD_INVERT_COLOR false
-#define LCD_SWAP_XY true
+#define LCD_MIRROR_X 0
+#define LCD_MIRROR_Y 0
+#define LCD_INVERT_COLOR 0
+#define LCD_SWAP_XY 1
 #define BUTTON_MASK (BUTTON_PIN(0))
 #define BUTTON_ON_LEVEL 0
 #endif // ESP_WROVER_KIT
@@ -118,17 +118,17 @@
 #define LCD_PIN_NUM_DC 4
 #define LCD_PIN_NUM_RST 8
 #define LCD_PIN_NUM_BCKL 9
-#define LCD_PANEL esp_lcd_new_panel_st7789
+#define LCD_INIT esp_lcd_new_panel_st7789
 #define LCD_HRES 240
 #define LCD_VRES 240
 #define LCD_COLOR_SPACE LCD_COLOR_RGB
 #define LCD_CLOCK_HZ (40 * 1000 * 1000)
 #define LCD_GAP_X 0
 #define LCD_GAP_Y 0
-#define LCD_MIRROR_X false
-#define LCD_MIRROR_Y false
-#define LCD_INVERT_COLOR true
-#define LCD_SWAP_XY false
+#define LCD_MIRROR_X 0
+#define LCD_MIRROR_Y 0
+#define LCD_INVERT_COLOR 1
+#define LCD_SWAP_XY 0
 #define BUTTON_MASK (BUTTON_PIN(0)|BUTTON_PIN(10)|BUTTON_PIN(11)|BUTTON_PIN(14))
 #define BUTTON_ON_LEVEL 0
 #define SD_PIN_NUM_CLK 36
@@ -136,7 +136,8 @@
 #define SD_PIN_NUM_D01 38
 #define SD_PIN_NUM_D02 33
 #define SD_PIN_NUM_D03 34
-#define SD_CLOCK_HZ (40*1000)
+#define SD_PIN_NUM_CMD 35
+#define SD_CLOCK_HZ (40*1000*1000)
 #endif // ESP_USB_OTG
 
 #ifdef M5STACK_CORE2 // Works
@@ -153,26 +154,26 @@
 #define LCD_PIN_NUM_CLK 18
 #define LCD_PIN_NUM_CS 5
 #define LCD_PIN_NUM_DC 15
-#define LCD_PANEL esp_lcd_new_panel_ili9342
+#define LCD_INIT esp_lcd_new_panel_ili9342
 #define LCD_HRES 320
 #define LCD_VRES 240
 #define LCD_COLOR_SPACE LCD_COLOR_BGR
 #define LCD_CLOCK_HZ (40 * 1000 * 1000)
 #define LCD_GAP_X 0
 #define LCD_GAP_Y 0
-#define LCD_MIRROR_X false
-#define LCD_MIRROR_Y false
-#define LCD_INVERT_COLOR true
-#define LCD_SWAP_XY false
+#define LCD_MIRROR_X 0
+#define LCD_MIRROR_Y 0
+#define LCD_INVERT_COLOR 1
+#define LCD_SWAP_XY 0
 #define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SDA 21
 #define TOUCH_PIN_NUM_SCL 22
-#define TOUCH_PANEL esp_lcd_touch_new_i2c_ft6x36
-#define TOUCH_I2C_ADDR ESP_LCD_TOUCH_IO_I2C_FT6x36_ADDRESS
+#define TOUCH_INIT esp_lcd_touch_new_i2c_ft6x36
+#define TOUCH_I2C_ADDRESS ESP_LCD_TOUCH_IO_I2C_FT6x36_ADDRESS
 #define TOUCH_UPDATE_LIMIT_MS 13
 #define TOUCH_CMD_BITS 8
 #define TOUCH_PARAM_BITS 0
-#define TOUCH_DISABLE_CONTROL_PHASE
+#define TOUCH_DISABLE_CONTROL_PHASE 1
 #define TOUCH_CLOCK_HZ (200*1000)
 #define TOUCH_PIN_NUM_RST -1
 #define TOUCH_VRES 280
@@ -182,7 +183,7 @@
 #define POWER_PIN_NUM_SCL 22
 #define POWER_CLOCK_HZ (200*1000) 
 #define POWER_I2C_PULLUP 1
-#define POWER_INIT m5_stack_core2_power_init(false)
+#define POWER_INIT m5_stack_core2_power_init(0)
 #define SD_SPI_HOST SPI_3
 #define SD_PIN_NUM_CS 4
 #define SD_PIN_NUM_MOSI 23
@@ -201,17 +202,17 @@
 #define LCD_PIN_NUM_DC 27
 #define LCD_PIN_NUM_RST 33
 #define LCD_PIN_NUM_BCKL 32
-#define LCD_PANEL esp_lcd_new_panel_ili9342
+#define LCD_INIT esp_lcd_new_panel_ili9342
 #define LCD_HRES 320
 #define LCD_VRES 240
 #define LCD_COLOR_SPACE LCD_COLOR_BGR
 #define LCD_CLOCK_HZ (40 * 1000 * 1000)
 #define LCD_GAP_X 0
 #define LCD_GAP_Y 0
-#define LCD_MIRROR_X false
-#define LCD_MIRROR_Y false
-#define LCD_INVERT_COLOR true
-#define LCD_SWAP_XY false
+#define LCD_MIRROR_X 0
+#define LCD_MIRROR_Y 0
+#define LCD_INVERT_COLOR 1
+#define LCD_SWAP_XY 0
 #define BUTTON_MASK (BUTTON_PIN(39)|BUTTON_PIN(38)|BUTTON_PIN(37))
 #define BUTTON_ON_LEVEL 0
 #define SD_SPI_HOST    SPI_3
@@ -229,17 +230,17 @@
 #define LCD_PIN_NUM_DC 33
 #define LCD_PIN_NUM_RST 34
 #define LCD_PIN_NUM_BCKL 16
-#define LCD_PANEL esp_lcd_new_panel_st7789
+#define LCD_INIT esp_lcd_new_panel_st7789
 #define LCD_HRES 128
 #define LCD_VRES 128
 #define LCD_COLOR_SPACE LCD_COLOR_BGR
 #define LCD_CLOCK_HZ (40 * 1000 * 1000)
 #define LCD_GAP_X 2
 #define LCD_GAP_Y 1
-#define LCD_MIRROR_X true
-#define LCD_MIRROR_Y true
-#define LCD_INVERT_COLOR true
-#define LCD_SWAP_XY false
+#define LCD_MIRROR_X 1
+#define LCD_MIRROR_Y 1
+#define LCD_INVERT_COLOR 1
+#define LCD_SWAP_XY 0
 #define BUTTON_MASK (BUTTON_PIN(41))
 #define BUTTON_ON_LEVEL 0
 #endif // M5STACK_S3_ATOM
@@ -272,27 +273,27 @@
 #define LCD_PIN_NUM_D14 5
 #define LCD_PIN_NUM_D15 4
 #define LCD_PIN_NUM_BCKL 45
-#define LCD_PANEL esp_lcd_new_panel_ili9488
+#define LCD_INIT esp_lcd_new_panel_ili9488
 #define LCD_HRES 320
 #define LCD_VRES 480
 #define LCD_COLOR_SPACE LCD_COLOR_BGR
 #define LCD_CLOCK_HZ (20 * 1000 * 1000)
 #define LCD_GAP_X 0
 #define LCD_GAP_Y 0
-#define LCD_MIRROR_X true
-#define LCD_MIRROR_Y true
-#define LCD_INVERT_COLOR false
-#define LCD_SWAP_XY true
-#define LCD_SWAP_COLOR_BYTES true
+#define LCD_MIRROR_X 1
+#define LCD_MIRROR_Y 1
+#define LCD_INVERT_COLOR 0
+#define LCD_SWAP_XY 1
+#define LCD_SWAP_COLOR_BYTES 1
 #define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SCL 39
 #define TOUCH_PIN_NUM_SDA 38
-#define TOUCH_PANEL esp_lcd_touch_new_i2c_ft6x36
-#define TOUCH_I2C_ADDR ESP_LCD_TOUCH_IO_I2C_FT6x36_ADDRESS
+#define TOUCH_INIT esp_lcd_touch_new_i2c_ft6x36
+#define TOUCH_I2C_ADDRESS ESP_LCD_TOUCH_IO_I2C_FT6x36_ADDRESS
 #define TOUCH_UPDATE_LIMIT_MS 13
 #define TOUCH_CMD_BITS 8
 #define TOUCH_PARAM_BITS 0
-#define TOUCH_DISABLE_CONTROL_PHASE
+#define TOUCH_DISABLE_CONTROL_PHASE 1
 #define TOUCH_CLOCK_HZ (200*1000)
 #define TOUCH_PIN_NUM_RST -1
 #endif // MATOUCH_ESP_DISPLAY_PARALLEL_35
@@ -334,14 +335,14 @@
 #define LCD_VSYNC_FRONT_PORCH 10
 #define LCD_VSYNC_PULSE_WIDTH 8
 #define LCD_VSYNC_BACK_PORCH 10
-#define LCD_CLK_IDLE_HIGH 0
-#define LCD_DE_IDLE_HIGH 1
+#define LCD_CLK_ON_LEVEL 1
+#define LCD_DE_ON_LEVEL 1
 #define LCD_BIT_DEPTH 16
-#define LCD_PANEL esp_lcd_new_panel_st7701
+#define LCD_INIT esp_lcd_new_panel_st7701
 #define LCD_HRES 480
 #define LCD_VRES 480
 #define LCD_COLOR_SPACE LCD_COLOR_BGR
-#define LCD_SWAP_COLOR_BYTES true
+#define LCD_SWAP_COLOR_BYTES 1
 #ifdef CONFIG_SPIRAM_MODE_QUAD
     #define LCD_CLOCK_HZ (6 * 1000 * 1000)
 #else
@@ -352,15 +353,15 @@
 #define TOUCH_PIN_NUM_SCL 18
 #define TOUCH_PIN_NUM_INT -1
 #define TOUCH_PIN_NUM_RST 38
-#define TOUCH_PANEL esp_lcd_touch_new_i2c_gt911
-#define TOUCH_I2C_ADDR ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
+#define TOUCH_INIT esp_lcd_touch_new_i2c_gt911
+#define TOUCH_I2C_ADDRESS ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
 #define TOUCH_CLOCK_HZ (400*1000)
 #define TOUCH_RST_ON_LEVEL 0
 #define TOUCH_INT_ON_LEVEL 0
 #define TOUCH_DC_BIT_OFFSET 0
 #define TOUCH_CMD_BITS 16
 #define TOUCH_PARAM_BITS 0
-#define TOUCH_DISABLE_CONTROL_PHASE
+#define TOUCH_DISABLE_CONTROL_PHASE 1
 #define SD_PIN_NUM_CLK 12
 #define SD_PIN_NUM_MISO 13
 #define SD_PIN_NUM_MOSI 11
@@ -402,13 +403,13 @@
 #define LCD_VSYNC_FRONT_PORCH 8
 #define LCD_VSYNC_PULSE_WIDTH 4
 #define LCD_VSYNC_BACK_PORCH 8
-#define LCD_CLK_IDLE_HIGH 0
-#define LCD_DE_IDLE_HIGH 0
+#define LCD_CLK_ON_LEVEL 1
+#define LCD_DE_ON_LEVEL 0
 #define LCD_BIT_DEPTH 16
 #define LCD_HRES 800
 #define LCD_VRES 480
 #define LCD_COLOR_SPACE LCD_COLOR_RGB
-#define LCD_SWAP_COLOR_BYTES true
+#define LCD_SWAP_COLOR_BYTES 1
 #define LCD_TRANSFER_IN_SPIRAM
 #ifdef CONFIG_SPIRAM_MODE_QUAD
     #define LCD_CLOCK_HZ (6 * 1000 * 1000)
@@ -418,8 +419,8 @@
 #define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SCL 18
 #define TOUCH_PIN_NUM_SDA 17
-#define TOUCH_PANEL esp_lcd_touch_new_i2c_gt911
-#define TOUCH_I2C_ADDR ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
+#define TOUCH_INIT esp_lcd_touch_new_i2c_gt911
+#define TOUCH_I2C_ADDRESS ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
 #define TOUCH_CLOCK_HZ (400*1000)
 #define TOUCH_PIN_NUM_RST 38
 #define TOUCH_HRES 480
@@ -429,7 +430,7 @@
 #define TOUCH_DC_BIT_OFFSET 0
 #define TOUCH_CMD_BITS 16
 #define TOUCH_PARAM_BITS 0
-#define TOUCH_DISABLE_CONTROL_PHASE
+#define TOUCH_DISABLE_CONTROL_PHASE 1
 #define SD_SPI_HOST SPI_3
 #define SD_PIN_NUM_CLK 12
 #define SD_PIN_NUM_MISO 13
@@ -469,14 +470,14 @@
 #define LCD_VSYNC_FRONT_PORCH 22
 #define LCD_VSYNC_PULSE_WIDTH 13
 #define LCD_VSYNC_BACK_PORCH 10
-#define LCD_CLK_IDLE_HIGH 1 
-#define LCD_DE_IDLE_HIGH 0
+#define LCD_CLK_ON_LEVEL 0
+#define LCD_DE_ON_LEVEL 0
 #define LCD_BIT_DEPTH 16
 #define LCD_HRES 1024
 #define LCD_VRES 600
 #define LCD_TRANSFER_IN_SPIRAM
 #define LCD_COLOR_SPACE LCD_COLOR_BGR
-#define LCD_SWAP_COLOR_BYTES false
+#define LCD_SWAP_COLOR_BYTES 0
 #ifdef CONFIG_SPIRAM_MODE_QUAD
     #define LCD_CLOCK_HZ (6 * 1000 * 1000)
 #else
@@ -485,8 +486,8 @@
 #define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SCL 18
 #define TOUCH_PIN_NUM_SDA 17
-#define TOUCH_PANEL esp_lcd_touch_new_i2c_gt911
-#define TOUCH_I2C_ADDR ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
+#define TOUCH_INIT esp_lcd_touch_new_i2c_gt911
+#define TOUCH_I2C_ADDRESS ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
 #define TOUCH_CLOCK_HZ (400*1000)
 #define TOUCH_PIN_NUM_RST 38
 #define TOUCH_HRES 480
@@ -496,11 +497,11 @@
 #define TOUCH_DC_BIT_OFFSET 0
 #define TOUCH_CMD_BITS 16
 #define TOUCH_PARAM_BITS 0
-#define TOUCH_DISABLE_CONTROL_PHASE
+#define TOUCH_DISABLE_CONTROL_PHASE 1
 #define SD_PIN_NUM_CMD 11
 #define SD_PIN_NUM_CLK 12
 #define SD_PIN_NUM_D00 13
-#define SD_CLOCK_HZ (40*1000)
+#define SD_CLOCK_HZ (40*1000*1000)
 #endif // MATOUCH_ESP_DISPLAY_PARALLEL_7
 
 #ifdef WAVESHARE_S3_43_DEVKIT // works, sometimes reboots on initting the touch controller
@@ -536,13 +537,13 @@
 #define LCD_VSYNC_FRONT_PORCH 10
 #define LCD_VSYNC_PULSE_WIDTH 10
 #define LCD_VSYNC_BACK_PORCH 10
-#define LCD_CLK_IDLE_HIGH 0
-#define LCD_DE_IDLE_HIGH 0
+#define LCD_CLK_ON_LEVEL 1
+#define LCD_DE_ON_LEVEL 0
 #define LCD_BIT_DEPTH 16
 #define LCD_HRES 800
 #define LCD_VRES 480
 #define LCD_COLOR_SPACE LCD_COLOR_RGB
-#define LCD_SWAP_COLOR_BYTES true
+#define LCD_SWAP_COLOR_BYTES 1
 #define LCD_TRANSFER_IN_SPIRAM
 #ifdef CONFIG_SPIRAM_MODE_QUAD
     #define LCD_CLOCK_HZ (6 * 1000 * 1000)
@@ -553,8 +554,8 @@
 #define TOUCH_PIN_NUM_SCL           9
 #define TOUCH_PIN_NUM_SDA           8
 #define TOUCH_I2C_PULLUP 1
-#define TOUCH_PANEL esp_lcd_touch_new_i2c_gt911
-#define TOUCH_I2C_ADDR ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
+#define TOUCH_INIT esp_lcd_touch_new_i2c_gt911
+#define TOUCH_I2C_ADDRESS ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
 #define TOUCH_CLOCK_HZ (400*1000)
 #define TOUCH_HRES LCD_HRES
 #define TOUCH_VRES LCD_VRES
@@ -563,7 +564,7 @@
 #define TOUCH_DC_BIT_OFFSET 0
 #define TOUCH_CMD_BITS 16
 #define TOUCH_PARAM_BITS 0
-#define TOUCH_DISABLE_CONTROL_PHASE
+#define TOUCH_DISABLE_CONTROL_PHASE 1
 #ifndef LEGACY_I2C
 #define TOUCH_RESET \
     i2c_master_bus_handle_t bus; \
@@ -627,7 +628,7 @@
 #define LCD_VSYNC_BACK_PORCH 12
 #define LCD_BIT_DEPTH 16
 #define LCD_MIPI_DMA2D
-#define LCD_PANEL esp_lcd_new_panel_st7703
+#define LCD_INIT esp_lcd_new_panel_st7703
 #define LCD_DATA_ENDIAN_LITTLE
 #define LCD_MIPI_DSI_PHY_PWR_LDO_CHAN (3)
 #define LCD_MIPI_DSI_PHY_PWR_LDO_VOLTAGE_MV (2500)
@@ -643,44 +644,43 @@ st7703_vendor_config_t vendor_config = { \
 }
 #define LCD_PIN_NUM_RST 27
 #define LCD_PIN_NUM_BCKL 26
-#define LCD_PHY_PWR_LDO_CHAN
 #define LCD_CLOCK_HZ (46 * 1000 * 1000)
 #define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SDA 7
 #define TOUCH_PIN_NUM_SCL 8
 #define TOUCH_CLOCK_HZ (100*1000)
-#define TOUCH_PANEL esp_lcd_touch_new_i2c_gt911
+#define TOUCH_INIT esp_lcd_touch_new_i2c_gt911
 #define TOUCH_RST_ON_LEVEL 0
 #define TOUCH_INT_ON_LEVEL 0
 #define TOUCH_DC_BIT_OFFSET 0
 #define TOUCH_CMD_BITS 16
 #define TOUCH_PARAM_BITS 0
-#define TOUCH_DISABLE_CONTROL_PHASE
-#define TOUCH_I2C_ADDR ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
+#define TOUCH_DISABLE_CONTROL_PHASE 1
+#define TOUCH_I2C_ADDRESS ESP_LCD_TOUCH_IO_I2C_GT911_ADDRESS
 #endif // WAVESHARE_P4_SMART86BOX
 
 #ifdef HELTEC_WIFI_LORA_KIT_V2 // should work. the display broke on mine though
 #define LCD_I2C_HOST    I2C_1
-#define LCD_I2C_ADDR 0x3C
+#define LCD_I2C_ADDRESS 0x3C
 #define LCD_CONTROL_PHASE_BYTES 1
 #define LCD_DC_BIT_OFFSET 6
 #define LCD_BIT_DEPTH 1
 #define LCD_PIN_NUM_SCL 15
 #define LCD_PIN_NUM_SDA 4
 #define LCD_PIN_NUM_RST 16
-#define LCD_PANEL esp_lcd_new_panel_ssd1306
+#define LCD_INIT esp_lcd_new_panel_ssd1306
 #define LCD_HRES 128
 #define LCD_VRES 64
 #define LCD_COLOR_SPACE LCD_COLOR_GSC
 #define LCD_CLOCK_HZ (400 * 1000)
 #define LCD_GAP_X 0
 #define LCD_GAP_Y 0
-#define LCD_INVERT_COLOR false
-#define LCD_SWAP_XY false
-#define LCD_MIRROR_X true
-#define LCD_MIRROR_Y true
-#define LCD_INVERT_COLOR false
-#define LCD_SWAP_XY false
+#define LCD_INVERT_COLOR 0
+#define LCD_SWAP_XY 0
+#define LCD_MIRROR_X 1
+#define LCD_MIRROR_Y 1
+#define LCD_INVERT_COLOR 0
+#define LCD_SWAP_XY 0
 #define LCD_DIVISOR 1
 #define LCD_Y_ALIGN 8
 #define LCD_VENDOR_CONFIG esp_lcd_panel_ssd1306_config_t vendor_config = {\
@@ -725,27 +725,27 @@ st7703_vendor_config_t vendor_config = { \
 #define LCD_VRES 320
 #define LCD_COLOR_SPACE LCD_COLOR_RGB
 #define LCD_CLOCK_HZ (80 * 1000 * 1000)
-#define LCD_MIRROR_X true
-#define LCD_MIRROR_Y false
-#define LCD_PANEL esp_lcd_new_panel_st7789
-#define LCD_INVERT_COLOR false
-#define LCD_SWAP_XY true
+#define LCD_MIRROR_X 1
+#define LCD_MIRROR_Y 0
+#define LCD_INIT esp_lcd_new_panel_st7789
+#define LCD_INVERT_COLOR 0
+#define LCD_SWAP_XY 1
 #define TOUCH_I2C_HOST I2C_1
 #define TOUCH_I2C_PULLUP 1
 #define TOUCH_PIN_NUM_SCL 1
 #define TOUCH_PIN_NUM_SDA 2
-#define TOUCH_PANEL esp_lcd_touch_new_i2c_ft6x36
-#define TOUCH_I2C_ADDR ESP_LCD_TOUCH_IO_I2C_FT6x36_ADDRESS
+#define TOUCH_INIT esp_lcd_touch_new_i2c_ft6x36
+#define TOUCH_I2C_ADDRESS ESP_LCD_TOUCH_IO_I2C_FT6x36_ADDRESS
 #define TOUCH_UPDATE_LIMIT_MS 13
 #define TOUCH_CMD_BITS 8
 #define TOUCH_PARAM_BITS 0
-#define TOUCH_DISABLE_CONTROL_PHASE
+#define TOUCH_DISABLE_CONTROL_PHASE 1
 #define TOUCH_CLOCK_HZ (200*1000)
 #define TOUCH_PIN_NUM_RST -1
 #define SD_PIN_NUM_D00 40
 #define SD_PIN_NUM_CMD 38
 #define SD_PIN_NUM_CLK 39
-#define SD_CLOCK_HZ (40*1000)
+#define SD_CLOCK_HZ (40*1000*1000)
 #endif // FREENOVE_S3_DEVKIT
 
 // END devices
