@@ -1954,6 +1954,7 @@
         }
         function getValueForKey(key) {
             const  elem = document.getElementById(key);
+            if(elem===null || elem===undefined) return undefined
             const res = elem.value.trim();
             if(res.length==0) return undefined;
             return res;
@@ -2261,7 +2262,7 @@
                             const busType = getPinBusType(key);
                             if(busType==="SPI"||busType==="I2C") {
                                 const name = getPinName(key);
-                                if(name!==undefined && name!=="CS" && name!=="DC") {
+                                if(name!==undefined && name!=="CS" && name!=="DC" && name!=="INT") {
                                     const host = getFieldHost(key);
                                     if(host!==undefined && host!==null) {
                                         const devices = config.device_by_host.get(host+"_"+busType);
