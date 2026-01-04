@@ -985,6 +985,7 @@ bool panel_sd_init(bool format_on_fail, size_t max_files, size_t alloc_unit_size
         .allocation_unit_size = alloc_unit_size
     };
 #if SD_BUS == PANEL_BUS_SPI
+    spi_init();
     sdmmc_host_t host = SDSPI_HOST_DEFAULT();
     host.slot = SD_SPI_HOST;
 #ifdef SD_CLOCK_HZ
@@ -1033,7 +1034,7 @@ return true;
     host.max_freq_khz = ((SD_CLOCK_HZ)/1000);
 #endif
 #ifdef SD_MMC_HOST
-    host.slot = SD_MMC_HOST
+    host.slot = SD_MMC_HOST;
 #endif
     sdmmc_slot_config_t slot_config = SDMMC_SLOT_CONFIG_DEFAULT();
     slot_config.clk = SD_PIN_NUM_CLK;
