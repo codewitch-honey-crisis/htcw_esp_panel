@@ -817,7 +817,6 @@ void panel_touch_init(void) {
 #endif
 #ifdef TOUCH_PIN_NUM_INT
     touch_cfg.int_gpio_num = (gpio_num_t)TOUCH_PIN_NUM_INT;
-    touch_cfg.interrupt_callback = on_touch;
 #else
     touch_cfg.int_gpio_num = (gpio_num_t)-1;
 #endif
