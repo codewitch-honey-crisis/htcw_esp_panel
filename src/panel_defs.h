@@ -113,6 +113,16 @@
 #ifndef LCD_TRANSFER_SIZE
 #define LCD_TRANSFER_SIZE ((((((LCD_WIDTH*(LCD_HEIGHT+(0!=(LCD_HEIGHT%LCD_DIVISOR)))*LCD_BIT_DEPTH+(LCD_DIVISOR-1))/LCD_DIVISOR))+7)/8)+LCD_TRANSFER_PALETTE_SIZE)
 #endif
+#ifndef LCD_SYNC_TRANSFER
+#define LCD_SYNC_TRANSFER 0
+#endif
+#ifndef LCD_VSYNC
+#ifdef LCD_PIN_NUM_VSYNC
+#define LCD_VSYNC 1
+#else
+#define LCD_VSYNC 0
+#endif
+#endif 
 #endif
 #ifndef TOUCH_BUS
 #if defined(TOUCH_SPI_HOST)

@@ -304,8 +304,8 @@
 #include "esp_lcd_touch_gt911.h"
 #endif
 #define LCD_PIN_NUM_CS 1
-#define LCD_PIN_NUM_CLK 12
-#define LCD_PIN_NUM_MOSI 11 
+#define LCD_PIN_NUM_SCL 12
+#define LCD_PIN_NUM_SDA 11 
 #define LCD_PIN_NUM_DE 45
 #define LCD_PIN_NUM_VSYNC 4
 #define LCD_PIN_NUM_HSYNC 5

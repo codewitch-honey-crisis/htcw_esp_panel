@@ -42,14 +42,14 @@ static esp_lcd_dsi_bus_handle_t mipi_dsi_bus = NULL;
 #endif
 #if LCD_TRANSFER_SIZE > 0
 static void* draw_buffer = NULL;
-#ifndef LCD_SYNC_TRANSFER
+#if LCD_SYNC_TRANSFER > 0
 static void* draw_buffer2 = NULL;
 #endif
 #endif
-#ifdef LCD_SYNC_TRANSFER
+#if LCD_SYNC_TRANSFER == 0
 static volatile int lcd_flushing = 0;
 #endif
-#ifdef LCD_PIN_NUM_VSYNC
+#if LCD_VSYNC > 0
 static volatile bool vsync_count = 0;
 #endif
 
@@ -249,7 +249,7 @@ static void i2c_init() {
 #endif 
 #ifdef LCD_BUS
 size_t panel_lcd_vsync_flush_count(void) { 
-#ifdef LCD_PIN_NUM_VSYNC
+#if LCD_VSYNC > 0
     return vsync_count; 
 #else
     return 0;
@@ -262,18 +262,18 @@ void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void *b
         ESP_LOGE(TAG,"panel_lcd_flush() was invoked but panel_lcd_init() was never called.");
         return;
     }
-#ifdef LCD_SYNC_TRANSFER
+#if LCD_SYNC_TRANSFER == 0
     lcd_flushing = 1;
 #endif
 #ifdef LCD_TRANSLATE
     LCD_TRANSLATE;
 #endif    
     ESP_ERROR_CHECK(esp_lcd_panel_draw_bitmap(lcd_handle, x1, y1, x2 + 1, y2 + 1, bitmap));
-#ifdef LCD_SYNC_TRANSFER
+#if LCD_SYNC_TRANSFER == 0
     while(lcd_flushing) portYIELD();
 #endif
 
-#if LCD_PIN_NUM_VSYNC
+#if LCD_VSYNC > 0
     vsync_count = vsync_count + 1;
 #endif
 }
@@ -281,23 +281,25 @@ void panel_lcd_flush(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, void *b
 // LCD Panel API calls this
 static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_handle_t panel, const esp_lcd_rgb_panel_event_data_t *edata, void *user_ctx) {
     // let the display know the flush has finished
-#ifndef LCD_SYNC_TRANSFER
+#if LCD_SYNC_TRANSFER > 0
     panel_lcd_flush_complete();
 #else
     lcd_flushing = 0;
 #endif
     return true;
 }
+#if LCD_VSYNC > 0
 // LCD Panel API calls this
 static IRAM_ATTR bool on_vsync(esp_lcd_panel_handle_t panel, const esp_lcd_rgb_panel_event_data_t *edata, void *user_ctx) {
     vsync_count = 0;
     return true;
 }
 #endif
+#endif
 #if (LCD_BUS==PANEL_BUS_SPI || LCD_BUS==PANEL_BUS_I2C || LCD_BUS==PANEL_BUS_I8080)
 static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_io_handle_t lcd_io, esp_lcd_panel_io_event_data_t* edata, void* user_ctx) {
     // let the display know the flush has finished
-#ifndef LCD_SYNC_TRANSFER
+#if LCD_SYNC_TRANSFER > 0
     panel_lcd_flush_complete();
 #else
     lcd_flushing = 0;
@@ -308,7 +310,7 @@ static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_io_handle_t lcd_io, esp_lc
 #if LCD_BUS == PANEL_BUS_MIPI
 static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_handle_t panel, esp_lcd_dpi_panel_event_data_t *edata, void *user_ctx) {
     // let the display know the flush has finished
-#ifndef LCD_SYNC_TRANSFER
+#if LCD_SYNC_TRANSFER > 0
     panel_lcd_flush_complete();
 #else
     lcd_flushing = 0;
@@ -706,9 +708,7 @@ void panel_lcd_init(void) {
     ESP_ERROR_CHECK(esp_lcd_new_rgb_panel(&rgb_panel_cfg, &lcd_handle));   
     esp_lcd_rgb_panel_event_callbacks_t rgb_cbs;
     memset(&rgb_cbs,0,sizeof(rgb_cbs));
-#ifndef LCD_SYNC_TRANSFER
     rgb_cbs.on_color_trans_done = on_flush_complete;
-#endif
     rgb_cbs.on_vsync = on_vsync;
     esp_lcd_rgb_panel_register_event_callbacks(lcd_handle,&rgb_cbs,NULL);
     
