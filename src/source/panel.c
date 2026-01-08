@@ -31,9 +31,12 @@
 #if LCD_BUS == PANEL_BUS_RGB
 #include "esp_lcd_panel_rgb.h"
 #endif
-static const char* TAG = "lcd";
+#ifdef EXPANDER
+#include "esp_io_expander.h"
+#endif
+static const char* TAG = "panel";
 static esp_lcd_panel_handle_t lcd_handle = NULL;
-#if LCD_BUS != PANEL_BUS_RGB
+#if LCD_BUS != PANEL_BUS_RGB || defined(LCD_INIT)
 static esp_lcd_panel_io_handle_t lcd_io_handle = NULL;
 #endif
 #if LCD_BUS == PANEL_BUS_MIPI
@@ -428,7 +431,7 @@ void panel_lcd_init(void) {
 #endif
     esp_lcd_rgb_panel_config_t rgb_panel_cfg;
     memset(&rgb_panel_cfg,0,sizeof(esp_lcd_rgb_panel_config_t));
-    rgb_panel_cfg.data_width = LCD_BIT_DEPTH; // RGB565 in parallel mode, thus 16bit in width;
+    rgb_panel_cfg.data_width = LCD_DATA_WIDTH;
     rgb_panel_cfg.clk_src = LCD_CLK_SRC_DEFAULT;
 #ifdef LCD_PIN_NUM_DISP
     rgb_panel_cfg.disp_gpio_num = LCD_PIN_NUM_DISP;
@@ -436,10 +439,15 @@ void panel_lcd_init(void) {
     rgb_panel_cfg.disp_gpio_num = -1;
 #endif
     rgb_panel_cfg.pclk_gpio_num = LCD_PIN_NUM_CLK;
+
     rgb_panel_cfg.vsync_gpio_num = LCD_PIN_NUM_VSYNC;
     rgb_panel_cfg.hsync_gpio_num = LCD_PIN_NUM_HSYNC;
+#ifdef LCD_PIN_NUM_DE
     rgb_panel_cfg.de_gpio_num = LCD_PIN_NUM_DE;
-#if LCD_BIT_DEPTH == 8
+#else
+    rgb_panel_cfg.de_gpio_num = -1;
+#endif
+#if LCD_DATA_WIDTH == 8
     rgb_panel_cfg.data_gpio_nums[8]=LCD_PIN_NUM_D08;
     rgb_panel_cfg.data_gpio_nums[9]=LCD_PIN_NUM_D09;
     rgb_panel_cfg.data_gpio_nums[10]=LCD_PIN_NUM_D10;
@@ -448,7 +456,7 @@ void panel_lcd_init(void) {
     rgb_panel_cfg.data_gpio_nums[13]=LCD_PIN_NUM_D13;
     rgb_panel_cfg.data_gpio_nums[14]=LCD_PIN_NUM_D14;
     rgb_panel_cfg.data_gpio_nums[15]=LCD_PIN_NUM_D15;
-#elif !defined(LCD_SWAP_COLOR_BYTES) || LCD_SWAP_COLOR_BYTES == false
+#elif LCD_DATA_WIDTH==16 && (!defined(LCD_SWAP_COLOR_BYTES) || LCD_SWAP_COLOR_BYTES) == 0
 #if LCD_COLOR_SPACE != LCD_COLOR_BGR
     rgb_panel_cfg.data_gpio_nums[0]=LCD_PIN_NUM_D00;
     rgb_panel_cfg.data_gpio_nums[1]=LCD_PIN_NUM_D01;
@@ -535,7 +543,7 @@ void panel_lcd_init(void) {
 #ifdef LCD_CLK_ACTIVE_NEG
     rgb_panel_cfg.timings.flags.pclk_active_neg = LCD_CLK_ACTIVE_NEG;
 #endif
-    rgb_panel_cfg.timings.flags.hsync_idle_low = false;
+    rgb_panel_cfg.timings.flags.hsync_idle_low = 0;
 #ifdef LCD_CLK_ON_LEVEL
     rgb_panel_cfg.timings.flags.pclk_idle_high = !LCD_CLK_ON_LEVEL;
 #else
@@ -555,12 +563,11 @@ void panel_lcd_init(void) {
 #ifdef LCD_DISP_ON_LEVEL
     rgb_panel_cfg.flags.disp_active_low = LCD_DISP_ON_LEVEL;
 #endif
-    rgb_panel_cfg.flags.double_fb = false;
-    rgb_panel_cfg.flags.no_fb = false;
-    rgb_panel_cfg.flags.refresh_on_demand = false;
-    rgb_panel_cfg.flags.fb_in_psram = true; // allocate frame buffer in PSRAM
-    //rgb_panel_cfg.sram_trans_align = 4;
-    //rgb_panel_cfg.psram_trans_align = 64;
+    rgb_panel_cfg.flags.double_fb = 0;
+    rgb_panel_cfg.flags.no_fb = 0;
+    rgb_panel_cfg.flags.refresh_on_demand = 0;
+    rgb_panel_cfg.flags.fb_in_psram = 1; // allocate frame buffer in PSRAM
+    rgb_panel_cfg.dma_burst_size = 64;
 #ifdef LCD_FRAMEBUFFER_COUNT
     rgb_panel_cfg.num_fbs = LCD_FRAMEBUFFER_COUNT;
 #else
@@ -669,7 +676,7 @@ void panel_lcd_init(void) {
     };
 
 #endif
-#if LCD_BUS != PANEL_BUS_RGB
+#if (LCD_BUS != PANEL_BUS_RGB) || defined(LCD_INIT)
     esp_lcd_panel_dev_config_t panel_config;
     memset(&panel_config,0,sizeof(panel_config));
 #ifdef LCD_VENDOR_CONFIG
@@ -692,12 +699,15 @@ void panel_lcd_init(void) {
     // seems to work
     panel_config.rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB;
 #endif
-#ifdef LCD_DATA_ENDIAN_LITTLE
+#if defined(LCD_DATA_ENDIAN_LITTLE) && LCD_DATA_ENDIAN_LITTLE > 0
     panel_config.data_endian = LCD_RGB_DATA_ENDIAN_LITTLE;
 #else
     panel_config.data_endian = LCD_RGB_DATA_ENDIAN_BIG;
 #endif
     panel_config.bits_per_pixel = LCD_BIT_DEPTH;
+#if LCD_BUS == PANEL_BUS_RGB && defined(LCD_IO_INIT)
+    LCD_IO_INIT;
+#endif
 #ifdef LCD_VENDOR_CONFIG
     panel_config.vendor_config = &vendor_config;
 #else
@@ -706,16 +716,17 @@ void panel_lcd_init(void) {
     ESP_ERROR_CHECK(LCD_INIT(lcd_io_handle, &panel_config, &lcd_handle));
 #else
     ESP_ERROR_CHECK(esp_lcd_new_rgb_panel(&rgb_panel_cfg, &lcd_handle));   
+#endif
+    ESP_ERROR_CHECK(esp_lcd_panel_reset(lcd_handle));
+    ESP_ERROR_CHECK(esp_lcd_panel_init(lcd_handle));
+#if LCD_BUS == PANEL_BUS_RGB
     esp_lcd_rgb_panel_event_callbacks_t rgb_cbs;
     memset(&rgb_cbs,0,sizeof(rgb_cbs));
     rgb_cbs.on_color_trans_done = on_flush_complete;
     rgb_cbs.on_vsync = on_vsync;
-    esp_lcd_rgb_panel_register_event_callbacks(lcd_handle,&rgb_cbs,NULL);
-    
+    ESP_ERROR_CHECK(esp_lcd_rgb_panel_register_event_callbacks(lcd_handle,&rgb_cbs,NULL));
 #endif
-    ESP_ERROR_CHECK(esp_lcd_panel_reset(lcd_handle));
-    ESP_ERROR_CHECK(esp_lcd_panel_init(lcd_handle));
-#if LCD_BUS == PANEL_BUS_MIPI && !defined(LCD_SYNC_TRANSFER)
+#if LCD_BUS == PANEL_BUS_MIPI 
     esp_lcd_dpi_panel_event_callbacks_t mipi_cbs = {
         .on_color_trans_done = on_flush_complete,
     };
@@ -752,9 +763,7 @@ void panel_lcd_init(void) {
 #ifdef LCD_INVERT_COLOR
     ESP_ERROR_CHECK(esp_lcd_panel_invert_color(lcd_handle,LCD_INVERT_COLOR));
 #endif
-#if LCD_BUS != PANEL_BUS_RGB
-    ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(lcd_handle, true));
-#endif
+    esp_lcd_panel_disp_on_off(lcd_handle, true);
 #ifdef LCD_PIN_NUM_BCKL
 #if LCD_PIN_NUM_BCKL >= 0
     gpio_set_level((gpio_num_t)LCD_PIN_NUM_BCKL, LCD_BCKL_ON_LEVEL);
@@ -797,7 +806,7 @@ static void on_touch(esp_lcd_touch_handle_t tp) {
 #endif
 void panel_touch_init(void) {
     if(touch_handle!=NULL) {
-        ESP_LOGW(TAG,"lcd_touch_init() was already called");
+        ESP_LOGW(TAG,"panel_touch_init() was already called");
         return; // already initialized
     }
 #if TOUCH_BUS == PANEL_BUS_SPI
@@ -1079,5 +1088,25 @@ return true;
     }
     return true;
 #endif
+}
+#endif
+
+#ifdef EXPANDER
+static esp_io_expander_handle_t expander_handle = NULL;
+void panel_expander_init(void) {
+    if(expander_handle!=NULL) {
+        ESP_LOGW(TAG,"panel_expander_init() was already called");
+        return; // already initialized
+    }
+#if defined(EXPANDER_BUS) && (EXPANDER_BUS == EXPANDER_BUS_SPI)
+    spi_init();
+#endif
+#if defined(POWER_BUS) && (EXPANDER_BUS == EXPANDER_BUS_I2C)
+    i2c_init();
+#endif
+    ESP_ERROR_CHECK(EXPANDER_INIT((i2c_port_num_t)EXPANDER_I2C_HOST,EXPANDER_I2C_ADDRESS,&expander_handle));
+}
+void panel_expander_handle(void) {
+    return expander_handle;
 }
 #endif

@@ -1,5 +1,5 @@
-#ifndef PANEL_TRANSFER_H
-#define PANEL_TRANSFER_H
+#ifndef PANEL_MAXES_H
+#define PANEL_MAXES_H
 #include "panel_pins.h"
 
 // ============================================================================
@@ -16,6 +16,7 @@
     #define SPI_1_XFER_TOUCH 0
     #define SPI_1_XFER_POWER 0
     #define SPI_1_XFER_SD 0
+    #define SPI_1_XFER_EXPANDER 0
     
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1) && defined(LCD_TRANSFER_SIZE)
         #undef SPI_1_XFER_LCD
@@ -37,15 +38,22 @@
         #define SPI_1_XFER_SD SD_TRANSFER_SIZE
     #endif
     
-    // Find maximum using nested conditionals
-    #if (SPI_1_XFER_LCD >= SPI_1_XFER_TOUCH) && (SPI_1_XFER_LCD >= SPI_1_XFER_POWER) && (SPI_1_XFER_LCD >= SPI_1_XFER_SD)
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1) && defined(EXPANDER_TRANSFER_SIZE)
+        #undef SPI_1_XFER_EXPANDER
+        #define SPI_1_XFER_EXPANDER EXPANDER_TRANSFER_SIZE
+    #endif
+    
+   // Find maximum using nested conditionals
+    #if (SPI_1_XFER_LCD >= SPI_1_XFER_TOUCH) && (SPI_1_XFER_LCD >= SPI_1_XFER_POWER) && (SPI_1_XFER_LCD >= SPI_1_XFER_SD) && (SPI_1_XFER_LCD >= SPI_1_XFER_EXPANDER)
         #define SPI_1_TRANSFER_SIZE_RAW SPI_1_XFER_LCD
-    #elif (SPI_1_XFER_TOUCH >= SPI_1_XFER_POWER) && (SPI_1_XFER_TOUCH >= SPI_1_XFER_SD)
+    #elif (SPI_1_XFER_TOUCH >= SPI_1_XFER_POWER) && (SPI_1_XFER_TOUCH >= SPI_1_XFER_SD) && (SPI_1_XFER_TOUCH >= SPI_1_XFER_EXPANDER)
         #define SPI_1_TRANSFER_SIZE_RAW SPI_1_XFER_TOUCH
-    #elif (SPI_1_XFER_POWER >= SPI_1_XFER_SD)
+    #elif (SPI_1_XFER_POWER >= SPI_1_XFER_SD) && (SPI_1_XFER_POWER >= SPI_1_XFER_EXPANDER)
         #define SPI_1_TRANSFER_SIZE_RAW SPI_1_XFER_POWER
-    #else
+    #elif (SPI_1_XFER_SD >= SPI_1_XFER_EXPANDER)
         #define SPI_1_TRANSFER_SIZE_RAW SPI_1_XFER_SD
+    #else
+        #define SPI_1_TRANSFER_SIZE_RAW SPI_1_XFER_EXPANDER
     #endif
     
     // Check if exceeds maximum and warn
@@ -61,6 +69,7 @@
     #undef SPI_1_XFER_TOUCH
     #undef SPI_1_XFER_POWER
     #undef SPI_1_XFER_SD
+    #undef SPI_1_XFER_EXPANDER
     #undef SPI_1_TRANSFER_SIZE_RAW
 #endif
 
@@ -71,7 +80,8 @@
     #define SPI_2_XFER_TOUCH 0
     #define SPI_2_XFER_POWER 0
     #define SPI_2_XFER_SD 0
-    
+    #define SPI_2_XFER_EXPANDER 0
+
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2) && defined(LCD_TRANSFER_SIZE)
         #undef SPI_2_XFER_LCD
         #define SPI_2_XFER_LCD LCD_TRANSFER_SIZE
@@ -91,16 +101,23 @@
         #undef SPI_2_XFER_SD
         #define SPI_2_XFER_SD SD_TRANSFER_SIZE
     #endif
-    
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2) && defined(EXPANDER_TRANSFER_SIZE)
+        #undef SPI_2_XFER_EXPANDER
+        #define SPI_2_XFER_EXPANDER EXPANDER_TRANSFER_SIZE
+    #endif
+        
     // Find maximum using nested conditionals
-    #if (SPI_2_XFER_LCD >= SPI_2_XFER_TOUCH) && (SPI_2_XFER_LCD >= SPI_2_XFER_POWER) && (SPI_2_XFER_LCD >= SPI_2_XFER_SD)
+    #if (SPI_2_XFER_LCD >= SPI_2_XFER_TOUCH) && (SPI_2_XFER_LCD >= SPI_2_XFER_POWER) && (SPI_2_XFER_LCD >= SPI_2_XFER_SD) && (SPI_2_XFER_LCD >= SPI_2_XFER_EXPANDER)
         #define SPI_2_TRANSFER_SIZE_RAW SPI_2_XFER_LCD
-    #elif (SPI_2_XFER_TOUCH >= SPI_2_XFER_POWER) && (SPI_2_XFER_TOUCH >= SPI_2_XFER_SD)
+    #elif (SPI_2_XFER_TOUCH >= SPI_2_XFER_POWER) && (SPI_2_XFER_TOUCH >= SPI_2_XFER_SD) && (SPI_2_XFER_TOUCH >= SPI_2_XFER_EXPANDER)
         #define SPI_2_TRANSFER_SIZE_RAW SPI_2_XFER_TOUCH
-    #elif (SPI_2_XFER_POWER >= SPI_2_XFER_SD)
+    #elif (SPI_2_XFER_POWER >= SPI_2_XFER_SD) && (SPI_2_XFER_POWER >= SPI_2_XFER_EXPANDER)
         #define SPI_2_TRANSFER_SIZE_RAW SPI_2_XFER_POWER
-    #else
+    #elif (SPI_2_XFER_SD >= SPI_2_XFER_EXPANDER)
         #define SPI_2_TRANSFER_SIZE_RAW SPI_2_XFER_SD
+    #else
+        #define SPI_2_TRANSFER_SIZE_RAW SPI_2_XFER_EXPANDER
     #endif
     
     // Check if exceeds maximum and warn
@@ -116,6 +133,7 @@
     #undef SPI_2_XFER_TOUCH
     #undef SPI_2_XFER_POWER
     #undef SPI_2_XFER_SD
+    #undef SPI_2_XFER_EXPANDER
     #undef SPI_2_TRANSFER_SIZE_RAW
 #endif
 
@@ -126,6 +144,7 @@
     #define SPI_3_XFER_TOUCH 0
     #define SPI_3_XFER_POWER 0
     #define SPI_3_XFER_SD 0
+    #define SPI_3_XFER_EXPANDER 0
     
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3) && defined(LCD_TRANSFER_SIZE)
         #undef SPI_3_XFER_LCD
@@ -147,15 +166,22 @@
         #define SPI_3_XFER_SD SD_TRANSFER_SIZE
     #endif
     
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3) && defined(EXPANDER_TRANSFER_SIZE)
+        #undef SPI_3_XFER_EXPANDER
+        #define SPI_3_XFER_EXPANDER EXPANDER_TRANSFER_SIZE
+    #endif
+    
     // Find maximum using nested conditionals
-    #if (SPI_3_XFER_LCD >= SPI_3_XFER_TOUCH) && (SPI_3_XFER_LCD >= SPI_3_XFER_POWER) && (SPI_3_XFER_LCD >= SPI_3_XFER_SD)
+    #if (SPI_3_XFER_LCD >= SPI_3_XFER_TOUCH) && (SPI_3_XFER_LCD >= SPI_3_XFER_POWER) && (SPI_3_XFER_LCD >= SPI_3_XFER_SD) && (SPI_3_XFER_LCD >= SPI_3_XFER_EXPANDER)
         #define SPI_3_TRANSFER_SIZE_RAW SPI_3_XFER_LCD
-    #elif (SPI_3_XFER_TOUCH >= SPI_3_XFER_POWER) && (SPI_3_XFER_TOUCH >= SPI_3_XFER_SD)
+    #elif (SPI_3_XFER_TOUCH >= SPI_3_XFER_POWER) && (SPI_3_XFER_TOUCH >= SPI_3_XFER_SD) && (SPI_3_XFER_TOUCH >= SPI_3_XFER_EXPANDER)
         #define SPI_3_TRANSFER_SIZE_RAW SPI_3_XFER_TOUCH
-    #elif (SPI_3_XFER_POWER >= SPI_3_XFER_SD)
+    #elif (SPI_3_XFER_POWER >= SPI_3_XFER_SD) && (SPI_3_XFER_POWER >= SPI_3_XFER_EXPANDER)
         #define SPI_3_TRANSFER_SIZE_RAW SPI_3_XFER_POWER
-    #else
+    #elif (SPI_3_XFER_SD >= SPI_3_XFER_EXPANDER)
         #define SPI_3_TRANSFER_SIZE_RAW SPI_3_XFER_SD
+    #else
+        #define SPI_3_TRANSFER_SIZE_RAW SPI_3_XFER_EXPANDER
     #endif
     
     // Check if exceeds maximum and warn
@@ -171,6 +197,7 @@
     #undef SPI_3_XFER_TOUCH
     #undef SPI_3_XFER_POWER
     #undef SPI_3_XFER_SD
+    #undef SPI_3_XFER_EXPANDER
     #undef SPI_3_TRANSFER_SIZE_RAW
 #endif
 
@@ -181,7 +208,8 @@
     #define SPI_4_XFER_TOUCH 0
     #define SPI_4_XFER_POWER 0
     #define SPI_4_XFER_SD 0
-    
+    #define SPI_4_XFER_EXPANDER 0
+
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4) && defined(LCD_TRANSFER_SIZE)
         #undef SPI_4_XFER_LCD
         #define SPI_4_XFER_LCD LCD_TRANSFER_SIZE
@@ -202,15 +230,22 @@
         #define SPI_4_XFER_SD SD_TRANSFER_SIZE
     #endif
     
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4) && defined(EXPANDER_TRANSFER_SIZE)
+        #undef SPI_4_XFER_EXPANDER
+        #define SPI_4_XFER_EXPANDER EXPANDER_TRANSFER_SIZE
+    #endif
+    
     // Find maximum using nested conditionals
-    #if (SPI_4_XFER_LCD >= SPI_4_XFER_TOUCH) && (SPI_4_XFER_LCD >= SPI_4_XFER_POWER) && (SPI_4_XFER_LCD >= SPI_4_XFER_SD)
+    #if (SPI_4_XFER_LCD >= SPI_4_XFER_TOUCH) && (SPI_4_XFER_LCD >= SPI_4_XFER_POWER) && (SPI_4_XFER_LCD >= SPI_4_XFER_SD) && (SPI_4_XFER_LCD >= SPI_4_XFER_EXPANDER)
         #define SPI_4_TRANSFER_SIZE_RAW SPI_4_XFER_LCD
-    #elif (SPI_4_XFER_TOUCH >= SPI_4_XFER_POWER) && (SPI_4_XFER_TOUCH >= SPI_4_XFER_SD)
+    #elif (SPI_4_XFER_TOUCH >= SPI_4_XFER_POWER) && (SPI_4_XFER_TOUCH >= SPI_4_XFER_SD) && (SPI_4_XFER_TOUCH >= SPI_4_XFER_EXPANDER)
         #define SPI_4_TRANSFER_SIZE_RAW SPI_4_XFER_TOUCH
-    #elif (SPI_4_XFER_POWER >= SPI_4_XFER_SD)
+    #elif (SPI_4_XFER_POWER >= SPI_4_XFER_SD) && (SPI_4_XFER_POWER >= SPI_4_XFER_EXPANDER)
         #define SPI_4_TRANSFER_SIZE_RAW SPI_4_XFER_POWER
-    #else
+    #elif (SPI_4_XFER_SD >= SPI_4_XFER_EXPANDER)
         #define SPI_4_TRANSFER_SIZE_RAW SPI_4_XFER_SD
+    #else
+        #define SPI_4_TRANSFER_SIZE_RAW SPI_4_XFER_EXPANDER
     #endif
     
     // Check if exceeds maximum and warn
@@ -226,6 +261,7 @@
     #undef SPI_4_XFER_TOUCH
     #undef SPI_4_XFER_POWER
     #undef SPI_4_XFER_SD
+    #undef SPI_4_XFER_EXPANDER
     #undef SPI_4_TRANSFER_SIZE_RAW
 #endif
 #ifdef I2C_1_HOST_USED
@@ -233,7 +269,8 @@
     #define I2C_1_SPEED_LCD (800*1000)
     #define I2C_1_SPEED_TOUCH (800*1000)
     #define I2C_1_SPEED_POWER (800*1000)
-    
+    #define I2C_1_SPEED_EXPANDER (800*1000)
+
     #if defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_1) && defined(LCD_CLOCK_HZ)
         #undef I2C_1_SPEED_LCD
         #define I2C_1_SPEED_LCD LCD_CLOCK_HZ
@@ -249,18 +286,27 @@
         #define I2C_1_SPEED_POWER POWER_CLOCK_HZ
     #endif
     
-    // Find minimum using nested conditionals
-    #if (I2C_1_SPEED_LCD <= I2C_1_SPEED_TOUCH) && (I2C_1_SPEED_LCD <= I2C_1_SPEED_POWER)
+    #if defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_1) && defined(EXPANDER_CLOCK_HZ)
+        #undef I2C_1_SPEED_EXPANDER
+        #define I2C_1_SPEED_EXPANDER EXPANDER_CLOCK_HZ
+    #endif
+    
+   // Find minimum using nested conditionals
+    #if (I2C_1_SPEED_LCD <= I2C_1_SPEED_TOUCH) && (I2C_1_SPEED_LCD <= I2C_1_SPEED_POWER) && (I2C_1_SPEED_LCD <= I2C_1_SPEED_EXPANDER)
         #define I2C_1_CLOCK_HZ I2C_1_SPEED_LCD
-    #elif (I2C_1_SPEED_TOUCH <= I2C_1_SPEED_POWER) 
+    #elif (I2C_1_SPEED_TOUCH <= I2C_1_SPEED_POWER) && (I2C_1_SPEED_TOUCH <= I2C_1_SPEED_EXPANDER)
         #define I2C_1_CLOCK_HZ I2C_1_SPEED_TOUCH
-    #else
+    #elif (I2C_1_SPEED_POWER <= I2C_1_SPEED_EXPANDER)
         #define I2C_1_CLOCK_HZ I2C_1_SPEED_POWER
-    #endif    
+    #else
+        #define I2C_1_CLOCK_HZ I2C_1_SPEED_EXPANDER
+    #endif
+
     // Cleanup temp defines
     #undef I2C_1_SPEED_LCD
     #undef I2C_1_SPEED_TOUCH
     #undef I2C_1_SPEED_POWER
+    #undef I2C_1_SPEED_EXPANDER
 #endif
 
 #ifdef I2C_2_HOST_USED
@@ -268,6 +314,7 @@
     #define I2C_2_SPEED_LCD (800*1000)
     #define I2C_2_SPEED_TOUCH (800*1000)
     #define I2C_2_SPEED_POWER (800*1000)
+    #define I2C_2_SPEED_EXPANDER (800*1000)
     
     #if defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_2) && defined(LCD_CLOCK_HZ)
         #undef I2C_2_SPEED_LCD
@@ -285,16 +332,20 @@
     #endif
     
     // Find minimum using nested conditionals
-    #if (I2C_2_SPEED_LCD <= I2C_2_SPEED_TOUCH) && (I2C_2_SPEED_LCD <= I2C_2_SPEED_POWER)
+    #if (I2C_2_SPEED_LCD <= I2C_2_SPEED_TOUCH) && (I2C_2_SPEED_LCD <= I2C_2_SPEED_POWER) && (I2C_2_SPEED_LCD <= I2C_2_SPEED_EXPANDER)
         #define I2C_2_CLOCK_HZ I2C_2_SPEED_LCD
-    #elif (I2C_2_SPEED_TOUCH <= I2C_2_SPEED_POWER) 
+    #elif (I2C_2_SPEED_TOUCH <= I2C_2_SPEED_POWER) && (I2C_2_SPEED_TOUCH <= I2C_2_SPEED_EXPANDER)
         #define I2C_2_CLOCK_HZ I2C_2_SPEED_TOUCH
-    #else
+    #elif (I2C_2_SPEED_POWER <= I2C_2_SPEED_EXPANDER)
         #define I2C_2_CLOCK_HZ I2C_2_SPEED_POWER
-    #endif    
+    #else
+        #define I2C_2_CLOCK_HZ I2C_2_SPEED_EXPANDER
+    #endif
+    
     // Cleanup temp defines
     #undef I2C_2_SPEED_LCD
     #undef I2C_2_SPEED_TOUCH
     #undef I2C_2_SPEED_POWER
+    #undef I2C_2_SPEED_EXPANDER
 #endif
-#endif // PANEL_TRANSFER_H
+#endif // PANEL_MAXES_H

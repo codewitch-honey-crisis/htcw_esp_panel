@@ -9,6 +9,15 @@
 #define MMC_1 0
 #define MMC_2 1
 
+#define LCD_COLOR_RGB 1
+#define LCD_COLOR_BGR 2
+#define LCD_COLOR_GSC 3
+#define PANEL_BUS_SPI 1
+#define PANEL_BUS_I2C 2
+#define PANEL_BUS_I8080 3
+#define PANEL_BUS_RGB 4
+#define PANEL_BUS_MIPI 5
+#define PANEL_BUS_MMC 6
 
 #include "panels.h"
 #if __has_include("custom_panel.h")
@@ -122,6 +131,13 @@
 #else
 #define LCD_VSYNC 0
 #endif
+#endif
+#ifndef LCD_DATA_WIDTH
+#if LCD_BUS == PANEL_BUS_RGB
+#define LCD_DATA_WIDTH LCD_BIT_DEPTH
+#else
+#define LCD_DATA_WIDTH 16
+#endif
 #endif 
 #endif
 #ifndef TOUCH_BUS
@@ -212,15 +228,27 @@
 #define POWER_TRANSFER_SIZE 1024
 #endif
 #endif
-#define LCD_COLOR_RGB 1
-#define LCD_COLOR_BGR 2
-#define LCD_COLOR_GSC 3
-#define PANEL_BUS_SPI 1
-#define PANEL_BUS_I2C 2
-#define PANEL_BUS_I8080 3
-#define PANEL_BUS_RGB 4
-#define PANEL_BUS_MIPI 5
-#define PANEL_BUS_MMC 6
+#if defined(POWER_BUS) && (POWER_BUS == PANEL_BUS_SPI)
+#ifndef POWER_TRANSFER_SIZE
+#define POWER_TRANSFER_SIZE 1024
+#endif
+#endif
+
+#ifndef EXPANDER_BUS
+#if defined(EXPANDER_SPI_HOST)
+#define EXPANDER_BUS PANEL_BUS_SPI
+#elif defined(EXPANDER_I2C_HOST) 
+#define EXPANDER_BUS PANEL_BUS_I2C
+#endif
+#endif
+#if defined(EXPANDER_BUS)
+#define EXPANDER
+#endif
+#if defined(EXAPNDER_BUS) && (EXPANDER_BUS == PANEL_BUS_SPI)
+#ifndef EXPANDER_TRANSFER_SIZE
+#define EXPANDER_TRANSFER_SIZE 1024
+#endif
+#endif
 
 #if LCD_BUS == PANEL_BUS_MIPI
 #if LCD_BIT_DEPTH == 24

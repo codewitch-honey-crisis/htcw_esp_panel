@@ -4,22 +4,23 @@
 
 #ifndef PANEL_PINS_H
 #define PANEL_PINS_H
-          
+
 #include "panel_defs.h"
 #include "panel_pin_aliases.h"
+
 // ============================================================================
 // CONDITIONAL HEADER INCLUDES
 // ============================================================================
 
 
 // Include SPI headers if any device uses SPI
-#if defined(LCD_SPI_HOST) || defined(TOUCH_SPI_HOST) || defined(POWER_SPI_HOST) || defined(SD_SPI_HOST)
+#if defined(LCD_SPI_HOST) || defined(TOUCH_SPI_HOST) || defined(POWER_SPI_HOST) || defined(SD_SPI_HOST) || defined(EXPANDER_SPI_HOST)
     #include "driver/spi_master.h"
     #define PANEL_USE_SPI
 #endif
 
 // Include I2C headers if any device uses I2C
-#if defined(LCD_I2C_HOST) || defined(TOUCH_I2C_HOST) || defined(POWER_I2C_HOST)
+#if defined(LCD_I2C_HOST) || defined(TOUCH_I2C_HOST) || defined(POWER_I2C_HOST) || defined(EXPANDER_I2C_HOST)
     #ifdef LEGACY_I2C
         #include "driver/i2c.h"
     #else
@@ -563,6 +564,182 @@
 #endif
 
 
+// LCD-EXPANDER SPI bus sharing
+#if defined(LCD_SPI_HOST) && defined(EXPANDER_SPI_HOST) && (LCD_SPI_HOST == EXPANDER_SPI_HOST)
+
+    #if defined(LCD_PIN_NUM_CLK) && defined(EXPANDER_PIN_NUM_CLK) && \
+        (LCD_PIN_NUM_CLK != -1) && (EXPANDER_PIN_NUM_CLK != -1) && \
+        (LCD_PIN_NUM_CLK != EXPANDER_PIN_NUM_CLK)
+        #error "LCD_PIN_NUM_CLK and EXPANDER_PIN_NUM_CLK conflict on same SPI bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_CLK) || (LCD_PIN_NUM_CLK == -1)
+        #if defined(EXPANDER_PIN_NUM_CLK) && (EXPANDER_PIN_NUM_CLK != -1)
+            #undef LCD_PIN_NUM_CLK
+            #define LCD_PIN_NUM_CLK EXPANDER_PIN_NUM_CLK
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_CLK) || (EXPANDER_PIN_NUM_CLK == -1)
+        #if defined(LCD_PIN_NUM_CLK) && (LCD_PIN_NUM_CLK != -1)
+            #undef EXPANDER_PIN_NUM_CLK
+            #define EXPANDER_PIN_NUM_CLK LCD_PIN_NUM_CLK
+        #endif
+    #endif
+
+    #if defined(LCD_PIN_NUM_D00) && defined(EXPANDER_PIN_NUM_D00) && \
+        (LCD_PIN_NUM_D00 != -1) && (EXPANDER_PIN_NUM_D00 != -1) && \
+        (LCD_PIN_NUM_D00 != EXPANDER_PIN_NUM_D00)
+        #error "LCD_PIN_NUM_D00 and EXPANDER_PIN_NUM_D00 conflict on same SPI bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_D00) || (LCD_PIN_NUM_D00 == -1)
+        #if defined(EXPANDER_PIN_NUM_D00) && (EXPANDER_PIN_NUM_D00 != -1)
+            #undef LCD_PIN_NUM_D00
+            #define LCD_PIN_NUM_D00 EXPANDER_PIN_NUM_D00
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D00) || (EXPANDER_PIN_NUM_D00 == -1)
+        #if defined(LCD_PIN_NUM_D00) && (LCD_PIN_NUM_D00 != -1)
+            #undef EXPANDER_PIN_NUM_D00
+            #define EXPANDER_PIN_NUM_D00 LCD_PIN_NUM_D00
+        #endif
+    #endif
+
+    #if defined(LCD_PIN_NUM_D01) && defined(EXPANDER_PIN_NUM_D01) && \
+        (LCD_PIN_NUM_D01 != -1) && (EXPANDER_PIN_NUM_D01 != -1) && \
+        (LCD_PIN_NUM_D01 != EXPANDER_PIN_NUM_D01)
+        #error "LCD_PIN_NUM_D01 and EXPANDER_PIN_NUM_D01 conflict on same SPI bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_D01) || (LCD_PIN_NUM_D01 == -1)
+        #if defined(EXPANDER_PIN_NUM_D01) && (EXPANDER_PIN_NUM_D01 != -1)
+            #undef LCD_PIN_NUM_D01
+            #define LCD_PIN_NUM_D01 EXPANDER_PIN_NUM_D01
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D01) || (EXPANDER_PIN_NUM_D01 == -1)
+        #if defined(LCD_PIN_NUM_D01) && (LCD_PIN_NUM_D01 != -1)
+            #undef EXPANDER_PIN_NUM_D01
+            #define EXPANDER_PIN_NUM_D01 LCD_PIN_NUM_D01
+        #endif
+    #endif
+
+    #if defined(LCD_PIN_NUM_D02) && defined(EXPANDER_PIN_NUM_D02) && \
+        (LCD_PIN_NUM_D02 != -1) && (EXPANDER_PIN_NUM_D02 != -1) && \
+        (LCD_PIN_NUM_D02 != EXPANDER_PIN_NUM_D02)
+        #error "LCD_PIN_NUM_D02 and EXPANDER_PIN_NUM_D02 conflict on same SPI bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_D02) || (LCD_PIN_NUM_D02 == -1)
+        #if defined(EXPANDER_PIN_NUM_D02) && (EXPANDER_PIN_NUM_D02 != -1)
+            #undef LCD_PIN_NUM_D02
+            #define LCD_PIN_NUM_D02 EXPANDER_PIN_NUM_D02
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D02) || (EXPANDER_PIN_NUM_D02 == -1)
+        #if defined(LCD_PIN_NUM_D02) && (LCD_PIN_NUM_D02 != -1)
+            #undef EXPANDER_PIN_NUM_D02
+            #define EXPANDER_PIN_NUM_D02 LCD_PIN_NUM_D02
+        #endif
+    #endif
+
+    #if defined(LCD_PIN_NUM_D03) && defined(EXPANDER_PIN_NUM_D03) && \
+        (LCD_PIN_NUM_D03 != -1) && (EXPANDER_PIN_NUM_D03 != -1) && \
+        (LCD_PIN_NUM_D03 != EXPANDER_PIN_NUM_D03)
+        #error "LCD_PIN_NUM_D03 and EXPANDER_PIN_NUM_D03 conflict on same SPI bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_D03) || (LCD_PIN_NUM_D03 == -1)
+        #if defined(EXPANDER_PIN_NUM_D03) && (EXPANDER_PIN_NUM_D03 != -1)
+            #undef LCD_PIN_NUM_D03
+            #define LCD_PIN_NUM_D03 EXPANDER_PIN_NUM_D03
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D03) || (EXPANDER_PIN_NUM_D03 == -1)
+        #if defined(LCD_PIN_NUM_D03) && (LCD_PIN_NUM_D03 != -1)
+            #undef EXPANDER_PIN_NUM_D03
+            #define EXPANDER_PIN_NUM_D03 LCD_PIN_NUM_D03
+        #endif
+    #endif
+
+    #if defined(LCD_PIN_NUM_D04) && defined(EXPANDER_PIN_NUM_D04) && \
+        (LCD_PIN_NUM_D04 != -1) && (EXPANDER_PIN_NUM_D04 != -1) && \
+        (LCD_PIN_NUM_D04 != EXPANDER_PIN_NUM_D04)
+        #error "LCD_PIN_NUM_D04 and EXPANDER_PIN_NUM_D04 conflict on same SPI bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_D04) || (LCD_PIN_NUM_D04 == -1)
+        #if defined(EXPANDER_PIN_NUM_D04) && (EXPANDER_PIN_NUM_D04 != -1)
+            #undef LCD_PIN_NUM_D04
+            #define LCD_PIN_NUM_D04 EXPANDER_PIN_NUM_D04
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D04) || (EXPANDER_PIN_NUM_D04 == -1)
+        #if defined(LCD_PIN_NUM_D04) && (LCD_PIN_NUM_D04 != -1)
+            #undef EXPANDER_PIN_NUM_D04
+            #define EXPANDER_PIN_NUM_D04 LCD_PIN_NUM_D04
+        #endif
+    #endif
+
+    #if defined(LCD_PIN_NUM_D05) && defined(EXPANDER_PIN_NUM_D05) && \
+        (LCD_PIN_NUM_D05 != -1) && (EXPANDER_PIN_NUM_D05 != -1) && \
+        (LCD_PIN_NUM_D05 != EXPANDER_PIN_NUM_D05)
+        #error "LCD_PIN_NUM_D05 and EXPANDER_PIN_NUM_D05 conflict on same SPI bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_D05) || (LCD_PIN_NUM_D05 == -1)
+        #if defined(EXPANDER_PIN_NUM_D05) && (EXPANDER_PIN_NUM_D05 != -1)
+            #undef LCD_PIN_NUM_D05
+            #define LCD_PIN_NUM_D05 EXPANDER_PIN_NUM_D05
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D05) || (EXPANDER_PIN_NUM_D05 == -1)
+        #if defined(LCD_PIN_NUM_D05) && (LCD_PIN_NUM_D05 != -1)
+            #undef EXPANDER_PIN_NUM_D05
+            #define EXPANDER_PIN_NUM_D05 LCD_PIN_NUM_D05
+        #endif
+    #endif
+
+    #if defined(LCD_PIN_NUM_D06) && defined(EXPANDER_PIN_NUM_D06) && \
+        (LCD_PIN_NUM_D06 != -1) && (EXPANDER_PIN_NUM_D06 != -1) && \
+        (LCD_PIN_NUM_D06 != EXPANDER_PIN_NUM_D06)
+        #error "LCD_PIN_NUM_D06 and EXPANDER_PIN_NUM_D06 conflict on same SPI bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_D06) || (LCD_PIN_NUM_D06 == -1)
+        #if defined(EXPANDER_PIN_NUM_D06) && (EXPANDER_PIN_NUM_D06 != -1)
+            #undef LCD_PIN_NUM_D06
+            #define LCD_PIN_NUM_D06 EXPANDER_PIN_NUM_D06
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D06) || (EXPANDER_PIN_NUM_D06 == -1)
+        #if defined(LCD_PIN_NUM_D06) && (LCD_PIN_NUM_D06 != -1)
+            #undef EXPANDER_PIN_NUM_D06
+            #define EXPANDER_PIN_NUM_D06 LCD_PIN_NUM_D06
+        #endif
+    #endif
+
+    #if defined(LCD_PIN_NUM_D07) && defined(EXPANDER_PIN_NUM_D07) && \
+        (LCD_PIN_NUM_D07 != -1) && (EXPANDER_PIN_NUM_D07 != -1) && \
+        (LCD_PIN_NUM_D07 != EXPANDER_PIN_NUM_D07)
+        #error "LCD_PIN_NUM_D07 and EXPANDER_PIN_NUM_D07 conflict on same SPI bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_D07) || (LCD_PIN_NUM_D07 == -1)
+        #if defined(EXPANDER_PIN_NUM_D07) && (EXPANDER_PIN_NUM_D07 != -1)
+            #undef LCD_PIN_NUM_D07
+            #define LCD_PIN_NUM_D07 EXPANDER_PIN_NUM_D07
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D07) || (EXPANDER_PIN_NUM_D07 == -1)
+        #if defined(LCD_PIN_NUM_D07) && (LCD_PIN_NUM_D07 != -1)
+            #undef EXPANDER_PIN_NUM_D07
+            #define EXPANDER_PIN_NUM_D07 LCD_PIN_NUM_D07
+        #endif
+    #endif
+#endif
+
+
 // TOUCH-POWER SPI bus sharing
 #if defined(TOUCH_SPI_HOST) && defined(POWER_SPI_HOST) && (TOUCH_SPI_HOST == POWER_SPI_HOST)
 
@@ -915,6 +1092,182 @@
 #endif
 
 
+// TOUCH-EXPANDER SPI bus sharing
+#if defined(TOUCH_SPI_HOST) && defined(EXPANDER_SPI_HOST) && (TOUCH_SPI_HOST == EXPANDER_SPI_HOST)
+
+    #if defined(TOUCH_PIN_NUM_CLK) && defined(EXPANDER_PIN_NUM_CLK) && \
+        (TOUCH_PIN_NUM_CLK != -1) && (EXPANDER_PIN_NUM_CLK != -1) && \
+        (TOUCH_PIN_NUM_CLK != EXPANDER_PIN_NUM_CLK)
+        #error "TOUCH_PIN_NUM_CLK and EXPANDER_PIN_NUM_CLK conflict on same SPI bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_CLK) || (TOUCH_PIN_NUM_CLK == -1)
+        #if defined(EXPANDER_PIN_NUM_CLK) && (EXPANDER_PIN_NUM_CLK != -1)
+            #undef TOUCH_PIN_NUM_CLK
+            #define TOUCH_PIN_NUM_CLK EXPANDER_PIN_NUM_CLK
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_CLK) || (EXPANDER_PIN_NUM_CLK == -1)
+        #if defined(TOUCH_PIN_NUM_CLK) && (TOUCH_PIN_NUM_CLK != -1)
+            #undef EXPANDER_PIN_NUM_CLK
+            #define EXPANDER_PIN_NUM_CLK TOUCH_PIN_NUM_CLK
+        #endif
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D00) && defined(EXPANDER_PIN_NUM_D00) && \
+        (TOUCH_PIN_NUM_D00 != -1) && (EXPANDER_PIN_NUM_D00 != -1) && \
+        (TOUCH_PIN_NUM_D00 != EXPANDER_PIN_NUM_D00)
+        #error "TOUCH_PIN_NUM_D00 and EXPANDER_PIN_NUM_D00 conflict on same SPI bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_D00) || (TOUCH_PIN_NUM_D00 == -1)
+        #if defined(EXPANDER_PIN_NUM_D00) && (EXPANDER_PIN_NUM_D00 != -1)
+            #undef TOUCH_PIN_NUM_D00
+            #define TOUCH_PIN_NUM_D00 EXPANDER_PIN_NUM_D00
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D00) || (EXPANDER_PIN_NUM_D00 == -1)
+        #if defined(TOUCH_PIN_NUM_D00) && (TOUCH_PIN_NUM_D00 != -1)
+            #undef EXPANDER_PIN_NUM_D00
+            #define EXPANDER_PIN_NUM_D00 TOUCH_PIN_NUM_D00
+        #endif
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D01) && defined(EXPANDER_PIN_NUM_D01) && \
+        (TOUCH_PIN_NUM_D01 != -1) && (EXPANDER_PIN_NUM_D01 != -1) && \
+        (TOUCH_PIN_NUM_D01 != EXPANDER_PIN_NUM_D01)
+        #error "TOUCH_PIN_NUM_D01 and EXPANDER_PIN_NUM_D01 conflict on same SPI bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_D01) || (TOUCH_PIN_NUM_D01 == -1)
+        #if defined(EXPANDER_PIN_NUM_D01) && (EXPANDER_PIN_NUM_D01 != -1)
+            #undef TOUCH_PIN_NUM_D01
+            #define TOUCH_PIN_NUM_D01 EXPANDER_PIN_NUM_D01
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D01) || (EXPANDER_PIN_NUM_D01 == -1)
+        #if defined(TOUCH_PIN_NUM_D01) && (TOUCH_PIN_NUM_D01 != -1)
+            #undef EXPANDER_PIN_NUM_D01
+            #define EXPANDER_PIN_NUM_D01 TOUCH_PIN_NUM_D01
+        #endif
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D02) && defined(EXPANDER_PIN_NUM_D02) && \
+        (TOUCH_PIN_NUM_D02 != -1) && (EXPANDER_PIN_NUM_D02 != -1) && \
+        (TOUCH_PIN_NUM_D02 != EXPANDER_PIN_NUM_D02)
+        #error "TOUCH_PIN_NUM_D02 and EXPANDER_PIN_NUM_D02 conflict on same SPI bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_D02) || (TOUCH_PIN_NUM_D02 == -1)
+        #if defined(EXPANDER_PIN_NUM_D02) && (EXPANDER_PIN_NUM_D02 != -1)
+            #undef TOUCH_PIN_NUM_D02
+            #define TOUCH_PIN_NUM_D02 EXPANDER_PIN_NUM_D02
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D02) || (EXPANDER_PIN_NUM_D02 == -1)
+        #if defined(TOUCH_PIN_NUM_D02) && (TOUCH_PIN_NUM_D02 != -1)
+            #undef EXPANDER_PIN_NUM_D02
+            #define EXPANDER_PIN_NUM_D02 TOUCH_PIN_NUM_D02
+        #endif
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D03) && defined(EXPANDER_PIN_NUM_D03) && \
+        (TOUCH_PIN_NUM_D03 != -1) && (EXPANDER_PIN_NUM_D03 != -1) && \
+        (TOUCH_PIN_NUM_D03 != EXPANDER_PIN_NUM_D03)
+        #error "TOUCH_PIN_NUM_D03 and EXPANDER_PIN_NUM_D03 conflict on same SPI bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_D03) || (TOUCH_PIN_NUM_D03 == -1)
+        #if defined(EXPANDER_PIN_NUM_D03) && (EXPANDER_PIN_NUM_D03 != -1)
+            #undef TOUCH_PIN_NUM_D03
+            #define TOUCH_PIN_NUM_D03 EXPANDER_PIN_NUM_D03
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D03) || (EXPANDER_PIN_NUM_D03 == -1)
+        #if defined(TOUCH_PIN_NUM_D03) && (TOUCH_PIN_NUM_D03 != -1)
+            #undef EXPANDER_PIN_NUM_D03
+            #define EXPANDER_PIN_NUM_D03 TOUCH_PIN_NUM_D03
+        #endif
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D04) && defined(EXPANDER_PIN_NUM_D04) && \
+        (TOUCH_PIN_NUM_D04 != -1) && (EXPANDER_PIN_NUM_D04 != -1) && \
+        (TOUCH_PIN_NUM_D04 != EXPANDER_PIN_NUM_D04)
+        #error "TOUCH_PIN_NUM_D04 and EXPANDER_PIN_NUM_D04 conflict on same SPI bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_D04) || (TOUCH_PIN_NUM_D04 == -1)
+        #if defined(EXPANDER_PIN_NUM_D04) && (EXPANDER_PIN_NUM_D04 != -1)
+            #undef TOUCH_PIN_NUM_D04
+            #define TOUCH_PIN_NUM_D04 EXPANDER_PIN_NUM_D04
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D04) || (EXPANDER_PIN_NUM_D04 == -1)
+        #if defined(TOUCH_PIN_NUM_D04) && (TOUCH_PIN_NUM_D04 != -1)
+            #undef EXPANDER_PIN_NUM_D04
+            #define EXPANDER_PIN_NUM_D04 TOUCH_PIN_NUM_D04
+        #endif
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D05) && defined(EXPANDER_PIN_NUM_D05) && \
+        (TOUCH_PIN_NUM_D05 != -1) && (EXPANDER_PIN_NUM_D05 != -1) && \
+        (TOUCH_PIN_NUM_D05 != EXPANDER_PIN_NUM_D05)
+        #error "TOUCH_PIN_NUM_D05 and EXPANDER_PIN_NUM_D05 conflict on same SPI bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_D05) || (TOUCH_PIN_NUM_D05 == -1)
+        #if defined(EXPANDER_PIN_NUM_D05) && (EXPANDER_PIN_NUM_D05 != -1)
+            #undef TOUCH_PIN_NUM_D05
+            #define TOUCH_PIN_NUM_D05 EXPANDER_PIN_NUM_D05
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D05) || (EXPANDER_PIN_NUM_D05 == -1)
+        #if defined(TOUCH_PIN_NUM_D05) && (TOUCH_PIN_NUM_D05 != -1)
+            #undef EXPANDER_PIN_NUM_D05
+            #define EXPANDER_PIN_NUM_D05 TOUCH_PIN_NUM_D05
+        #endif
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D06) && defined(EXPANDER_PIN_NUM_D06) && \
+        (TOUCH_PIN_NUM_D06 != -1) && (EXPANDER_PIN_NUM_D06 != -1) && \
+        (TOUCH_PIN_NUM_D06 != EXPANDER_PIN_NUM_D06)
+        #error "TOUCH_PIN_NUM_D06 and EXPANDER_PIN_NUM_D06 conflict on same SPI bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_D06) || (TOUCH_PIN_NUM_D06 == -1)
+        #if defined(EXPANDER_PIN_NUM_D06) && (EXPANDER_PIN_NUM_D06 != -1)
+            #undef TOUCH_PIN_NUM_D06
+            #define TOUCH_PIN_NUM_D06 EXPANDER_PIN_NUM_D06
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D06) || (EXPANDER_PIN_NUM_D06 == -1)
+        #if defined(TOUCH_PIN_NUM_D06) && (TOUCH_PIN_NUM_D06 != -1)
+            #undef EXPANDER_PIN_NUM_D06
+            #define EXPANDER_PIN_NUM_D06 TOUCH_PIN_NUM_D06
+        #endif
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D07) && defined(EXPANDER_PIN_NUM_D07) && \
+        (TOUCH_PIN_NUM_D07 != -1) && (EXPANDER_PIN_NUM_D07 != -1) && \
+        (TOUCH_PIN_NUM_D07 != EXPANDER_PIN_NUM_D07)
+        #error "TOUCH_PIN_NUM_D07 and EXPANDER_PIN_NUM_D07 conflict on same SPI bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_D07) || (TOUCH_PIN_NUM_D07 == -1)
+        #if defined(EXPANDER_PIN_NUM_D07) && (EXPANDER_PIN_NUM_D07 != -1)
+            #undef TOUCH_PIN_NUM_D07
+            #define TOUCH_PIN_NUM_D07 EXPANDER_PIN_NUM_D07
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D07) || (EXPANDER_PIN_NUM_D07 == -1)
+        #if defined(TOUCH_PIN_NUM_D07) && (TOUCH_PIN_NUM_D07 != -1)
+            #undef EXPANDER_PIN_NUM_D07
+            #define EXPANDER_PIN_NUM_D07 TOUCH_PIN_NUM_D07
+        #endif
+    #endif
+#endif
+
+
 // POWER-SD SPI bus sharing
 #if defined(POWER_SPI_HOST) && defined(SD_SPI_HOST) && (POWER_SPI_HOST == SD_SPI_HOST)
 
@@ -1086,6 +1439,358 @@
         #if defined(POWER_PIN_NUM_D07) && (POWER_PIN_NUM_D07 != -1)
             #undef SD_PIN_NUM_D07
             #define SD_PIN_NUM_D07 POWER_PIN_NUM_D07
+        #endif
+    #endif
+#endif
+
+
+// POWER-EXPANDER SPI bus sharing
+#if defined(POWER_SPI_HOST) && defined(EXPANDER_SPI_HOST) && (POWER_SPI_HOST == EXPANDER_SPI_HOST)
+
+    #if defined(POWER_PIN_NUM_CLK) && defined(EXPANDER_PIN_NUM_CLK) && \
+        (POWER_PIN_NUM_CLK != -1) && (EXPANDER_PIN_NUM_CLK != -1) && \
+        (POWER_PIN_NUM_CLK != EXPANDER_PIN_NUM_CLK)
+        #error "POWER_PIN_NUM_CLK and EXPANDER_PIN_NUM_CLK conflict on same SPI bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_CLK) || (POWER_PIN_NUM_CLK == -1)
+        #if defined(EXPANDER_PIN_NUM_CLK) && (EXPANDER_PIN_NUM_CLK != -1)
+            #undef POWER_PIN_NUM_CLK
+            #define POWER_PIN_NUM_CLK EXPANDER_PIN_NUM_CLK
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_CLK) || (EXPANDER_PIN_NUM_CLK == -1)
+        #if defined(POWER_PIN_NUM_CLK) && (POWER_PIN_NUM_CLK != -1)
+            #undef EXPANDER_PIN_NUM_CLK
+            #define EXPANDER_PIN_NUM_CLK POWER_PIN_NUM_CLK
+        #endif
+    #endif
+
+    #if defined(POWER_PIN_NUM_D00) && defined(EXPANDER_PIN_NUM_D00) && \
+        (POWER_PIN_NUM_D00 != -1) && (EXPANDER_PIN_NUM_D00 != -1) && \
+        (POWER_PIN_NUM_D00 != EXPANDER_PIN_NUM_D00)
+        #error "POWER_PIN_NUM_D00 and EXPANDER_PIN_NUM_D00 conflict on same SPI bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_D00) || (POWER_PIN_NUM_D00 == -1)
+        #if defined(EXPANDER_PIN_NUM_D00) && (EXPANDER_PIN_NUM_D00 != -1)
+            #undef POWER_PIN_NUM_D00
+            #define POWER_PIN_NUM_D00 EXPANDER_PIN_NUM_D00
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D00) || (EXPANDER_PIN_NUM_D00 == -1)
+        #if defined(POWER_PIN_NUM_D00) && (POWER_PIN_NUM_D00 != -1)
+            #undef EXPANDER_PIN_NUM_D00
+            #define EXPANDER_PIN_NUM_D00 POWER_PIN_NUM_D00
+        #endif
+    #endif
+
+    #if defined(POWER_PIN_NUM_D01) && defined(EXPANDER_PIN_NUM_D01) && \
+        (POWER_PIN_NUM_D01 != -1) && (EXPANDER_PIN_NUM_D01 != -1) && \
+        (POWER_PIN_NUM_D01 != EXPANDER_PIN_NUM_D01)
+        #error "POWER_PIN_NUM_D01 and EXPANDER_PIN_NUM_D01 conflict on same SPI bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_D01) || (POWER_PIN_NUM_D01 == -1)
+        #if defined(EXPANDER_PIN_NUM_D01) && (EXPANDER_PIN_NUM_D01 != -1)
+            #undef POWER_PIN_NUM_D01
+            #define POWER_PIN_NUM_D01 EXPANDER_PIN_NUM_D01
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D01) || (EXPANDER_PIN_NUM_D01 == -1)
+        #if defined(POWER_PIN_NUM_D01) && (POWER_PIN_NUM_D01 != -1)
+            #undef EXPANDER_PIN_NUM_D01
+            #define EXPANDER_PIN_NUM_D01 POWER_PIN_NUM_D01
+        #endif
+    #endif
+
+    #if defined(POWER_PIN_NUM_D02) && defined(EXPANDER_PIN_NUM_D02) && \
+        (POWER_PIN_NUM_D02 != -1) && (EXPANDER_PIN_NUM_D02 != -1) && \
+        (POWER_PIN_NUM_D02 != EXPANDER_PIN_NUM_D02)
+        #error "POWER_PIN_NUM_D02 and EXPANDER_PIN_NUM_D02 conflict on same SPI bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_D02) || (POWER_PIN_NUM_D02 == -1)
+        #if defined(EXPANDER_PIN_NUM_D02) && (EXPANDER_PIN_NUM_D02 != -1)
+            #undef POWER_PIN_NUM_D02
+            #define POWER_PIN_NUM_D02 EXPANDER_PIN_NUM_D02
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D02) || (EXPANDER_PIN_NUM_D02 == -1)
+        #if defined(POWER_PIN_NUM_D02) && (POWER_PIN_NUM_D02 != -1)
+            #undef EXPANDER_PIN_NUM_D02
+            #define EXPANDER_PIN_NUM_D02 POWER_PIN_NUM_D02
+        #endif
+    #endif
+
+    #if defined(POWER_PIN_NUM_D03) && defined(EXPANDER_PIN_NUM_D03) && \
+        (POWER_PIN_NUM_D03 != -1) && (EXPANDER_PIN_NUM_D03 != -1) && \
+        (POWER_PIN_NUM_D03 != EXPANDER_PIN_NUM_D03)
+        #error "POWER_PIN_NUM_D03 and EXPANDER_PIN_NUM_D03 conflict on same SPI bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_D03) || (POWER_PIN_NUM_D03 == -1)
+        #if defined(EXPANDER_PIN_NUM_D03) && (EXPANDER_PIN_NUM_D03 != -1)
+            #undef POWER_PIN_NUM_D03
+            #define POWER_PIN_NUM_D03 EXPANDER_PIN_NUM_D03
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D03) || (EXPANDER_PIN_NUM_D03 == -1)
+        #if defined(POWER_PIN_NUM_D03) && (POWER_PIN_NUM_D03 != -1)
+            #undef EXPANDER_PIN_NUM_D03
+            #define EXPANDER_PIN_NUM_D03 POWER_PIN_NUM_D03
+        #endif
+    #endif
+
+    #if defined(POWER_PIN_NUM_D04) && defined(EXPANDER_PIN_NUM_D04) && \
+        (POWER_PIN_NUM_D04 != -1) && (EXPANDER_PIN_NUM_D04 != -1) && \
+        (POWER_PIN_NUM_D04 != EXPANDER_PIN_NUM_D04)
+        #error "POWER_PIN_NUM_D04 and EXPANDER_PIN_NUM_D04 conflict on same SPI bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_D04) || (POWER_PIN_NUM_D04 == -1)
+        #if defined(EXPANDER_PIN_NUM_D04) && (EXPANDER_PIN_NUM_D04 != -1)
+            #undef POWER_PIN_NUM_D04
+            #define POWER_PIN_NUM_D04 EXPANDER_PIN_NUM_D04
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D04) || (EXPANDER_PIN_NUM_D04 == -1)
+        #if defined(POWER_PIN_NUM_D04) && (POWER_PIN_NUM_D04 != -1)
+            #undef EXPANDER_PIN_NUM_D04
+            #define EXPANDER_PIN_NUM_D04 POWER_PIN_NUM_D04
+        #endif
+    #endif
+
+    #if defined(POWER_PIN_NUM_D05) && defined(EXPANDER_PIN_NUM_D05) && \
+        (POWER_PIN_NUM_D05 != -1) && (EXPANDER_PIN_NUM_D05 != -1) && \
+        (POWER_PIN_NUM_D05 != EXPANDER_PIN_NUM_D05)
+        #error "POWER_PIN_NUM_D05 and EXPANDER_PIN_NUM_D05 conflict on same SPI bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_D05) || (POWER_PIN_NUM_D05 == -1)
+        #if defined(EXPANDER_PIN_NUM_D05) && (EXPANDER_PIN_NUM_D05 != -1)
+            #undef POWER_PIN_NUM_D05
+            #define POWER_PIN_NUM_D05 EXPANDER_PIN_NUM_D05
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D05) || (EXPANDER_PIN_NUM_D05 == -1)
+        #if defined(POWER_PIN_NUM_D05) && (POWER_PIN_NUM_D05 != -1)
+            #undef EXPANDER_PIN_NUM_D05
+            #define EXPANDER_PIN_NUM_D05 POWER_PIN_NUM_D05
+        #endif
+    #endif
+
+    #if defined(POWER_PIN_NUM_D06) && defined(EXPANDER_PIN_NUM_D06) && \
+        (POWER_PIN_NUM_D06 != -1) && (EXPANDER_PIN_NUM_D06 != -1) && \
+        (POWER_PIN_NUM_D06 != EXPANDER_PIN_NUM_D06)
+        #error "POWER_PIN_NUM_D06 and EXPANDER_PIN_NUM_D06 conflict on same SPI bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_D06) || (POWER_PIN_NUM_D06 == -1)
+        #if defined(EXPANDER_PIN_NUM_D06) && (EXPANDER_PIN_NUM_D06 != -1)
+            #undef POWER_PIN_NUM_D06
+            #define POWER_PIN_NUM_D06 EXPANDER_PIN_NUM_D06
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D06) || (EXPANDER_PIN_NUM_D06 == -1)
+        #if defined(POWER_PIN_NUM_D06) && (POWER_PIN_NUM_D06 != -1)
+            #undef EXPANDER_PIN_NUM_D06
+            #define EXPANDER_PIN_NUM_D06 POWER_PIN_NUM_D06
+        #endif
+    #endif
+
+    #if defined(POWER_PIN_NUM_D07) && defined(EXPANDER_PIN_NUM_D07) && \
+        (POWER_PIN_NUM_D07 != -1) && (EXPANDER_PIN_NUM_D07 != -1) && \
+        (POWER_PIN_NUM_D07 != EXPANDER_PIN_NUM_D07)
+        #error "POWER_PIN_NUM_D07 and EXPANDER_PIN_NUM_D07 conflict on same SPI bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_D07) || (POWER_PIN_NUM_D07 == -1)
+        #if defined(EXPANDER_PIN_NUM_D07) && (EXPANDER_PIN_NUM_D07 != -1)
+            #undef POWER_PIN_NUM_D07
+            #define POWER_PIN_NUM_D07 EXPANDER_PIN_NUM_D07
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D07) || (EXPANDER_PIN_NUM_D07 == -1)
+        #if defined(POWER_PIN_NUM_D07) && (POWER_PIN_NUM_D07 != -1)
+            #undef EXPANDER_PIN_NUM_D07
+            #define EXPANDER_PIN_NUM_D07 POWER_PIN_NUM_D07
+        #endif
+    #endif
+#endif
+
+
+// SD-EXPANDER SPI bus sharing
+#if defined(SD_SPI_HOST) && defined(EXPANDER_SPI_HOST) && (SD_SPI_HOST == EXPANDER_SPI_HOST)
+
+    #if defined(SD_PIN_NUM_CLK) && defined(EXPANDER_PIN_NUM_CLK) && \
+        (SD_PIN_NUM_CLK != -1) && (EXPANDER_PIN_NUM_CLK != -1) && \
+        (SD_PIN_NUM_CLK != EXPANDER_PIN_NUM_CLK)
+        #error "SD_PIN_NUM_CLK and EXPANDER_PIN_NUM_CLK conflict on same SPI bus"
+    #endif
+
+    #if !defined(SD_PIN_NUM_CLK) || (SD_PIN_NUM_CLK == -1)
+        #if defined(EXPANDER_PIN_NUM_CLK) && (EXPANDER_PIN_NUM_CLK != -1)
+            #undef SD_PIN_NUM_CLK
+            #define SD_PIN_NUM_CLK EXPANDER_PIN_NUM_CLK
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_CLK) || (EXPANDER_PIN_NUM_CLK == -1)
+        #if defined(SD_PIN_NUM_CLK) && (SD_PIN_NUM_CLK != -1)
+            #undef EXPANDER_PIN_NUM_CLK
+            #define EXPANDER_PIN_NUM_CLK SD_PIN_NUM_CLK
+        #endif
+    #endif
+
+    #if defined(SD_PIN_NUM_D00) && defined(EXPANDER_PIN_NUM_D00) && \
+        (SD_PIN_NUM_D00 != -1) && (EXPANDER_PIN_NUM_D00 != -1) && \
+        (SD_PIN_NUM_D00 != EXPANDER_PIN_NUM_D00)
+        #error "SD_PIN_NUM_D00 and EXPANDER_PIN_NUM_D00 conflict on same SPI bus"
+    #endif
+
+    #if !defined(SD_PIN_NUM_D00) || (SD_PIN_NUM_D00 == -1)
+        #if defined(EXPANDER_PIN_NUM_D00) && (EXPANDER_PIN_NUM_D00 != -1)
+            #undef SD_PIN_NUM_D00
+            #define SD_PIN_NUM_D00 EXPANDER_PIN_NUM_D00
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D00) || (EXPANDER_PIN_NUM_D00 == -1)
+        #if defined(SD_PIN_NUM_D00) && (SD_PIN_NUM_D00 != -1)
+            #undef EXPANDER_PIN_NUM_D00
+            #define EXPANDER_PIN_NUM_D00 SD_PIN_NUM_D00
+        #endif
+    #endif
+
+    #if defined(SD_PIN_NUM_D01) && defined(EXPANDER_PIN_NUM_D01) && \
+        (SD_PIN_NUM_D01 != -1) && (EXPANDER_PIN_NUM_D01 != -1) && \
+        (SD_PIN_NUM_D01 != EXPANDER_PIN_NUM_D01)
+        #error "SD_PIN_NUM_D01 and EXPANDER_PIN_NUM_D01 conflict on same SPI bus"
+    #endif
+
+    #if !defined(SD_PIN_NUM_D01) || (SD_PIN_NUM_D01 == -1)
+        #if defined(EXPANDER_PIN_NUM_D01) && (EXPANDER_PIN_NUM_D01 != -1)
+            #undef SD_PIN_NUM_D01
+            #define SD_PIN_NUM_D01 EXPANDER_PIN_NUM_D01
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D01) || (EXPANDER_PIN_NUM_D01 == -1)
+        #if defined(SD_PIN_NUM_D01) && (SD_PIN_NUM_D01 != -1)
+            #undef EXPANDER_PIN_NUM_D01
+            #define EXPANDER_PIN_NUM_D01 SD_PIN_NUM_D01
+        #endif
+    #endif
+
+    #if defined(SD_PIN_NUM_D02) && defined(EXPANDER_PIN_NUM_D02) && \
+        (SD_PIN_NUM_D02 != -1) && (EXPANDER_PIN_NUM_D02 != -1) && \
+        (SD_PIN_NUM_D02 != EXPANDER_PIN_NUM_D02)
+        #error "SD_PIN_NUM_D02 and EXPANDER_PIN_NUM_D02 conflict on same SPI bus"
+    #endif
+
+    #if !defined(SD_PIN_NUM_D02) || (SD_PIN_NUM_D02 == -1)
+        #if defined(EXPANDER_PIN_NUM_D02) && (EXPANDER_PIN_NUM_D02 != -1)
+            #undef SD_PIN_NUM_D02
+            #define SD_PIN_NUM_D02 EXPANDER_PIN_NUM_D02
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D02) || (EXPANDER_PIN_NUM_D02 == -1)
+        #if defined(SD_PIN_NUM_D02) && (SD_PIN_NUM_D02 != -1)
+            #undef EXPANDER_PIN_NUM_D02
+            #define EXPANDER_PIN_NUM_D02 SD_PIN_NUM_D02
+        #endif
+    #endif
+
+    #if defined(SD_PIN_NUM_D03) && defined(EXPANDER_PIN_NUM_D03) && \
+        (SD_PIN_NUM_D03 != -1) && (EXPANDER_PIN_NUM_D03 != -1) && \
+        (SD_PIN_NUM_D03 != EXPANDER_PIN_NUM_D03)
+        #error "SD_PIN_NUM_D03 and EXPANDER_PIN_NUM_D03 conflict on same SPI bus"
+    #endif
+
+    #if !defined(SD_PIN_NUM_D03) || (SD_PIN_NUM_D03 == -1)
+        #if defined(EXPANDER_PIN_NUM_D03) && (EXPANDER_PIN_NUM_D03 != -1)
+            #undef SD_PIN_NUM_D03
+            #define SD_PIN_NUM_D03 EXPANDER_PIN_NUM_D03
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D03) || (EXPANDER_PIN_NUM_D03 == -1)
+        #if defined(SD_PIN_NUM_D03) && (SD_PIN_NUM_D03 != -1)
+            #undef EXPANDER_PIN_NUM_D03
+            #define EXPANDER_PIN_NUM_D03 SD_PIN_NUM_D03
+        #endif
+    #endif
+
+    #if defined(SD_PIN_NUM_D04) && defined(EXPANDER_PIN_NUM_D04) && \
+        (SD_PIN_NUM_D04 != -1) && (EXPANDER_PIN_NUM_D04 != -1) && \
+        (SD_PIN_NUM_D04 != EXPANDER_PIN_NUM_D04)
+        #error "SD_PIN_NUM_D04 and EXPANDER_PIN_NUM_D04 conflict on same SPI bus"
+    #endif
+
+    #if !defined(SD_PIN_NUM_D04) || (SD_PIN_NUM_D04 == -1)
+        #if defined(EXPANDER_PIN_NUM_D04) && (EXPANDER_PIN_NUM_D04 != -1)
+            #undef SD_PIN_NUM_D04
+            #define SD_PIN_NUM_D04 EXPANDER_PIN_NUM_D04
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D04) || (EXPANDER_PIN_NUM_D04 == -1)
+        #if defined(SD_PIN_NUM_D04) && (SD_PIN_NUM_D04 != -1)
+            #undef EXPANDER_PIN_NUM_D04
+            #define EXPANDER_PIN_NUM_D04 SD_PIN_NUM_D04
+        #endif
+    #endif
+
+    #if defined(SD_PIN_NUM_D05) && defined(EXPANDER_PIN_NUM_D05) && \
+        (SD_PIN_NUM_D05 != -1) && (EXPANDER_PIN_NUM_D05 != -1) && \
+        (SD_PIN_NUM_D05 != EXPANDER_PIN_NUM_D05)
+        #error "SD_PIN_NUM_D05 and EXPANDER_PIN_NUM_D05 conflict on same SPI bus"
+    #endif
+
+    #if !defined(SD_PIN_NUM_D05) || (SD_PIN_NUM_D05 == -1)
+        #if defined(EXPANDER_PIN_NUM_D05) && (EXPANDER_PIN_NUM_D05 != -1)
+            #undef SD_PIN_NUM_D05
+            #define SD_PIN_NUM_D05 EXPANDER_PIN_NUM_D05
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D05) || (EXPANDER_PIN_NUM_D05 == -1)
+        #if defined(SD_PIN_NUM_D05) && (SD_PIN_NUM_D05 != -1)
+            #undef EXPANDER_PIN_NUM_D05
+            #define EXPANDER_PIN_NUM_D05 SD_PIN_NUM_D05
+        #endif
+    #endif
+
+    #if defined(SD_PIN_NUM_D06) && defined(EXPANDER_PIN_NUM_D06) && \
+        (SD_PIN_NUM_D06 != -1) && (EXPANDER_PIN_NUM_D06 != -1) && \
+        (SD_PIN_NUM_D06 != EXPANDER_PIN_NUM_D06)
+        #error "SD_PIN_NUM_D06 and EXPANDER_PIN_NUM_D06 conflict on same SPI bus"
+    #endif
+
+    #if !defined(SD_PIN_NUM_D06) || (SD_PIN_NUM_D06 == -1)
+        #if defined(EXPANDER_PIN_NUM_D06) && (EXPANDER_PIN_NUM_D06 != -1)
+            #undef SD_PIN_NUM_D06
+            #define SD_PIN_NUM_D06 EXPANDER_PIN_NUM_D06
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D06) || (EXPANDER_PIN_NUM_D06 == -1)
+        #if defined(SD_PIN_NUM_D06) && (SD_PIN_NUM_D06 != -1)
+            #undef EXPANDER_PIN_NUM_D06
+            #define EXPANDER_PIN_NUM_D06 SD_PIN_NUM_D06
+        #endif
+    #endif
+
+    #if defined(SD_PIN_NUM_D07) && defined(EXPANDER_PIN_NUM_D07) && \
+        (SD_PIN_NUM_D07 != -1) && (EXPANDER_PIN_NUM_D07 != -1) && \
+        (SD_PIN_NUM_D07 != EXPANDER_PIN_NUM_D07)
+        #error "SD_PIN_NUM_D07 and EXPANDER_PIN_NUM_D07 conflict on same SPI bus"
+    #endif
+
+    #if !defined(SD_PIN_NUM_D07) || (SD_PIN_NUM_D07 == -1)
+        #if defined(EXPANDER_PIN_NUM_D07) && (EXPANDER_PIN_NUM_D07 != -1)
+            #undef SD_PIN_NUM_D07
+            #define SD_PIN_NUM_D07 EXPANDER_PIN_NUM_D07
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_D07) || (EXPANDER_PIN_NUM_D07 == -1)
+        #if defined(SD_PIN_NUM_D07) && (SD_PIN_NUM_D07 != -1)
+            #undef EXPANDER_PIN_NUM_D07
+            #define EXPANDER_PIN_NUM_D07 SD_PIN_NUM_D07
         #endif
     #endif
 #endif
@@ -1271,6 +1976,65 @@
 #endif
 
 
+// LCD-EXPANDER SPI cross-host conflict check
+#if defined(LCD_SPI_HOST) && defined(EXPANDER_SPI_HOST) && (LCD_SPI_HOST != EXPANDER_SPI_HOST)
+
+    #if defined(LCD_PIN_NUM_CLK) && defined(EXPANDER_PIN_NUM_CLK) && \
+        (LCD_PIN_NUM_CLK != -1) && (EXPANDER_PIN_NUM_CLK != -1) && \
+        (LCD_PIN_NUM_CLK == EXPANDER_PIN_NUM_CLK)
+        #error "LCD_PIN_NUM_CLK and EXPANDER_PIN_NUM_CLK both use GPIO " ##LCD_PIN_NUM_CLK " but are on different SPI hosts"
+    #endif
+
+    #if defined(LCD_PIN_NUM_D00) && defined(EXPANDER_PIN_NUM_D00) && \
+        (LCD_PIN_NUM_D00 != -1) && (EXPANDER_PIN_NUM_D00 != -1) && \
+        (LCD_PIN_NUM_D00 == EXPANDER_PIN_NUM_D00)
+        #error "LCD_PIN_NUM_D00 and EXPANDER_PIN_NUM_D00 both use GPIO " ##LCD_PIN_NUM_D00 " but are on different SPI hosts"
+    #endif
+
+    #if defined(LCD_PIN_NUM_D01) && defined(EXPANDER_PIN_NUM_D01) && \
+        (LCD_PIN_NUM_D01 != -1) && (EXPANDER_PIN_NUM_D01 != -1) && \
+        (LCD_PIN_NUM_D01 == EXPANDER_PIN_NUM_D01)
+        #error "LCD_PIN_NUM_D01 and EXPANDER_PIN_NUM_D01 both use GPIO " ##LCD_PIN_NUM_D01 " but are on different SPI hosts"
+    #endif
+
+    #if defined(LCD_PIN_NUM_D02) && defined(EXPANDER_PIN_NUM_D02) && \
+        (LCD_PIN_NUM_D02 != -1) && (EXPANDER_PIN_NUM_D02 != -1) && \
+        (LCD_PIN_NUM_D02 == EXPANDER_PIN_NUM_D02)
+        #error "LCD_PIN_NUM_D02 and EXPANDER_PIN_NUM_D02 both use GPIO " ##LCD_PIN_NUM_D02 " but are on different SPI hosts"
+    #endif
+
+    #if defined(LCD_PIN_NUM_D03) && defined(EXPANDER_PIN_NUM_D03) && \
+        (LCD_PIN_NUM_D03 != -1) && (EXPANDER_PIN_NUM_D03 != -1) && \
+        (LCD_PIN_NUM_D03 == EXPANDER_PIN_NUM_D03)
+        #error "LCD_PIN_NUM_D03 and EXPANDER_PIN_NUM_D03 both use GPIO " ##LCD_PIN_NUM_D03 " but are on different SPI hosts"
+    #endif
+
+    #if defined(LCD_PIN_NUM_D04) && defined(EXPANDER_PIN_NUM_D04) && \
+        (LCD_PIN_NUM_D04 != -1) && (EXPANDER_PIN_NUM_D04 != -1) && \
+        (LCD_PIN_NUM_D04 == EXPANDER_PIN_NUM_D04)
+        #error "LCD_PIN_NUM_D04 and EXPANDER_PIN_NUM_D04 both use GPIO " ##LCD_PIN_NUM_D04 " but are on different SPI hosts"
+    #endif
+
+    #if defined(LCD_PIN_NUM_D05) && defined(EXPANDER_PIN_NUM_D05) && \
+        (LCD_PIN_NUM_D05 != -1) && (EXPANDER_PIN_NUM_D05 != -1) && \
+        (LCD_PIN_NUM_D05 == EXPANDER_PIN_NUM_D05)
+        #error "LCD_PIN_NUM_D05 and EXPANDER_PIN_NUM_D05 both use GPIO " ##LCD_PIN_NUM_D05 " but are on different SPI hosts"
+    #endif
+
+    #if defined(LCD_PIN_NUM_D06) && defined(EXPANDER_PIN_NUM_D06) && \
+        (LCD_PIN_NUM_D06 != -1) && (EXPANDER_PIN_NUM_D06 != -1) && \
+        (LCD_PIN_NUM_D06 == EXPANDER_PIN_NUM_D06)
+        #error "LCD_PIN_NUM_D06 and EXPANDER_PIN_NUM_D06 both use GPIO " ##LCD_PIN_NUM_D06 " but are on different SPI hosts"
+    #endif
+
+    #if defined(LCD_PIN_NUM_D07) && defined(EXPANDER_PIN_NUM_D07) && \
+        (LCD_PIN_NUM_D07 != -1) && (EXPANDER_PIN_NUM_D07 != -1) && \
+        (LCD_PIN_NUM_D07 == EXPANDER_PIN_NUM_D07)
+        #error "LCD_PIN_NUM_D07 and EXPANDER_PIN_NUM_D07 both use GPIO " ##LCD_PIN_NUM_D07 " but are on different SPI hosts"
+    #endif
+#endif
+
+
 // TOUCH-POWER SPI cross-host conflict check
 #if defined(TOUCH_SPI_HOST) && defined(POWER_SPI_HOST) && (TOUCH_SPI_HOST != POWER_SPI_HOST)
 
@@ -1389,6 +2153,65 @@
 #endif
 
 
+// TOUCH-EXPANDER SPI cross-host conflict check
+#if defined(TOUCH_SPI_HOST) && defined(EXPANDER_SPI_HOST) && (TOUCH_SPI_HOST != EXPANDER_SPI_HOST)
+
+    #if defined(TOUCH_PIN_NUM_CLK) && defined(EXPANDER_PIN_NUM_CLK) && \
+        (TOUCH_PIN_NUM_CLK != -1) && (EXPANDER_PIN_NUM_CLK != -1) && \
+        (TOUCH_PIN_NUM_CLK == EXPANDER_PIN_NUM_CLK)
+        #error "TOUCH_PIN_NUM_CLK and EXPANDER_PIN_NUM_CLK both use GPIO " ##TOUCH_PIN_NUM_CLK " but are on different SPI hosts"
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D00) && defined(EXPANDER_PIN_NUM_D00) && \
+        (TOUCH_PIN_NUM_D00 != -1) && (EXPANDER_PIN_NUM_D00 != -1) && \
+        (TOUCH_PIN_NUM_D00 == EXPANDER_PIN_NUM_D00)
+        #error "TOUCH_PIN_NUM_D00 and EXPANDER_PIN_NUM_D00 both use GPIO " ##TOUCH_PIN_NUM_D00 " but are on different SPI hosts"
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D01) && defined(EXPANDER_PIN_NUM_D01) && \
+        (TOUCH_PIN_NUM_D01 != -1) && (EXPANDER_PIN_NUM_D01 != -1) && \
+        (TOUCH_PIN_NUM_D01 == EXPANDER_PIN_NUM_D01)
+        #error "TOUCH_PIN_NUM_D01 and EXPANDER_PIN_NUM_D01 both use GPIO " ##TOUCH_PIN_NUM_D01 " but are on different SPI hosts"
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D02) && defined(EXPANDER_PIN_NUM_D02) && \
+        (TOUCH_PIN_NUM_D02 != -1) && (EXPANDER_PIN_NUM_D02 != -1) && \
+        (TOUCH_PIN_NUM_D02 == EXPANDER_PIN_NUM_D02)
+        #error "TOUCH_PIN_NUM_D02 and EXPANDER_PIN_NUM_D02 both use GPIO " ##TOUCH_PIN_NUM_D02 " but are on different SPI hosts"
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D03) && defined(EXPANDER_PIN_NUM_D03) && \
+        (TOUCH_PIN_NUM_D03 != -1) && (EXPANDER_PIN_NUM_D03 != -1) && \
+        (TOUCH_PIN_NUM_D03 == EXPANDER_PIN_NUM_D03)
+        #error "TOUCH_PIN_NUM_D03 and EXPANDER_PIN_NUM_D03 both use GPIO " ##TOUCH_PIN_NUM_D03 " but are on different SPI hosts"
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D04) && defined(EXPANDER_PIN_NUM_D04) && \
+        (TOUCH_PIN_NUM_D04 != -1) && (EXPANDER_PIN_NUM_D04 != -1) && \
+        (TOUCH_PIN_NUM_D04 == EXPANDER_PIN_NUM_D04)
+        #error "TOUCH_PIN_NUM_D04 and EXPANDER_PIN_NUM_D04 both use GPIO " ##TOUCH_PIN_NUM_D04 " but are on different SPI hosts"
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D05) && defined(EXPANDER_PIN_NUM_D05) && \
+        (TOUCH_PIN_NUM_D05 != -1) && (EXPANDER_PIN_NUM_D05 != -1) && \
+        (TOUCH_PIN_NUM_D05 == EXPANDER_PIN_NUM_D05)
+        #error "TOUCH_PIN_NUM_D05 and EXPANDER_PIN_NUM_D05 both use GPIO " ##TOUCH_PIN_NUM_D05 " but are on different SPI hosts"
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D06) && defined(EXPANDER_PIN_NUM_D06) && \
+        (TOUCH_PIN_NUM_D06 != -1) && (EXPANDER_PIN_NUM_D06 != -1) && \
+        (TOUCH_PIN_NUM_D06 == EXPANDER_PIN_NUM_D06)
+        #error "TOUCH_PIN_NUM_D06 and EXPANDER_PIN_NUM_D06 both use GPIO " ##TOUCH_PIN_NUM_D06 " but are on different SPI hosts"
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_D07) && defined(EXPANDER_PIN_NUM_D07) && \
+        (TOUCH_PIN_NUM_D07 != -1) && (EXPANDER_PIN_NUM_D07 != -1) && \
+        (TOUCH_PIN_NUM_D07 == EXPANDER_PIN_NUM_D07)
+        #error "TOUCH_PIN_NUM_D07 and EXPANDER_PIN_NUM_D07 both use GPIO " ##TOUCH_PIN_NUM_D07 " but are on different SPI hosts"
+    #endif
+#endif
+
+
 // POWER-SD SPI cross-host conflict check
 #if defined(POWER_SPI_HOST) && defined(SD_SPI_HOST) && (POWER_SPI_HOST != SD_SPI_HOST)
 
@@ -1444,6 +2267,124 @@
         (POWER_PIN_NUM_D07 != -1) && (SD_PIN_NUM_D07 != -1) && \
         (POWER_PIN_NUM_D07 == SD_PIN_NUM_D07)
         #error "POWER_PIN_NUM_D07 and SD_PIN_NUM_D07 both use GPIO " ##POWER_PIN_NUM_D07 " but are on different SPI hosts"
+    #endif
+#endif
+
+
+// POWER-EXPANDER SPI cross-host conflict check
+#if defined(POWER_SPI_HOST) && defined(EXPANDER_SPI_HOST) && (POWER_SPI_HOST != EXPANDER_SPI_HOST)
+
+    #if defined(POWER_PIN_NUM_CLK) && defined(EXPANDER_PIN_NUM_CLK) && \
+        (POWER_PIN_NUM_CLK != -1) && (EXPANDER_PIN_NUM_CLK != -1) && \
+        (POWER_PIN_NUM_CLK == EXPANDER_PIN_NUM_CLK)
+        #error "POWER_PIN_NUM_CLK and EXPANDER_PIN_NUM_CLK both use GPIO " ##POWER_PIN_NUM_CLK " but are on different SPI hosts"
+    #endif
+
+    #if defined(POWER_PIN_NUM_D00) && defined(EXPANDER_PIN_NUM_D00) && \
+        (POWER_PIN_NUM_D00 != -1) && (EXPANDER_PIN_NUM_D00 != -1) && \
+        (POWER_PIN_NUM_D00 == EXPANDER_PIN_NUM_D00)
+        #error "POWER_PIN_NUM_D00 and EXPANDER_PIN_NUM_D00 both use GPIO " ##POWER_PIN_NUM_D00 " but are on different SPI hosts"
+    #endif
+
+    #if defined(POWER_PIN_NUM_D01) && defined(EXPANDER_PIN_NUM_D01) && \
+        (POWER_PIN_NUM_D01 != -1) && (EXPANDER_PIN_NUM_D01 != -1) && \
+        (POWER_PIN_NUM_D01 == EXPANDER_PIN_NUM_D01)
+        #error "POWER_PIN_NUM_D01 and EXPANDER_PIN_NUM_D01 both use GPIO " ##POWER_PIN_NUM_D01 " but are on different SPI hosts"
+    #endif
+
+    #if defined(POWER_PIN_NUM_D02) && defined(EXPANDER_PIN_NUM_D02) && \
+        (POWER_PIN_NUM_D02 != -1) && (EXPANDER_PIN_NUM_D02 != -1) && \
+        (POWER_PIN_NUM_D02 == EXPANDER_PIN_NUM_D02)
+        #error "POWER_PIN_NUM_D02 and EXPANDER_PIN_NUM_D02 both use GPIO " ##POWER_PIN_NUM_D02 " but are on different SPI hosts"
+    #endif
+
+    #if defined(POWER_PIN_NUM_D03) && defined(EXPANDER_PIN_NUM_D03) && \
+        (POWER_PIN_NUM_D03 != -1) && (EXPANDER_PIN_NUM_D03 != -1) && \
+        (POWER_PIN_NUM_D03 == EXPANDER_PIN_NUM_D03)
+        #error "POWER_PIN_NUM_D03 and EXPANDER_PIN_NUM_D03 both use GPIO " ##POWER_PIN_NUM_D03 " but are on different SPI hosts"
+    #endif
+
+    #if defined(POWER_PIN_NUM_D04) && defined(EXPANDER_PIN_NUM_D04) && \
+        (POWER_PIN_NUM_D04 != -1) && (EXPANDER_PIN_NUM_D04 != -1) && \
+        (POWER_PIN_NUM_D04 == EXPANDER_PIN_NUM_D04)
+        #error "POWER_PIN_NUM_D04 and EXPANDER_PIN_NUM_D04 both use GPIO " ##POWER_PIN_NUM_D04 " but are on different SPI hosts"
+    #endif
+
+    #if defined(POWER_PIN_NUM_D05) && defined(EXPANDER_PIN_NUM_D05) && \
+        (POWER_PIN_NUM_D05 != -1) && (EXPANDER_PIN_NUM_D05 != -1) && \
+        (POWER_PIN_NUM_D05 == EXPANDER_PIN_NUM_D05)
+        #error "POWER_PIN_NUM_D05 and EXPANDER_PIN_NUM_D05 both use GPIO " ##POWER_PIN_NUM_D05 " but are on different SPI hosts"
+    #endif
+
+    #if defined(POWER_PIN_NUM_D06) && defined(EXPANDER_PIN_NUM_D06) && \
+        (POWER_PIN_NUM_D06 != -1) && (EXPANDER_PIN_NUM_D06 != -1) && \
+        (POWER_PIN_NUM_D06 == EXPANDER_PIN_NUM_D06)
+        #error "POWER_PIN_NUM_D06 and EXPANDER_PIN_NUM_D06 both use GPIO " ##POWER_PIN_NUM_D06 " but are on different SPI hosts"
+    #endif
+
+    #if defined(POWER_PIN_NUM_D07) && defined(EXPANDER_PIN_NUM_D07) && \
+        (POWER_PIN_NUM_D07 != -1) && (EXPANDER_PIN_NUM_D07 != -1) && \
+        (POWER_PIN_NUM_D07 == EXPANDER_PIN_NUM_D07)
+        #error "POWER_PIN_NUM_D07 and EXPANDER_PIN_NUM_D07 both use GPIO " ##POWER_PIN_NUM_D07 " but are on different SPI hosts"
+    #endif
+#endif
+
+
+// SD-EXPANDER SPI cross-host conflict check
+#if defined(SD_SPI_HOST) && defined(EXPANDER_SPI_HOST) && (SD_SPI_HOST != EXPANDER_SPI_HOST)
+
+    #if defined(SD_PIN_NUM_CLK) && defined(EXPANDER_PIN_NUM_CLK) && \
+        (SD_PIN_NUM_CLK != -1) && (EXPANDER_PIN_NUM_CLK != -1) && \
+        (SD_PIN_NUM_CLK == EXPANDER_PIN_NUM_CLK)
+        #error "SD_PIN_NUM_CLK and EXPANDER_PIN_NUM_CLK both use GPIO " ##SD_PIN_NUM_CLK " but are on different SPI hosts"
+    #endif
+
+    #if defined(SD_PIN_NUM_D00) && defined(EXPANDER_PIN_NUM_D00) && \
+        (SD_PIN_NUM_D00 != -1) && (EXPANDER_PIN_NUM_D00 != -1) && \
+        (SD_PIN_NUM_D00 == EXPANDER_PIN_NUM_D00)
+        #error "SD_PIN_NUM_D00 and EXPANDER_PIN_NUM_D00 both use GPIO " ##SD_PIN_NUM_D00 " but are on different SPI hosts"
+    #endif
+
+    #if defined(SD_PIN_NUM_D01) && defined(EXPANDER_PIN_NUM_D01) && \
+        (SD_PIN_NUM_D01 != -1) && (EXPANDER_PIN_NUM_D01 != -1) && \
+        (SD_PIN_NUM_D01 == EXPANDER_PIN_NUM_D01)
+        #error "SD_PIN_NUM_D01 and EXPANDER_PIN_NUM_D01 both use GPIO " ##SD_PIN_NUM_D01 " but are on different SPI hosts"
+    #endif
+
+    #if defined(SD_PIN_NUM_D02) && defined(EXPANDER_PIN_NUM_D02) && \
+        (SD_PIN_NUM_D02 != -1) && (EXPANDER_PIN_NUM_D02 != -1) && \
+        (SD_PIN_NUM_D02 == EXPANDER_PIN_NUM_D02)
+        #error "SD_PIN_NUM_D02 and EXPANDER_PIN_NUM_D02 both use GPIO " ##SD_PIN_NUM_D02 " but are on different SPI hosts"
+    #endif
+
+    #if defined(SD_PIN_NUM_D03) && defined(EXPANDER_PIN_NUM_D03) && \
+        (SD_PIN_NUM_D03 != -1) && (EXPANDER_PIN_NUM_D03 != -1) && \
+        (SD_PIN_NUM_D03 == EXPANDER_PIN_NUM_D03)
+        #error "SD_PIN_NUM_D03 and EXPANDER_PIN_NUM_D03 both use GPIO " ##SD_PIN_NUM_D03 " but are on different SPI hosts"
+    #endif
+
+    #if defined(SD_PIN_NUM_D04) && defined(EXPANDER_PIN_NUM_D04) && \
+        (SD_PIN_NUM_D04 != -1) && (EXPANDER_PIN_NUM_D04 != -1) && \
+        (SD_PIN_NUM_D04 == EXPANDER_PIN_NUM_D04)
+        #error "SD_PIN_NUM_D04 and EXPANDER_PIN_NUM_D04 both use GPIO " ##SD_PIN_NUM_D04 " but are on different SPI hosts"
+    #endif
+
+    #if defined(SD_PIN_NUM_D05) && defined(EXPANDER_PIN_NUM_D05) && \
+        (SD_PIN_NUM_D05 != -1) && (EXPANDER_PIN_NUM_D05 != -1) && \
+        (SD_PIN_NUM_D05 == EXPANDER_PIN_NUM_D05)
+        #error "SD_PIN_NUM_D05 and EXPANDER_PIN_NUM_D05 both use GPIO " ##SD_PIN_NUM_D05 " but are on different SPI hosts"
+    #endif
+
+    #if defined(SD_PIN_NUM_D06) && defined(EXPANDER_PIN_NUM_D06) && \
+        (SD_PIN_NUM_D06 != -1) && (EXPANDER_PIN_NUM_D06 != -1) && \
+        (SD_PIN_NUM_D06 == EXPANDER_PIN_NUM_D06)
+        #error "SD_PIN_NUM_D06 and EXPANDER_PIN_NUM_D06 both use GPIO " ##SD_PIN_NUM_D06 " but are on different SPI hosts"
+    #endif
+
+    #if defined(SD_PIN_NUM_D07) && defined(EXPANDER_PIN_NUM_D07) && \
+        (SD_PIN_NUM_D07 != -1) && (EXPANDER_PIN_NUM_D07 != -1) && \
+        (SD_PIN_NUM_D07 == EXPANDER_PIN_NUM_D07)
+        #error "SD_PIN_NUM_D07 and EXPANDER_PIN_NUM_D07 both use GPIO " ##SD_PIN_NUM_D07 " but are on different SPI hosts"
     #endif
 #endif
 
@@ -1537,6 +2478,49 @@
 #endif
 
 
+// LCD-EXPANDER I2C bus sharing
+#if defined(LCD_I2C_HOST) && defined(EXPANDER_I2C_HOST) && (LCD_I2C_HOST == EXPANDER_I2C_HOST)
+
+    #if defined(LCD_PIN_NUM_SCL) && defined(EXPANDER_PIN_NUM_SCL) && \
+        (LCD_PIN_NUM_SCL != -1) && (EXPANDER_PIN_NUM_SCL != -1) && \
+        (LCD_PIN_NUM_SCL != EXPANDER_PIN_NUM_SCL)
+        #error "LCD_PIN_NUM_SCL and EXPANDER_PIN_NUM_SCL conflict on same I2C bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_SCL) || (LCD_PIN_NUM_SCL == -1)
+        #if defined(EXPANDER_PIN_NUM_SCL) && (EXPANDER_PIN_NUM_SCL != -1)
+            #undef LCD_PIN_NUM_SCL
+            #define LCD_PIN_NUM_SCL EXPANDER_PIN_NUM_SCL
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_SCL) || (EXPANDER_PIN_NUM_SCL == -1)
+        #if defined(LCD_PIN_NUM_SCL) && (LCD_PIN_NUM_SCL != -1)
+            #undef EXPANDER_PIN_NUM_SCL
+            #define EXPANDER_PIN_NUM_SCL LCD_PIN_NUM_SCL
+        #endif
+    #endif
+
+    #if defined(LCD_PIN_NUM_SDA) && defined(EXPANDER_PIN_NUM_SDA) && \
+        (LCD_PIN_NUM_SDA != -1) && (EXPANDER_PIN_NUM_SDA != -1) && \
+        (LCD_PIN_NUM_SDA != EXPANDER_PIN_NUM_SDA)
+        #error "LCD_PIN_NUM_SDA and EXPANDER_PIN_NUM_SDA conflict on same I2C bus"
+    #endif
+
+    #if !defined(LCD_PIN_NUM_SDA) || (LCD_PIN_NUM_SDA == -1)
+        #if defined(EXPANDER_PIN_NUM_SDA) && (EXPANDER_PIN_NUM_SDA != -1)
+            #undef LCD_PIN_NUM_SDA
+            #define LCD_PIN_NUM_SDA EXPANDER_PIN_NUM_SDA
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_SDA) || (EXPANDER_PIN_NUM_SDA == -1)
+        #if defined(LCD_PIN_NUM_SDA) && (LCD_PIN_NUM_SDA != -1)
+            #undef EXPANDER_PIN_NUM_SDA
+            #define EXPANDER_PIN_NUM_SDA LCD_PIN_NUM_SDA
+        #endif
+    #endif
+#endif
+
+
 // TOUCH-POWER I2C bus sharing
 #if defined(TOUCH_I2C_HOST) && defined(POWER_I2C_HOST) && (TOUCH_I2C_HOST == POWER_I2C_HOST)
 
@@ -1579,6 +2563,92 @@
     #endif
 #endif
 
+
+// TOUCH-EXPANDER I2C bus sharing
+#if defined(TOUCH_I2C_HOST) && defined(EXPANDER_I2C_HOST) && (TOUCH_I2C_HOST == EXPANDER_I2C_HOST)
+
+    #if defined(TOUCH_PIN_NUM_SCL) && defined(EXPANDER_PIN_NUM_SCL) && \
+        (TOUCH_PIN_NUM_SCL != -1) && (EXPANDER_PIN_NUM_SCL != -1) && \
+        (TOUCH_PIN_NUM_SCL != EXPANDER_PIN_NUM_SCL)
+        #error "TOUCH_PIN_NUM_SCL and EXPANDER_PIN_NUM_SCL conflict on same I2C bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_SCL) || (TOUCH_PIN_NUM_SCL == -1)
+        #if defined(EXPANDER_PIN_NUM_SCL) && (EXPANDER_PIN_NUM_SCL != -1)
+            #undef TOUCH_PIN_NUM_SCL
+            #define TOUCH_PIN_NUM_SCL EXPANDER_PIN_NUM_SCL
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_SCL) || (EXPANDER_PIN_NUM_SCL == -1)
+        #if defined(TOUCH_PIN_NUM_SCL) && (TOUCH_PIN_NUM_SCL != -1)
+            #undef EXPANDER_PIN_NUM_SCL
+            #define EXPANDER_PIN_NUM_SCL TOUCH_PIN_NUM_SCL
+        #endif
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_SDA) && defined(EXPANDER_PIN_NUM_SDA) && \
+        (TOUCH_PIN_NUM_SDA != -1) && (EXPANDER_PIN_NUM_SDA != -1) && \
+        (TOUCH_PIN_NUM_SDA != EXPANDER_PIN_NUM_SDA)
+        #error "TOUCH_PIN_NUM_SDA and EXPANDER_PIN_NUM_SDA conflict on same I2C bus"
+    #endif
+
+    #if !defined(TOUCH_PIN_NUM_SDA) || (TOUCH_PIN_NUM_SDA == -1)
+        #if defined(EXPANDER_PIN_NUM_SDA) && (EXPANDER_PIN_NUM_SDA != -1)
+            #undef TOUCH_PIN_NUM_SDA
+            #define TOUCH_PIN_NUM_SDA EXPANDER_PIN_NUM_SDA
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_SDA) || (EXPANDER_PIN_NUM_SDA == -1)
+        #if defined(TOUCH_PIN_NUM_SDA) && (TOUCH_PIN_NUM_SDA != -1)
+            #undef EXPANDER_PIN_NUM_SDA
+            #define EXPANDER_PIN_NUM_SDA TOUCH_PIN_NUM_SDA
+        #endif
+    #endif
+#endif
+
+
+// POWER-EXPANDER I2C bus sharing
+#if defined(POWER_I2C_HOST) && defined(EXPANDER_I2C_HOST) && (POWER_I2C_HOST == EXPANDER_I2C_HOST)
+
+    #if defined(POWER_PIN_NUM_SCL) && defined(EXPANDER_PIN_NUM_SCL) && \
+        (POWER_PIN_NUM_SCL != -1) && (EXPANDER_PIN_NUM_SCL != -1) && \
+        (POWER_PIN_NUM_SCL != EXPANDER_PIN_NUM_SCL)
+        #error "POWER_PIN_NUM_SCL and EXPANDER_PIN_NUM_SCL conflict on same I2C bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_SCL) || (POWER_PIN_NUM_SCL == -1)
+        #if defined(EXPANDER_PIN_NUM_SCL) && (EXPANDER_PIN_NUM_SCL != -1)
+            #undef POWER_PIN_NUM_SCL
+            #define POWER_PIN_NUM_SCL EXPANDER_PIN_NUM_SCL
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_SCL) || (EXPANDER_PIN_NUM_SCL == -1)
+        #if defined(POWER_PIN_NUM_SCL) && (POWER_PIN_NUM_SCL != -1)
+            #undef EXPANDER_PIN_NUM_SCL
+            #define EXPANDER_PIN_NUM_SCL POWER_PIN_NUM_SCL
+        #endif
+    #endif
+
+    #if defined(POWER_PIN_NUM_SDA) && defined(EXPANDER_PIN_NUM_SDA) && \
+        (POWER_PIN_NUM_SDA != -1) && (EXPANDER_PIN_NUM_SDA != -1) && \
+        (POWER_PIN_NUM_SDA != EXPANDER_PIN_NUM_SDA)
+        #error "POWER_PIN_NUM_SDA and EXPANDER_PIN_NUM_SDA conflict on same I2C bus"
+    #endif
+
+    #if !defined(POWER_PIN_NUM_SDA) || (POWER_PIN_NUM_SDA == -1)
+        #if defined(EXPANDER_PIN_NUM_SDA) && (EXPANDER_PIN_NUM_SDA != -1)
+            #undef POWER_PIN_NUM_SDA
+            #define POWER_PIN_NUM_SDA EXPANDER_PIN_NUM_SDA
+        #endif
+    #endif
+    #if !defined(EXPANDER_PIN_NUM_SDA) || (EXPANDER_PIN_NUM_SDA == -1)
+        #if defined(POWER_PIN_NUM_SDA) && (POWER_PIN_NUM_SDA != -1)
+            #undef EXPANDER_PIN_NUM_SDA
+            #define EXPANDER_PIN_NUM_SDA POWER_PIN_NUM_SDA
+        #endif
+    #endif
+#endif
+
 // ============================================================================
 // I2C CROSS-HOST CONFLICT DETECTION
 // ============================================================================
@@ -1617,6 +2687,23 @@
 #endif
 
 
+// LCD-EXPANDER I2C cross-host conflict check
+#if defined(LCD_I2C_HOST) && defined(EXPANDER_I2C_HOST) && (LCD_I2C_HOST != EXPANDER_I2C_HOST)
+
+    #if defined(LCD_PIN_NUM_SCL) && defined(EXPANDER_PIN_NUM_SCL) && \
+        (LCD_PIN_NUM_SCL != -1) && (EXPANDER_PIN_NUM_SCL != -1) && \
+        (LCD_PIN_NUM_SCL == EXPANDER_PIN_NUM_SCL)
+        #error "LCD_PIN_NUM_SCL and EXPANDER_PIN_NUM_SCL both use GPIO " ##LCD_PIN_NUM_SCL " but are on different I2C hosts"
+    #endif
+
+    #if defined(LCD_PIN_NUM_SDA) && defined(EXPANDER_PIN_NUM_SDA) && \
+        (LCD_PIN_NUM_SDA != -1) && (EXPANDER_PIN_NUM_SDA != -1) && \
+        (LCD_PIN_NUM_SDA == EXPANDER_PIN_NUM_SDA)
+        #error "LCD_PIN_NUM_SDA and EXPANDER_PIN_NUM_SDA both use GPIO " ##LCD_PIN_NUM_SDA " but are on different I2C hosts"
+    #endif
+#endif
+
+
 // TOUCH-POWER I2C cross-host conflict check
 #if defined(TOUCH_I2C_HOST) && defined(POWER_I2C_HOST) && (TOUCH_I2C_HOST != POWER_I2C_HOST)
 
@@ -1630,6 +2717,40 @@
         (TOUCH_PIN_NUM_SDA != -1) && (POWER_PIN_NUM_SDA != -1) && \
         (TOUCH_PIN_NUM_SDA == POWER_PIN_NUM_SDA)
         #error "TOUCH_PIN_NUM_SDA and POWER_PIN_NUM_SDA both use GPIO " ##TOUCH_PIN_NUM_SDA " but are on different I2C hosts"
+    #endif
+#endif
+
+
+// TOUCH-EXPANDER I2C cross-host conflict check
+#if defined(TOUCH_I2C_HOST) && defined(EXPANDER_I2C_HOST) && (TOUCH_I2C_HOST != EXPANDER_I2C_HOST)
+
+    #if defined(TOUCH_PIN_NUM_SCL) && defined(EXPANDER_PIN_NUM_SCL) && \
+        (TOUCH_PIN_NUM_SCL != -1) && (EXPANDER_PIN_NUM_SCL != -1) && \
+        (TOUCH_PIN_NUM_SCL == EXPANDER_PIN_NUM_SCL)
+        #error "TOUCH_PIN_NUM_SCL and EXPANDER_PIN_NUM_SCL both use GPIO " ##TOUCH_PIN_NUM_SCL " but are on different I2C hosts"
+    #endif
+
+    #if defined(TOUCH_PIN_NUM_SDA) && defined(EXPANDER_PIN_NUM_SDA) && \
+        (TOUCH_PIN_NUM_SDA != -1) && (EXPANDER_PIN_NUM_SDA != -1) && \
+        (TOUCH_PIN_NUM_SDA == EXPANDER_PIN_NUM_SDA)
+        #error "TOUCH_PIN_NUM_SDA and EXPANDER_PIN_NUM_SDA both use GPIO " ##TOUCH_PIN_NUM_SDA " but are on different I2C hosts"
+    #endif
+#endif
+
+
+// POWER-EXPANDER I2C cross-host conflict check
+#if defined(POWER_I2C_HOST) && defined(EXPANDER_I2C_HOST) && (POWER_I2C_HOST != EXPANDER_I2C_HOST)
+
+    #if defined(POWER_PIN_NUM_SCL) && defined(EXPANDER_PIN_NUM_SCL) && \
+        (POWER_PIN_NUM_SCL != -1) && (EXPANDER_PIN_NUM_SCL != -1) && \
+        (POWER_PIN_NUM_SCL == EXPANDER_PIN_NUM_SCL)
+        #error "POWER_PIN_NUM_SCL and EXPANDER_PIN_NUM_SCL both use GPIO " ##POWER_PIN_NUM_SCL " but are on different I2C hosts"
+    #endif
+
+    #if defined(POWER_PIN_NUM_SDA) && defined(EXPANDER_PIN_NUM_SDA) && \
+        (POWER_PIN_NUM_SDA != -1) && (EXPANDER_PIN_NUM_SDA != -1) && \
+        (POWER_PIN_NUM_SDA == EXPANDER_PIN_NUM_SDA)
+        #error "POWER_PIN_NUM_SDA and EXPANDER_PIN_NUM_SDA both use GPIO " ##POWER_PIN_NUM_SDA " but are on different I2C hosts"
     #endif
 #endif
 
@@ -1660,6 +2781,13 @@
     #error "LCD_PIN_NUM_CS and SD_PIN_NUM_CS both use GPIO " ##LCD_PIN_NUM_CS " - CS pins must be unique"
 #endif
 
+// LCD-EXPANDER CS pin uniqueness check
+#if defined(LCD_PIN_NUM_CS) && defined(EXPANDER_PIN_NUM_CS) && \
+    (LCD_PIN_NUM_CS != -1) && (EXPANDER_PIN_NUM_CS != -1) && \
+    (LCD_PIN_NUM_CS == EXPANDER_PIN_NUM_CS)
+    #error "LCD_PIN_NUM_CS and EXPANDER_PIN_NUM_CS both use GPIO " ##LCD_PIN_NUM_CS " - CS pins must be unique"
+#endif
+
 // TOUCH-POWER CS pin uniqueness check
 #if defined(TOUCH_PIN_NUM_CS) && defined(POWER_PIN_NUM_CS) && \
     (TOUCH_PIN_NUM_CS != -1) && (POWER_PIN_NUM_CS != -1) && \
@@ -1674,11 +2802,32 @@
     #error "TOUCH_PIN_NUM_CS and SD_PIN_NUM_CS both use GPIO " ##TOUCH_PIN_NUM_CS " - CS pins must be unique"
 #endif
 
+// TOUCH-EXPANDER CS pin uniqueness check
+#if defined(TOUCH_PIN_NUM_CS) && defined(EXPANDER_PIN_NUM_CS) && \
+    (TOUCH_PIN_NUM_CS != -1) && (EXPANDER_PIN_NUM_CS != -1) && \
+    (TOUCH_PIN_NUM_CS == EXPANDER_PIN_NUM_CS)
+    #error "TOUCH_PIN_NUM_CS and EXPANDER_PIN_NUM_CS both use GPIO " ##TOUCH_PIN_NUM_CS " - CS pins must be unique"
+#endif
+
 // POWER-SD CS pin uniqueness check
 #if defined(POWER_PIN_NUM_CS) && defined(SD_PIN_NUM_CS) && \
     (POWER_PIN_NUM_CS != -1) && (SD_PIN_NUM_CS != -1) && \
     (POWER_PIN_NUM_CS == SD_PIN_NUM_CS)
     #error "POWER_PIN_NUM_CS and SD_PIN_NUM_CS both use GPIO " ##POWER_PIN_NUM_CS " - CS pins must be unique"
+#endif
+
+// POWER-EXPANDER CS pin uniqueness check
+#if defined(POWER_PIN_NUM_CS) && defined(EXPANDER_PIN_NUM_CS) && \
+    (POWER_PIN_NUM_CS != -1) && (EXPANDER_PIN_NUM_CS != -1) && \
+    (POWER_PIN_NUM_CS == EXPANDER_PIN_NUM_CS)
+    #error "POWER_PIN_NUM_CS and EXPANDER_PIN_NUM_CS both use GPIO " ##POWER_PIN_NUM_CS " - CS pins must be unique"
+#endif
+
+// SD-EXPANDER CS pin uniqueness check
+#if defined(SD_PIN_NUM_CS) && defined(EXPANDER_PIN_NUM_CS) && \
+    (SD_PIN_NUM_CS != -1) && (EXPANDER_PIN_NUM_CS != -1) && \
+    (SD_PIN_NUM_CS == EXPANDER_PIN_NUM_CS)
+    #error "SD_PIN_NUM_CS and EXPANDER_PIN_NUM_CS both use GPIO " ##SD_PIN_NUM_CS " - CS pins must be unique"
 #endif
 // ============================================================================
 // HOST-LEVEL PIN CONSOLIDATION
@@ -1692,43 +2841,39 @@
 // ------------- SPI_1 consolidation -------------
 #ifdef SPI_1
 
-#if (defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1)) || (defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1)) || (defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1)) || (defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1))
+#if (defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1)) || (defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1)) || (defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1)) || (defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1)) || (defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1))
     #define SPI_1_HOST_USED
 
     
     // Consolidate CLK for SPI_1
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1) && defined(LCD_PIN_NUM_CLK) && (LCD_PIN_NUM_CLK != -1)
-        #define SPI_1_PIN_NUM_CLK LCD_PIN_NUM_CLK
+        #ifndef SPI_1_PIN_NUM_CLK
+            #define SPI_1_PIN_NUM_CLK LCD_PIN_NUM_CLK
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1) && defined(TOUCH_PIN_NUM_CLK) && (TOUCH_PIN_NUM_CLK != -1)
-        #ifdef SPI_1_PIN_NUM_CLK
-            #if SPI_1_PIN_NUM_CLK != TOUCH_PIN_NUM_CLK
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_CLK already set to a different value than TOUCH_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_CLK
             #define SPI_1_PIN_NUM_CLK TOUCH_PIN_NUM_CLK
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1) && defined(POWER_PIN_NUM_CLK) && (POWER_PIN_NUM_CLK != -1)
-        #ifdef SPI_1_PIN_NUM_CLK
-            #if SPI_1_PIN_NUM_CLK != POWER_PIN_NUM_CLK
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_CLK already set to a different value than POWER_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_CLK
             #define SPI_1_PIN_NUM_CLK POWER_PIN_NUM_CLK
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1) && defined(SD_PIN_NUM_CLK) && (SD_PIN_NUM_CLK != -1)
-        #ifdef SPI_1_PIN_NUM_CLK
-            #if SPI_1_PIN_NUM_CLK != SD_PIN_NUM_CLK
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_CLK already set to a different value than SD_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_CLK
             #define SPI_1_PIN_NUM_CLK SD_PIN_NUM_CLK
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1) && defined(EXPANDER_PIN_NUM_CLK) && (EXPANDER_PIN_NUM_CLK != -1)
+        #ifndef SPI_1_PIN_NUM_CLK
+            #define SPI_1_PIN_NUM_CLK EXPANDER_PIN_NUM_CLK
         #endif
     #endif
 
@@ -1740,36 +2885,32 @@
     // Consolidate D00 for SPI_1
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1) && defined(LCD_PIN_NUM_D00) && (LCD_PIN_NUM_D00 != -1)
-        #define SPI_1_PIN_NUM_D00 LCD_PIN_NUM_D00
+        #ifndef SPI_1_PIN_NUM_D00
+            #define SPI_1_PIN_NUM_D00 LCD_PIN_NUM_D00
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1) && defined(TOUCH_PIN_NUM_D00) && (TOUCH_PIN_NUM_D00 != -1)
-        #ifdef SPI_1_PIN_NUM_D00
-            #if SPI_1_PIN_NUM_D00 != TOUCH_PIN_NUM_D00
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D00 already set to a different value than TOUCH_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D00
             #define SPI_1_PIN_NUM_D00 TOUCH_PIN_NUM_D00
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1) && defined(POWER_PIN_NUM_D00) && (POWER_PIN_NUM_D00 != -1)
-        #ifdef SPI_1_PIN_NUM_D00
-            #if SPI_1_PIN_NUM_D00 != POWER_PIN_NUM_D00
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D00 already set to a different value than POWER_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D00
             #define SPI_1_PIN_NUM_D00 POWER_PIN_NUM_D00
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1) && defined(SD_PIN_NUM_D00) && (SD_PIN_NUM_D00 != -1)
-        #ifdef SPI_1_PIN_NUM_D00
-            #if SPI_1_PIN_NUM_D00 != SD_PIN_NUM_D00
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D00 already set to a different value than SD_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D00
             #define SPI_1_PIN_NUM_D00 SD_PIN_NUM_D00
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1) && defined(EXPANDER_PIN_NUM_D00) && (EXPANDER_PIN_NUM_D00 != -1)
+        #ifndef SPI_1_PIN_NUM_D00
+            #define SPI_1_PIN_NUM_D00 EXPANDER_PIN_NUM_D00
         #endif
     #endif
 
@@ -1781,36 +2922,32 @@
     // Consolidate D01 for SPI_1
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1) && defined(LCD_PIN_NUM_D01) && (LCD_PIN_NUM_D01 != -1)
-        #define SPI_1_PIN_NUM_D01 LCD_PIN_NUM_D01
+        #ifndef SPI_1_PIN_NUM_D01
+            #define SPI_1_PIN_NUM_D01 LCD_PIN_NUM_D01
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1) && defined(TOUCH_PIN_NUM_D01) && (TOUCH_PIN_NUM_D01 != -1)
-        #ifdef SPI_1_PIN_NUM_D01
-            #if SPI_1_PIN_NUM_D01 != TOUCH_PIN_NUM_D01
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D01 already set to a different value than TOUCH_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D01
             #define SPI_1_PIN_NUM_D01 TOUCH_PIN_NUM_D01
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1) && defined(POWER_PIN_NUM_D01) && (POWER_PIN_NUM_D01 != -1)
-        #ifdef SPI_1_PIN_NUM_D01
-            #if SPI_1_PIN_NUM_D01 != POWER_PIN_NUM_D01
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D01 already set to a different value than POWER_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D01
             #define SPI_1_PIN_NUM_D01 POWER_PIN_NUM_D01
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1) && defined(SD_PIN_NUM_D01) && (SD_PIN_NUM_D01 != -1)
-        #ifdef SPI_1_PIN_NUM_D01
-            #if SPI_1_PIN_NUM_D01 != SD_PIN_NUM_D01
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D01 already set to a different value than SD_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D01
             #define SPI_1_PIN_NUM_D01 SD_PIN_NUM_D01
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1) && defined(EXPANDER_PIN_NUM_D01) && (EXPANDER_PIN_NUM_D01 != -1)
+        #ifndef SPI_1_PIN_NUM_D01
+            #define SPI_1_PIN_NUM_D01 EXPANDER_PIN_NUM_D01
         #endif
     #endif
 
@@ -1822,36 +2959,32 @@
     // Consolidate D02 for SPI_1
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1) && defined(LCD_PIN_NUM_D02) && (LCD_PIN_NUM_D02 != -1)
-        #define SPI_1_PIN_NUM_D02 LCD_PIN_NUM_D02
+        #ifndef SPI_1_PIN_NUM_D02
+            #define SPI_1_PIN_NUM_D02 LCD_PIN_NUM_D02
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1) && defined(TOUCH_PIN_NUM_D02) && (TOUCH_PIN_NUM_D02 != -1)
-        #ifdef SPI_1_PIN_NUM_D02
-            #if SPI_1_PIN_NUM_D02 != TOUCH_PIN_NUM_D02
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D02 already set to a different value than TOUCH_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D02
             #define SPI_1_PIN_NUM_D02 TOUCH_PIN_NUM_D02
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1) && defined(POWER_PIN_NUM_D02) && (POWER_PIN_NUM_D02 != -1)
-        #ifdef SPI_1_PIN_NUM_D02
-            #if SPI_1_PIN_NUM_D02 != POWER_PIN_NUM_D02
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D02 already set to a different value than POWER_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D02
             #define SPI_1_PIN_NUM_D02 POWER_PIN_NUM_D02
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1) && defined(SD_PIN_NUM_D02) && (SD_PIN_NUM_D02 != -1)
-        #ifdef SPI_1_PIN_NUM_D02
-            #if SPI_1_PIN_NUM_D02 != SD_PIN_NUM_D02
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D02 already set to a different value than SD_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D02
             #define SPI_1_PIN_NUM_D02 SD_PIN_NUM_D02
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1) && defined(EXPANDER_PIN_NUM_D02) && (EXPANDER_PIN_NUM_D02 != -1)
+        #ifndef SPI_1_PIN_NUM_D02
+            #define SPI_1_PIN_NUM_D02 EXPANDER_PIN_NUM_D02
         #endif
     #endif
 
@@ -1863,36 +2996,32 @@
     // Consolidate D03 for SPI_1
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1) && defined(LCD_PIN_NUM_D03) && (LCD_PIN_NUM_D03 != -1)
-        #define SPI_1_PIN_NUM_D03 LCD_PIN_NUM_D03
+        #ifndef SPI_1_PIN_NUM_D03
+            #define SPI_1_PIN_NUM_D03 LCD_PIN_NUM_D03
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1) && defined(TOUCH_PIN_NUM_D03) && (TOUCH_PIN_NUM_D03 != -1)
-        #ifdef SPI_1_PIN_NUM_D03
-            #if SPI_1_PIN_NUM_D03 != TOUCH_PIN_NUM_D03
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D03 already set to a different value than TOUCH_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D03
             #define SPI_1_PIN_NUM_D03 TOUCH_PIN_NUM_D03
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1) && defined(POWER_PIN_NUM_D03) && (POWER_PIN_NUM_D03 != -1)
-        #ifdef SPI_1_PIN_NUM_D03
-            #if SPI_1_PIN_NUM_D03 != POWER_PIN_NUM_D03
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D03 already set to a different value than POWER_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D03
             #define SPI_1_PIN_NUM_D03 POWER_PIN_NUM_D03
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1) && defined(SD_PIN_NUM_D03) && (SD_PIN_NUM_D03 != -1)
-        #ifdef SPI_1_PIN_NUM_D03
-            #if SPI_1_PIN_NUM_D03 != SD_PIN_NUM_D03
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D03 already set to a different value than SD_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D03
             #define SPI_1_PIN_NUM_D03 SD_PIN_NUM_D03
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1) && defined(EXPANDER_PIN_NUM_D03) && (EXPANDER_PIN_NUM_D03 != -1)
+        #ifndef SPI_1_PIN_NUM_D03
+            #define SPI_1_PIN_NUM_D03 EXPANDER_PIN_NUM_D03
         #endif
     #endif
 
@@ -1904,36 +3033,32 @@
     // Consolidate D04 for SPI_1
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1) && defined(LCD_PIN_NUM_D04) && (LCD_PIN_NUM_D04 != -1)
-        #define SPI_1_PIN_NUM_D04 LCD_PIN_NUM_D04
+        #ifndef SPI_1_PIN_NUM_D04
+            #define SPI_1_PIN_NUM_D04 LCD_PIN_NUM_D04
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1) && defined(TOUCH_PIN_NUM_D04) && (TOUCH_PIN_NUM_D04 != -1)
-        #ifdef SPI_1_PIN_NUM_D04
-            #if SPI_1_PIN_NUM_D04 != TOUCH_PIN_NUM_D04
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D04 already set to a different value than TOUCH_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D04
             #define SPI_1_PIN_NUM_D04 TOUCH_PIN_NUM_D04
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1) && defined(POWER_PIN_NUM_D04) && (POWER_PIN_NUM_D04 != -1)
-        #ifdef SPI_1_PIN_NUM_D04
-            #if SPI_1_PIN_NUM_D04 != POWER_PIN_NUM_D04
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D04 already set to a different value than POWER_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D04
             #define SPI_1_PIN_NUM_D04 POWER_PIN_NUM_D04
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1) && defined(SD_PIN_NUM_D04) && (SD_PIN_NUM_D04 != -1)
-        #ifdef SPI_1_PIN_NUM_D04
-            #if SPI_1_PIN_NUM_D04 != SD_PIN_NUM_D04
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D04 already set to a different value than SD_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D04
             #define SPI_1_PIN_NUM_D04 SD_PIN_NUM_D04
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1) && defined(EXPANDER_PIN_NUM_D04) && (EXPANDER_PIN_NUM_D04 != -1)
+        #ifndef SPI_1_PIN_NUM_D04
+            #define SPI_1_PIN_NUM_D04 EXPANDER_PIN_NUM_D04
         #endif
     #endif
 
@@ -1945,36 +3070,32 @@
     // Consolidate D05 for SPI_1
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1) && defined(LCD_PIN_NUM_D05) && (LCD_PIN_NUM_D05 != -1)
-        #define SPI_1_PIN_NUM_D05 LCD_PIN_NUM_D05
+        #ifndef SPI_1_PIN_NUM_D05
+            #define SPI_1_PIN_NUM_D05 LCD_PIN_NUM_D05
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1) && defined(TOUCH_PIN_NUM_D05) && (TOUCH_PIN_NUM_D05 != -1)
-        #ifdef SPI_1_PIN_NUM_D05
-            #if SPI_1_PIN_NUM_D05 != TOUCH_PIN_NUM_D05
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D05 already set to a different value than TOUCH_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D05
             #define SPI_1_PIN_NUM_D05 TOUCH_PIN_NUM_D05
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1) && defined(POWER_PIN_NUM_D05) && (POWER_PIN_NUM_D05 != -1)
-        #ifdef SPI_1_PIN_NUM_D05
-            #if SPI_1_PIN_NUM_D05 != POWER_PIN_NUM_D05
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D05 already set to a different value than POWER_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D05
             #define SPI_1_PIN_NUM_D05 POWER_PIN_NUM_D05
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1) && defined(SD_PIN_NUM_D05) && (SD_PIN_NUM_D05 != -1)
-        #ifdef SPI_1_PIN_NUM_D05
-            #if SPI_1_PIN_NUM_D05 != SD_PIN_NUM_D05
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D05 already set to a different value than SD_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D05
             #define SPI_1_PIN_NUM_D05 SD_PIN_NUM_D05
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1) && defined(EXPANDER_PIN_NUM_D05) && (EXPANDER_PIN_NUM_D05 != -1)
+        #ifndef SPI_1_PIN_NUM_D05
+            #define SPI_1_PIN_NUM_D05 EXPANDER_PIN_NUM_D05
         #endif
     #endif
 
@@ -1986,36 +3107,32 @@
     // Consolidate D06 for SPI_1
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1) && defined(LCD_PIN_NUM_D06) && (LCD_PIN_NUM_D06 != -1)
-        #define SPI_1_PIN_NUM_D06 LCD_PIN_NUM_D06
+        #ifndef SPI_1_PIN_NUM_D06
+            #define SPI_1_PIN_NUM_D06 LCD_PIN_NUM_D06
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1) && defined(TOUCH_PIN_NUM_D06) && (TOUCH_PIN_NUM_D06 != -1)
-        #ifdef SPI_1_PIN_NUM_D06
-            #if SPI_1_PIN_NUM_D06 != TOUCH_PIN_NUM_D06
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D06 already set to a different value than TOUCH_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D06
             #define SPI_1_PIN_NUM_D06 TOUCH_PIN_NUM_D06
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1) && defined(POWER_PIN_NUM_D06) && (POWER_PIN_NUM_D06 != -1)
-        #ifdef SPI_1_PIN_NUM_D06
-            #if SPI_1_PIN_NUM_D06 != POWER_PIN_NUM_D06
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D06 already set to a different value than POWER_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D06
             #define SPI_1_PIN_NUM_D06 POWER_PIN_NUM_D06
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1) && defined(SD_PIN_NUM_D06) && (SD_PIN_NUM_D06 != -1)
-        #ifdef SPI_1_PIN_NUM_D06
-            #if SPI_1_PIN_NUM_D06 != SD_PIN_NUM_D06
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D06 already set to a different value than SD_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D06
             #define SPI_1_PIN_NUM_D06 SD_PIN_NUM_D06
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1) && defined(EXPANDER_PIN_NUM_D06) && (EXPANDER_PIN_NUM_D06 != -1)
+        #ifndef SPI_1_PIN_NUM_D06
+            #define SPI_1_PIN_NUM_D06 EXPANDER_PIN_NUM_D06
         #endif
     #endif
 
@@ -2027,36 +3144,32 @@
     // Consolidate D07 for SPI_1
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_1) && defined(LCD_PIN_NUM_D07) && (LCD_PIN_NUM_D07 != -1)
-        #define SPI_1_PIN_NUM_D07 LCD_PIN_NUM_D07
+        #ifndef SPI_1_PIN_NUM_D07
+            #define SPI_1_PIN_NUM_D07 LCD_PIN_NUM_D07
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_1) && defined(TOUCH_PIN_NUM_D07) && (TOUCH_PIN_NUM_D07 != -1)
-        #ifdef SPI_1_PIN_NUM_D07
-            #if SPI_1_PIN_NUM_D07 != TOUCH_PIN_NUM_D07
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D07 already set to a different value than TOUCH_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D07
             #define SPI_1_PIN_NUM_D07 TOUCH_PIN_NUM_D07
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_1) && defined(POWER_PIN_NUM_D07) && (POWER_PIN_NUM_D07 != -1)
-        #ifdef SPI_1_PIN_NUM_D07
-            #if SPI_1_PIN_NUM_D07 != POWER_PIN_NUM_D07
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D07 already set to a different value than POWER_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D07
             #define SPI_1_PIN_NUM_D07 POWER_PIN_NUM_D07
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_1) && defined(SD_PIN_NUM_D07) && (SD_PIN_NUM_D07 != -1)
-        #ifdef SPI_1_PIN_NUM_D07
-            #if SPI_1_PIN_NUM_D07 != SD_PIN_NUM_D07
-                #error "Pin conflict on SPI_1: SPI_1_PIN_NUM_D07 already set to a different value than SD_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_1_PIN_NUM_D07
             #define SPI_1_PIN_NUM_D07 SD_PIN_NUM_D07
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_1) && defined(EXPANDER_PIN_NUM_D07) && (EXPANDER_PIN_NUM_D07 != -1)
+        #ifndef SPI_1_PIN_NUM_D07
+            #define SPI_1_PIN_NUM_D07 EXPANDER_PIN_NUM_D07
         #endif
     #endif
 
@@ -2071,43 +3184,39 @@
 // ------------- SPI_2 consolidation -------------
 #ifdef SPI_2
 
-#if (defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2)) || (defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2)) || (defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2)) || (defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2))
+#if (defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2)) || (defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2)) || (defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2)) || (defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2)) || (defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2))
     #define SPI_2_HOST_USED
 
     
     // Consolidate CLK for SPI_2
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2) && defined(LCD_PIN_NUM_CLK) && (LCD_PIN_NUM_CLK != -1)
-        #define SPI_2_PIN_NUM_CLK LCD_PIN_NUM_CLK
+        #ifndef SPI_2_PIN_NUM_CLK
+            #define SPI_2_PIN_NUM_CLK LCD_PIN_NUM_CLK
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2) && defined(TOUCH_PIN_NUM_CLK) && (TOUCH_PIN_NUM_CLK != -1)
-        #ifdef SPI_2_PIN_NUM_CLK
-            #if SPI_2_PIN_NUM_CLK != TOUCH_PIN_NUM_CLK
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_CLK already set to a different value than TOUCH_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_CLK
             #define SPI_2_PIN_NUM_CLK TOUCH_PIN_NUM_CLK
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2) && defined(POWER_PIN_NUM_CLK) && (POWER_PIN_NUM_CLK != -1)
-        #ifdef SPI_2_PIN_NUM_CLK
-            #if SPI_2_PIN_NUM_CLK != POWER_PIN_NUM_CLK
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_CLK already set to a different value than POWER_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_CLK
             #define SPI_2_PIN_NUM_CLK POWER_PIN_NUM_CLK
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2) && defined(SD_PIN_NUM_CLK) && (SD_PIN_NUM_CLK != -1)
-        #ifdef SPI_2_PIN_NUM_CLK
-            #if SPI_2_PIN_NUM_CLK != SD_PIN_NUM_CLK
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_CLK already set to a different value than SD_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_CLK
             #define SPI_2_PIN_NUM_CLK SD_PIN_NUM_CLK
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2) && defined(EXPANDER_PIN_NUM_CLK) && (EXPANDER_PIN_NUM_CLK != -1)
+        #ifndef SPI_2_PIN_NUM_CLK
+            #define SPI_2_PIN_NUM_CLK EXPANDER_PIN_NUM_CLK
         #endif
     #endif
 
@@ -2119,36 +3228,32 @@
     // Consolidate D00 for SPI_2
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2) && defined(LCD_PIN_NUM_D00) && (LCD_PIN_NUM_D00 != -1)
-        #define SPI_2_PIN_NUM_D00 LCD_PIN_NUM_D00
+        #ifndef SPI_2_PIN_NUM_D00
+            #define SPI_2_PIN_NUM_D00 LCD_PIN_NUM_D00
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2) && defined(TOUCH_PIN_NUM_D00) && (TOUCH_PIN_NUM_D00 != -1)
-        #ifdef SPI_2_PIN_NUM_D00
-            #if SPI_2_PIN_NUM_D00 != TOUCH_PIN_NUM_D00
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D00 already set to a different value than TOUCH_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D00
             #define SPI_2_PIN_NUM_D00 TOUCH_PIN_NUM_D00
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2) && defined(POWER_PIN_NUM_D00) && (POWER_PIN_NUM_D00 != -1)
-        #ifdef SPI_2_PIN_NUM_D00
-            #if SPI_2_PIN_NUM_D00 != POWER_PIN_NUM_D00
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D00 already set to a different value than POWER_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D00
             #define SPI_2_PIN_NUM_D00 POWER_PIN_NUM_D00
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2) && defined(SD_PIN_NUM_D00) && (SD_PIN_NUM_D00 != -1)
-        #ifdef SPI_2_PIN_NUM_D00
-            #if SPI_2_PIN_NUM_D00 != SD_PIN_NUM_D00
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D00 already set to a different value than SD_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D00
             #define SPI_2_PIN_NUM_D00 SD_PIN_NUM_D00
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2) && defined(EXPANDER_PIN_NUM_D00) && (EXPANDER_PIN_NUM_D00 != -1)
+        #ifndef SPI_2_PIN_NUM_D00
+            #define SPI_2_PIN_NUM_D00 EXPANDER_PIN_NUM_D00
         #endif
     #endif
 
@@ -2160,36 +3265,32 @@
     // Consolidate D01 for SPI_2
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2) && defined(LCD_PIN_NUM_D01) && (LCD_PIN_NUM_D01 != -1)
-        #define SPI_2_PIN_NUM_D01 LCD_PIN_NUM_D01
+        #ifndef SPI_2_PIN_NUM_D01
+            #define SPI_2_PIN_NUM_D01 LCD_PIN_NUM_D01
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2) && defined(TOUCH_PIN_NUM_D01) && (TOUCH_PIN_NUM_D01 != -1)
-        #ifdef SPI_2_PIN_NUM_D01
-            #if SPI_2_PIN_NUM_D01 != TOUCH_PIN_NUM_D01
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D01 already set to a different value than TOUCH_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D01
             #define SPI_2_PIN_NUM_D01 TOUCH_PIN_NUM_D01
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2) && defined(POWER_PIN_NUM_D01) && (POWER_PIN_NUM_D01 != -1)
-        #ifdef SPI_2_PIN_NUM_D01
-            #if SPI_2_PIN_NUM_D01 != POWER_PIN_NUM_D01
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D01 already set to a different value than POWER_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D01
             #define SPI_2_PIN_NUM_D01 POWER_PIN_NUM_D01
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2) && defined(SD_PIN_NUM_D01) && (SD_PIN_NUM_D01 != -1)
-        #ifdef SPI_2_PIN_NUM_D01
-            #if SPI_2_PIN_NUM_D01 != SD_PIN_NUM_D01
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D01 already set to a different value than SD_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D01
             #define SPI_2_PIN_NUM_D01 SD_PIN_NUM_D01
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2) && defined(EXPANDER_PIN_NUM_D01) && (EXPANDER_PIN_NUM_D01 != -1)
+        #ifndef SPI_2_PIN_NUM_D01
+            #define SPI_2_PIN_NUM_D01 EXPANDER_PIN_NUM_D01
         #endif
     #endif
 
@@ -2201,36 +3302,32 @@
     // Consolidate D02 for SPI_2
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2) && defined(LCD_PIN_NUM_D02) && (LCD_PIN_NUM_D02 != -1)
-        #define SPI_2_PIN_NUM_D02 LCD_PIN_NUM_D02
+        #ifndef SPI_2_PIN_NUM_D02
+            #define SPI_2_PIN_NUM_D02 LCD_PIN_NUM_D02
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2) && defined(TOUCH_PIN_NUM_D02) && (TOUCH_PIN_NUM_D02 != -1)
-        #ifdef SPI_2_PIN_NUM_D02
-            #if SPI_2_PIN_NUM_D02 != TOUCH_PIN_NUM_D02
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D02 already set to a different value than TOUCH_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D02
             #define SPI_2_PIN_NUM_D02 TOUCH_PIN_NUM_D02
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2) && defined(POWER_PIN_NUM_D02) && (POWER_PIN_NUM_D02 != -1)
-        #ifdef SPI_2_PIN_NUM_D02
-            #if SPI_2_PIN_NUM_D02 != POWER_PIN_NUM_D02
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D02 already set to a different value than POWER_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D02
             #define SPI_2_PIN_NUM_D02 POWER_PIN_NUM_D02
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2) && defined(SD_PIN_NUM_D02) && (SD_PIN_NUM_D02 != -1)
-        #ifdef SPI_2_PIN_NUM_D02
-            #if SPI_2_PIN_NUM_D02 != SD_PIN_NUM_D02
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D02 already set to a different value than SD_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D02
             #define SPI_2_PIN_NUM_D02 SD_PIN_NUM_D02
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2) && defined(EXPANDER_PIN_NUM_D02) && (EXPANDER_PIN_NUM_D02 != -1)
+        #ifndef SPI_2_PIN_NUM_D02
+            #define SPI_2_PIN_NUM_D02 EXPANDER_PIN_NUM_D02
         #endif
     #endif
 
@@ -2242,36 +3339,32 @@
     // Consolidate D03 for SPI_2
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2) && defined(LCD_PIN_NUM_D03) && (LCD_PIN_NUM_D03 != -1)
-        #define SPI_2_PIN_NUM_D03 LCD_PIN_NUM_D03
+        #ifndef SPI_2_PIN_NUM_D03
+            #define SPI_2_PIN_NUM_D03 LCD_PIN_NUM_D03
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2) && defined(TOUCH_PIN_NUM_D03) && (TOUCH_PIN_NUM_D03 != -1)
-        #ifdef SPI_2_PIN_NUM_D03
-            #if SPI_2_PIN_NUM_D03 != TOUCH_PIN_NUM_D03
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D03 already set to a different value than TOUCH_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D03
             #define SPI_2_PIN_NUM_D03 TOUCH_PIN_NUM_D03
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2) && defined(POWER_PIN_NUM_D03) && (POWER_PIN_NUM_D03 != -1)
-        #ifdef SPI_2_PIN_NUM_D03
-            #if SPI_2_PIN_NUM_D03 != POWER_PIN_NUM_D03
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D03 already set to a different value than POWER_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D03
             #define SPI_2_PIN_NUM_D03 POWER_PIN_NUM_D03
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2) && defined(SD_PIN_NUM_D03) && (SD_PIN_NUM_D03 != -1)
-        #ifdef SPI_2_PIN_NUM_D03
-            #if SPI_2_PIN_NUM_D03 != SD_PIN_NUM_D03
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D03 already set to a different value than SD_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D03
             #define SPI_2_PIN_NUM_D03 SD_PIN_NUM_D03
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2) && defined(EXPANDER_PIN_NUM_D03) && (EXPANDER_PIN_NUM_D03 != -1)
+        #ifndef SPI_2_PIN_NUM_D03
+            #define SPI_2_PIN_NUM_D03 EXPANDER_PIN_NUM_D03
         #endif
     #endif
 
@@ -2283,36 +3376,32 @@
     // Consolidate D04 for SPI_2
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2) && defined(LCD_PIN_NUM_D04) && (LCD_PIN_NUM_D04 != -1)
-        #define SPI_2_PIN_NUM_D04 LCD_PIN_NUM_D04
+        #ifndef SPI_2_PIN_NUM_D04
+            #define SPI_2_PIN_NUM_D04 LCD_PIN_NUM_D04
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2) && defined(TOUCH_PIN_NUM_D04) && (TOUCH_PIN_NUM_D04 != -1)
-        #ifdef SPI_2_PIN_NUM_D04
-            #if SPI_2_PIN_NUM_D04 != TOUCH_PIN_NUM_D04
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D04 already set to a different value than TOUCH_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D04
             #define SPI_2_PIN_NUM_D04 TOUCH_PIN_NUM_D04
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2) && defined(POWER_PIN_NUM_D04) && (POWER_PIN_NUM_D04 != -1)
-        #ifdef SPI_2_PIN_NUM_D04
-            #if SPI_2_PIN_NUM_D04 != POWER_PIN_NUM_D04
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D04 already set to a different value than POWER_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D04
             #define SPI_2_PIN_NUM_D04 POWER_PIN_NUM_D04
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2) && defined(SD_PIN_NUM_D04) && (SD_PIN_NUM_D04 != -1)
-        #ifdef SPI_2_PIN_NUM_D04
-            #if SPI_2_PIN_NUM_D04 != SD_PIN_NUM_D04
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D04 already set to a different value than SD_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D04
             #define SPI_2_PIN_NUM_D04 SD_PIN_NUM_D04
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2) && defined(EXPANDER_PIN_NUM_D04) && (EXPANDER_PIN_NUM_D04 != -1)
+        #ifndef SPI_2_PIN_NUM_D04
+            #define SPI_2_PIN_NUM_D04 EXPANDER_PIN_NUM_D04
         #endif
     #endif
 
@@ -2324,36 +3413,32 @@
     // Consolidate D05 for SPI_2
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2) && defined(LCD_PIN_NUM_D05) && (LCD_PIN_NUM_D05 != -1)
-        #define SPI_2_PIN_NUM_D05 LCD_PIN_NUM_D05
+        #ifndef SPI_2_PIN_NUM_D05
+            #define SPI_2_PIN_NUM_D05 LCD_PIN_NUM_D05
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2) && defined(TOUCH_PIN_NUM_D05) && (TOUCH_PIN_NUM_D05 != -1)
-        #ifdef SPI_2_PIN_NUM_D05
-            #if SPI_2_PIN_NUM_D05 != TOUCH_PIN_NUM_D05
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D05 already set to a different value than TOUCH_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D05
             #define SPI_2_PIN_NUM_D05 TOUCH_PIN_NUM_D05
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2) && defined(POWER_PIN_NUM_D05) && (POWER_PIN_NUM_D05 != -1)
-        #ifdef SPI_2_PIN_NUM_D05
-            #if SPI_2_PIN_NUM_D05 != POWER_PIN_NUM_D05
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D05 already set to a different value than POWER_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D05
             #define SPI_2_PIN_NUM_D05 POWER_PIN_NUM_D05
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2) && defined(SD_PIN_NUM_D05) && (SD_PIN_NUM_D05 != -1)
-        #ifdef SPI_2_PIN_NUM_D05
-            #if SPI_2_PIN_NUM_D05 != SD_PIN_NUM_D05
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D05 already set to a different value than SD_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D05
             #define SPI_2_PIN_NUM_D05 SD_PIN_NUM_D05
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2) && defined(EXPANDER_PIN_NUM_D05) && (EXPANDER_PIN_NUM_D05 != -1)
+        #ifndef SPI_2_PIN_NUM_D05
+            #define SPI_2_PIN_NUM_D05 EXPANDER_PIN_NUM_D05
         #endif
     #endif
 
@@ -2365,36 +3450,32 @@
     // Consolidate D06 for SPI_2
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2) && defined(LCD_PIN_NUM_D06) && (LCD_PIN_NUM_D06 != -1)
-        #define SPI_2_PIN_NUM_D06 LCD_PIN_NUM_D06
+        #ifndef SPI_2_PIN_NUM_D06
+            #define SPI_2_PIN_NUM_D06 LCD_PIN_NUM_D06
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2) && defined(TOUCH_PIN_NUM_D06) && (TOUCH_PIN_NUM_D06 != -1)
-        #ifdef SPI_2_PIN_NUM_D06
-            #if SPI_2_PIN_NUM_D06 != TOUCH_PIN_NUM_D06
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D06 already set to a different value than TOUCH_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D06
             #define SPI_2_PIN_NUM_D06 TOUCH_PIN_NUM_D06
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2) && defined(POWER_PIN_NUM_D06) && (POWER_PIN_NUM_D06 != -1)
-        #ifdef SPI_2_PIN_NUM_D06
-            #if SPI_2_PIN_NUM_D06 != POWER_PIN_NUM_D06
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D06 already set to a different value than POWER_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D06
             #define SPI_2_PIN_NUM_D06 POWER_PIN_NUM_D06
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2) && defined(SD_PIN_NUM_D06) && (SD_PIN_NUM_D06 != -1)
-        #ifdef SPI_2_PIN_NUM_D06
-            #if SPI_2_PIN_NUM_D06 != SD_PIN_NUM_D06
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D06 already set to a different value than SD_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D06
             #define SPI_2_PIN_NUM_D06 SD_PIN_NUM_D06
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2) && defined(EXPANDER_PIN_NUM_D06) && (EXPANDER_PIN_NUM_D06 != -1)
+        #ifndef SPI_2_PIN_NUM_D06
+            #define SPI_2_PIN_NUM_D06 EXPANDER_PIN_NUM_D06
         #endif
     #endif
 
@@ -2406,36 +3487,32 @@
     // Consolidate D07 for SPI_2
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_2) && defined(LCD_PIN_NUM_D07) && (LCD_PIN_NUM_D07 != -1)
-        #define SPI_2_PIN_NUM_D07 LCD_PIN_NUM_D07
+        #ifndef SPI_2_PIN_NUM_D07
+            #define SPI_2_PIN_NUM_D07 LCD_PIN_NUM_D07
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_2) && defined(TOUCH_PIN_NUM_D07) && (TOUCH_PIN_NUM_D07 != -1)
-        #ifdef SPI_2_PIN_NUM_D07
-            #if SPI_2_PIN_NUM_D07 != TOUCH_PIN_NUM_D07
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D07 already set to a different value than TOUCH_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D07
             #define SPI_2_PIN_NUM_D07 TOUCH_PIN_NUM_D07
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_2) && defined(POWER_PIN_NUM_D07) && (POWER_PIN_NUM_D07 != -1)
-        #ifdef SPI_2_PIN_NUM_D07
-            #if SPI_2_PIN_NUM_D07 != POWER_PIN_NUM_D07
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D07 already set to a different value than POWER_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D07
             #define SPI_2_PIN_NUM_D07 POWER_PIN_NUM_D07
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_2) && defined(SD_PIN_NUM_D07) && (SD_PIN_NUM_D07 != -1)
-        #ifdef SPI_2_PIN_NUM_D07
-            #if SPI_2_PIN_NUM_D07 != SD_PIN_NUM_D07
-                #error "Pin conflict on SPI_2: SPI_2_PIN_NUM_D07 already set to a different value than SD_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_2_PIN_NUM_D07
             #define SPI_2_PIN_NUM_D07 SD_PIN_NUM_D07
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_2) && defined(EXPANDER_PIN_NUM_D07) && (EXPANDER_PIN_NUM_D07 != -1)
+        #ifndef SPI_2_PIN_NUM_D07
+            #define SPI_2_PIN_NUM_D07 EXPANDER_PIN_NUM_D07
         #endif
     #endif
 
@@ -2450,43 +3527,39 @@
 // ------------- SPI_3 consolidation -------------
 #ifdef SPI_3
 
-#if (defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3)) || (defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3)) || (defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3)) || (defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3))
+#if (defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3)) || (defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3)) || (defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3)) || (defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3)) || (defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3))
     #define SPI_3_HOST_USED
 
     
     // Consolidate CLK for SPI_3
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3) && defined(LCD_PIN_NUM_CLK) && (LCD_PIN_NUM_CLK != -1)
-        #define SPI_3_PIN_NUM_CLK LCD_PIN_NUM_CLK
+        #ifndef SPI_3_PIN_NUM_CLK
+            #define SPI_3_PIN_NUM_CLK LCD_PIN_NUM_CLK
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3) && defined(TOUCH_PIN_NUM_CLK) && (TOUCH_PIN_NUM_CLK != -1)
-        #ifdef SPI_3_PIN_NUM_CLK
-            #if SPI_3_PIN_NUM_CLK != TOUCH_PIN_NUM_CLK
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_CLK already set to a different value than TOUCH_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_CLK
             #define SPI_3_PIN_NUM_CLK TOUCH_PIN_NUM_CLK
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3) && defined(POWER_PIN_NUM_CLK) && (POWER_PIN_NUM_CLK != -1)
-        #ifdef SPI_3_PIN_NUM_CLK
-            #if SPI_3_PIN_NUM_CLK != POWER_PIN_NUM_CLK
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_CLK already set to a different value than POWER_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_CLK
             #define SPI_3_PIN_NUM_CLK POWER_PIN_NUM_CLK
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3) && defined(SD_PIN_NUM_CLK) && (SD_PIN_NUM_CLK != -1)
-        #ifdef SPI_3_PIN_NUM_CLK
-            #if SPI_3_PIN_NUM_CLK != SD_PIN_NUM_CLK
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_CLK already set to a different value than SD_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_CLK
             #define SPI_3_PIN_NUM_CLK SD_PIN_NUM_CLK
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3) && defined(EXPANDER_PIN_NUM_CLK) && (EXPANDER_PIN_NUM_CLK != -1)
+        #ifndef SPI_3_PIN_NUM_CLK
+            #define SPI_3_PIN_NUM_CLK EXPANDER_PIN_NUM_CLK
         #endif
     #endif
 
@@ -2498,36 +3571,32 @@
     // Consolidate D00 for SPI_3
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3) && defined(LCD_PIN_NUM_D00) && (LCD_PIN_NUM_D00 != -1)
-        #define SPI_3_PIN_NUM_D00 LCD_PIN_NUM_D00
+        #ifndef SPI_3_PIN_NUM_D00
+            #define SPI_3_PIN_NUM_D00 LCD_PIN_NUM_D00
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3) && defined(TOUCH_PIN_NUM_D00) && (TOUCH_PIN_NUM_D00 != -1)
-        #ifdef SPI_3_PIN_NUM_D00
-            #if SPI_3_PIN_NUM_D00 != TOUCH_PIN_NUM_D00
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D00 already set to a different value than TOUCH_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D00
             #define SPI_3_PIN_NUM_D00 TOUCH_PIN_NUM_D00
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3) && defined(POWER_PIN_NUM_D00) && (POWER_PIN_NUM_D00 != -1)
-        #ifdef SPI_3_PIN_NUM_D00
-            #if SPI_3_PIN_NUM_D00 != POWER_PIN_NUM_D00
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D00 already set to a different value than POWER_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D00
             #define SPI_3_PIN_NUM_D00 POWER_PIN_NUM_D00
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3) && defined(SD_PIN_NUM_D00) && (SD_PIN_NUM_D00 != -1)
-        #ifdef SPI_3_PIN_NUM_D00
-            #if SPI_3_PIN_NUM_D00 != SD_PIN_NUM_D00
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D00 already set to a different value than SD_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D00
             #define SPI_3_PIN_NUM_D00 SD_PIN_NUM_D00
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3) && defined(EXPANDER_PIN_NUM_D00) && (EXPANDER_PIN_NUM_D00 != -1)
+        #ifndef SPI_3_PIN_NUM_D00
+            #define SPI_3_PIN_NUM_D00 EXPANDER_PIN_NUM_D00
         #endif
     #endif
 
@@ -2539,36 +3608,32 @@
     // Consolidate D01 for SPI_3
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3) && defined(LCD_PIN_NUM_D01) && (LCD_PIN_NUM_D01 != -1)
-        #define SPI_3_PIN_NUM_D01 LCD_PIN_NUM_D01
+        #ifndef SPI_3_PIN_NUM_D01
+            #define SPI_3_PIN_NUM_D01 LCD_PIN_NUM_D01
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3) && defined(TOUCH_PIN_NUM_D01) && (TOUCH_PIN_NUM_D01 != -1)
-        #ifdef SPI_3_PIN_NUM_D01
-            #if SPI_3_PIN_NUM_D01 != TOUCH_PIN_NUM_D01
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D01 already set to a different value than TOUCH_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D01
             #define SPI_3_PIN_NUM_D01 TOUCH_PIN_NUM_D01
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3) && defined(POWER_PIN_NUM_D01) && (POWER_PIN_NUM_D01 != -1)
-        #ifdef SPI_3_PIN_NUM_D01
-            #if SPI_3_PIN_NUM_D01 != POWER_PIN_NUM_D01
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D01 already set to a different value than POWER_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D01
             #define SPI_3_PIN_NUM_D01 POWER_PIN_NUM_D01
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3) && defined(SD_PIN_NUM_D01) && (SD_PIN_NUM_D01 != -1)
-        #ifdef SPI_3_PIN_NUM_D01
-            #if SPI_3_PIN_NUM_D01 != SD_PIN_NUM_D01
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D01 already set to a different value than SD_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D01
             #define SPI_3_PIN_NUM_D01 SD_PIN_NUM_D01
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3) && defined(EXPANDER_PIN_NUM_D01) && (EXPANDER_PIN_NUM_D01 != -1)
+        #ifndef SPI_3_PIN_NUM_D01
+            #define SPI_3_PIN_NUM_D01 EXPANDER_PIN_NUM_D01
         #endif
     #endif
 
@@ -2580,36 +3645,32 @@
     // Consolidate D02 for SPI_3
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3) && defined(LCD_PIN_NUM_D02) && (LCD_PIN_NUM_D02 != -1)
-        #define SPI_3_PIN_NUM_D02 LCD_PIN_NUM_D02
+        #ifndef SPI_3_PIN_NUM_D02
+            #define SPI_3_PIN_NUM_D02 LCD_PIN_NUM_D02
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3) && defined(TOUCH_PIN_NUM_D02) && (TOUCH_PIN_NUM_D02 != -1)
-        #ifdef SPI_3_PIN_NUM_D02
-            #if SPI_3_PIN_NUM_D02 != TOUCH_PIN_NUM_D02
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D02 already set to a different value than TOUCH_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D02
             #define SPI_3_PIN_NUM_D02 TOUCH_PIN_NUM_D02
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3) && defined(POWER_PIN_NUM_D02) && (POWER_PIN_NUM_D02 != -1)
-        #ifdef SPI_3_PIN_NUM_D02
-            #if SPI_3_PIN_NUM_D02 != POWER_PIN_NUM_D02
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D02 already set to a different value than POWER_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D02
             #define SPI_3_PIN_NUM_D02 POWER_PIN_NUM_D02
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3) && defined(SD_PIN_NUM_D02) && (SD_PIN_NUM_D02 != -1)
-        #ifdef SPI_3_PIN_NUM_D02
-            #if SPI_3_PIN_NUM_D02 != SD_PIN_NUM_D02
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D02 already set to a different value than SD_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D02
             #define SPI_3_PIN_NUM_D02 SD_PIN_NUM_D02
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3) && defined(EXPANDER_PIN_NUM_D02) && (EXPANDER_PIN_NUM_D02 != -1)
+        #ifndef SPI_3_PIN_NUM_D02
+            #define SPI_3_PIN_NUM_D02 EXPANDER_PIN_NUM_D02
         #endif
     #endif
 
@@ -2621,36 +3682,32 @@
     // Consolidate D03 for SPI_3
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3) && defined(LCD_PIN_NUM_D03) && (LCD_PIN_NUM_D03 != -1)
-        #define SPI_3_PIN_NUM_D03 LCD_PIN_NUM_D03
+        #ifndef SPI_3_PIN_NUM_D03
+            #define SPI_3_PIN_NUM_D03 LCD_PIN_NUM_D03
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3) && defined(TOUCH_PIN_NUM_D03) && (TOUCH_PIN_NUM_D03 != -1)
-        #ifdef SPI_3_PIN_NUM_D03
-            #if SPI_3_PIN_NUM_D03 != TOUCH_PIN_NUM_D03
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D03 already set to a different value than TOUCH_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D03
             #define SPI_3_PIN_NUM_D03 TOUCH_PIN_NUM_D03
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3) && defined(POWER_PIN_NUM_D03) && (POWER_PIN_NUM_D03 != -1)
-        #ifdef SPI_3_PIN_NUM_D03
-            #if SPI_3_PIN_NUM_D03 != POWER_PIN_NUM_D03
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D03 already set to a different value than POWER_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D03
             #define SPI_3_PIN_NUM_D03 POWER_PIN_NUM_D03
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3) && defined(SD_PIN_NUM_D03) && (SD_PIN_NUM_D03 != -1)
-        #ifdef SPI_3_PIN_NUM_D03
-            #if SPI_3_PIN_NUM_D03 != SD_PIN_NUM_D03
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D03 already set to a different value than SD_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D03
             #define SPI_3_PIN_NUM_D03 SD_PIN_NUM_D03
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3) && defined(EXPANDER_PIN_NUM_D03) && (EXPANDER_PIN_NUM_D03 != -1)
+        #ifndef SPI_3_PIN_NUM_D03
+            #define SPI_3_PIN_NUM_D03 EXPANDER_PIN_NUM_D03
         #endif
     #endif
 
@@ -2662,36 +3719,32 @@
     // Consolidate D04 for SPI_3
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3) && defined(LCD_PIN_NUM_D04) && (LCD_PIN_NUM_D04 != -1)
-        #define SPI_3_PIN_NUM_D04 LCD_PIN_NUM_D04
+        #ifndef SPI_3_PIN_NUM_D04
+            #define SPI_3_PIN_NUM_D04 LCD_PIN_NUM_D04
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3) && defined(TOUCH_PIN_NUM_D04) && (TOUCH_PIN_NUM_D04 != -1)
-        #ifdef SPI_3_PIN_NUM_D04
-            #if SPI_3_PIN_NUM_D04 != TOUCH_PIN_NUM_D04
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D04 already set to a different value than TOUCH_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D04
             #define SPI_3_PIN_NUM_D04 TOUCH_PIN_NUM_D04
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3) && defined(POWER_PIN_NUM_D04) && (POWER_PIN_NUM_D04 != -1)
-        #ifdef SPI_3_PIN_NUM_D04
-            #if SPI_3_PIN_NUM_D04 != POWER_PIN_NUM_D04
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D04 already set to a different value than POWER_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D04
             #define SPI_3_PIN_NUM_D04 POWER_PIN_NUM_D04
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3) && defined(SD_PIN_NUM_D04) && (SD_PIN_NUM_D04 != -1)
-        #ifdef SPI_3_PIN_NUM_D04
-            #if SPI_3_PIN_NUM_D04 != SD_PIN_NUM_D04
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D04 already set to a different value than SD_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D04
             #define SPI_3_PIN_NUM_D04 SD_PIN_NUM_D04
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3) && defined(EXPANDER_PIN_NUM_D04) && (EXPANDER_PIN_NUM_D04 != -1)
+        #ifndef SPI_3_PIN_NUM_D04
+            #define SPI_3_PIN_NUM_D04 EXPANDER_PIN_NUM_D04
         #endif
     #endif
 
@@ -2703,36 +3756,32 @@
     // Consolidate D05 for SPI_3
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3) && defined(LCD_PIN_NUM_D05) && (LCD_PIN_NUM_D05 != -1)
-        #define SPI_3_PIN_NUM_D05 LCD_PIN_NUM_D05
+        #ifndef SPI_3_PIN_NUM_D05
+            #define SPI_3_PIN_NUM_D05 LCD_PIN_NUM_D05
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3) && defined(TOUCH_PIN_NUM_D05) && (TOUCH_PIN_NUM_D05 != -1)
-        #ifdef SPI_3_PIN_NUM_D05
-            #if SPI_3_PIN_NUM_D05 != TOUCH_PIN_NUM_D05
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D05 already set to a different value than TOUCH_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D05
             #define SPI_3_PIN_NUM_D05 TOUCH_PIN_NUM_D05
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3) && defined(POWER_PIN_NUM_D05) && (POWER_PIN_NUM_D05 != -1)
-        #ifdef SPI_3_PIN_NUM_D05
-            #if SPI_3_PIN_NUM_D05 != POWER_PIN_NUM_D05
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D05 already set to a different value than POWER_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D05
             #define SPI_3_PIN_NUM_D05 POWER_PIN_NUM_D05
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3) && defined(SD_PIN_NUM_D05) && (SD_PIN_NUM_D05 != -1)
-        #ifdef SPI_3_PIN_NUM_D05
-            #if SPI_3_PIN_NUM_D05 != SD_PIN_NUM_D05
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D05 already set to a different value than SD_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D05
             #define SPI_3_PIN_NUM_D05 SD_PIN_NUM_D05
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3) && defined(EXPANDER_PIN_NUM_D05) && (EXPANDER_PIN_NUM_D05 != -1)
+        #ifndef SPI_3_PIN_NUM_D05
+            #define SPI_3_PIN_NUM_D05 EXPANDER_PIN_NUM_D05
         #endif
     #endif
 
@@ -2744,36 +3793,32 @@
     // Consolidate D06 for SPI_3
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3) && defined(LCD_PIN_NUM_D06) && (LCD_PIN_NUM_D06 != -1)
-        #define SPI_3_PIN_NUM_D06 LCD_PIN_NUM_D06
+        #ifndef SPI_3_PIN_NUM_D06
+            #define SPI_3_PIN_NUM_D06 LCD_PIN_NUM_D06
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3) && defined(TOUCH_PIN_NUM_D06) && (TOUCH_PIN_NUM_D06 != -1)
-        #ifdef SPI_3_PIN_NUM_D06
-            #if SPI_3_PIN_NUM_D06 != TOUCH_PIN_NUM_D06
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D06 already set to a different value than TOUCH_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D06
             #define SPI_3_PIN_NUM_D06 TOUCH_PIN_NUM_D06
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3) && defined(POWER_PIN_NUM_D06) && (POWER_PIN_NUM_D06 != -1)
-        #ifdef SPI_3_PIN_NUM_D06
-            #if SPI_3_PIN_NUM_D06 != POWER_PIN_NUM_D06
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D06 already set to a different value than POWER_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D06
             #define SPI_3_PIN_NUM_D06 POWER_PIN_NUM_D06
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3) && defined(SD_PIN_NUM_D06) && (SD_PIN_NUM_D06 != -1)
-        #ifdef SPI_3_PIN_NUM_D06
-            #if SPI_3_PIN_NUM_D06 != SD_PIN_NUM_D06
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D06 already set to a different value than SD_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D06
             #define SPI_3_PIN_NUM_D06 SD_PIN_NUM_D06
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3) && defined(EXPANDER_PIN_NUM_D06) && (EXPANDER_PIN_NUM_D06 != -1)
+        #ifndef SPI_3_PIN_NUM_D06
+            #define SPI_3_PIN_NUM_D06 EXPANDER_PIN_NUM_D06
         #endif
     #endif
 
@@ -2785,36 +3830,32 @@
     // Consolidate D07 for SPI_3
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_3) && defined(LCD_PIN_NUM_D07) && (LCD_PIN_NUM_D07 != -1)
-        #define SPI_3_PIN_NUM_D07 LCD_PIN_NUM_D07
+        #ifndef SPI_3_PIN_NUM_D07
+            #define SPI_3_PIN_NUM_D07 LCD_PIN_NUM_D07
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_3) && defined(TOUCH_PIN_NUM_D07) && (TOUCH_PIN_NUM_D07 != -1)
-        #ifdef SPI_3_PIN_NUM_D07
-            #if SPI_3_PIN_NUM_D07 != TOUCH_PIN_NUM_D07
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D07 already set to a different value than TOUCH_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D07
             #define SPI_3_PIN_NUM_D07 TOUCH_PIN_NUM_D07
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_3) && defined(POWER_PIN_NUM_D07) && (POWER_PIN_NUM_D07 != -1)
-        #ifdef SPI_3_PIN_NUM_D07
-            #if SPI_3_PIN_NUM_D07 != POWER_PIN_NUM_D07
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D07 already set to a different value than POWER_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D07
             #define SPI_3_PIN_NUM_D07 POWER_PIN_NUM_D07
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_3) && defined(SD_PIN_NUM_D07) && (SD_PIN_NUM_D07 != -1)
-        #ifdef SPI_3_PIN_NUM_D07
-            #if SPI_3_PIN_NUM_D07 != SD_PIN_NUM_D07
-                #error "Pin conflict on SPI_3: SPI_3_PIN_NUM_D07 already set to a different value than SD_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_3_PIN_NUM_D07
             #define SPI_3_PIN_NUM_D07 SD_PIN_NUM_D07
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_3) && defined(EXPANDER_PIN_NUM_D07) && (EXPANDER_PIN_NUM_D07 != -1)
+        #ifndef SPI_3_PIN_NUM_D07
+            #define SPI_3_PIN_NUM_D07 EXPANDER_PIN_NUM_D07
         #endif
     #endif
 
@@ -2829,43 +3870,39 @@
 // ------------- SPI_4 consolidation -------------
 #ifdef SPI_4
 
-#if (defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4)) || (defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4)) || (defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4)) || (defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4))
+#if (defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4)) || (defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4)) || (defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4)) || (defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4)) || (defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4))
     #define SPI_4_HOST_USED
 
     
     // Consolidate CLK for SPI_4
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4) && defined(LCD_PIN_NUM_CLK) && (LCD_PIN_NUM_CLK != -1)
-        #define SPI_4_PIN_NUM_CLK LCD_PIN_NUM_CLK
+        #ifndef SPI_4_PIN_NUM_CLK
+            #define SPI_4_PIN_NUM_CLK LCD_PIN_NUM_CLK
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4) && defined(TOUCH_PIN_NUM_CLK) && (TOUCH_PIN_NUM_CLK != -1)
-        #ifdef SPI_4_PIN_NUM_CLK
-            #if SPI_4_PIN_NUM_CLK != TOUCH_PIN_NUM_CLK
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_CLK already set to a different value than TOUCH_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_CLK
             #define SPI_4_PIN_NUM_CLK TOUCH_PIN_NUM_CLK
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4) && defined(POWER_PIN_NUM_CLK) && (POWER_PIN_NUM_CLK != -1)
-        #ifdef SPI_4_PIN_NUM_CLK
-            #if SPI_4_PIN_NUM_CLK != POWER_PIN_NUM_CLK
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_CLK already set to a different value than POWER_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_CLK
             #define SPI_4_PIN_NUM_CLK POWER_PIN_NUM_CLK
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4) && defined(SD_PIN_NUM_CLK) && (SD_PIN_NUM_CLK != -1)
-        #ifdef SPI_4_PIN_NUM_CLK
-            #if SPI_4_PIN_NUM_CLK != SD_PIN_NUM_CLK
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_CLK already set to a different value than SD_PIN_NUM_CLK"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_CLK
             #define SPI_4_PIN_NUM_CLK SD_PIN_NUM_CLK
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4) && defined(EXPANDER_PIN_NUM_CLK) && (EXPANDER_PIN_NUM_CLK != -1)
+        #ifndef SPI_4_PIN_NUM_CLK
+            #define SPI_4_PIN_NUM_CLK EXPANDER_PIN_NUM_CLK
         #endif
     #endif
 
@@ -2877,36 +3914,32 @@
     // Consolidate D00 for SPI_4
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4) && defined(LCD_PIN_NUM_D00) && (LCD_PIN_NUM_D00 != -1)
-        #define SPI_4_PIN_NUM_D00 LCD_PIN_NUM_D00
+        #ifndef SPI_4_PIN_NUM_D00
+            #define SPI_4_PIN_NUM_D00 LCD_PIN_NUM_D00
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4) && defined(TOUCH_PIN_NUM_D00) && (TOUCH_PIN_NUM_D00 != -1)
-        #ifdef SPI_4_PIN_NUM_D00
-            #if SPI_4_PIN_NUM_D00 != TOUCH_PIN_NUM_D00
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D00 already set to a different value than TOUCH_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D00
             #define SPI_4_PIN_NUM_D00 TOUCH_PIN_NUM_D00
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4) && defined(POWER_PIN_NUM_D00) && (POWER_PIN_NUM_D00 != -1)
-        #ifdef SPI_4_PIN_NUM_D00
-            #if SPI_4_PIN_NUM_D00 != POWER_PIN_NUM_D00
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D00 already set to a different value than POWER_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D00
             #define SPI_4_PIN_NUM_D00 POWER_PIN_NUM_D00
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4) && defined(SD_PIN_NUM_D00) && (SD_PIN_NUM_D00 != -1)
-        #ifdef SPI_4_PIN_NUM_D00
-            #if SPI_4_PIN_NUM_D00 != SD_PIN_NUM_D00
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D00 already set to a different value than SD_PIN_NUM_D00"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D00
             #define SPI_4_PIN_NUM_D00 SD_PIN_NUM_D00
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4) && defined(EXPANDER_PIN_NUM_D00) && (EXPANDER_PIN_NUM_D00 != -1)
+        #ifndef SPI_4_PIN_NUM_D00
+            #define SPI_4_PIN_NUM_D00 EXPANDER_PIN_NUM_D00
         #endif
     #endif
 
@@ -2918,36 +3951,32 @@
     // Consolidate D01 for SPI_4
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4) && defined(LCD_PIN_NUM_D01) && (LCD_PIN_NUM_D01 != -1)
-        #define SPI_4_PIN_NUM_D01 LCD_PIN_NUM_D01
+        #ifndef SPI_4_PIN_NUM_D01
+            #define SPI_4_PIN_NUM_D01 LCD_PIN_NUM_D01
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4) && defined(TOUCH_PIN_NUM_D01) && (TOUCH_PIN_NUM_D01 != -1)
-        #ifdef SPI_4_PIN_NUM_D01
-            #if SPI_4_PIN_NUM_D01 != TOUCH_PIN_NUM_D01
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D01 already set to a different value than TOUCH_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D01
             #define SPI_4_PIN_NUM_D01 TOUCH_PIN_NUM_D01
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4) && defined(POWER_PIN_NUM_D01) && (POWER_PIN_NUM_D01 != -1)
-        #ifdef SPI_4_PIN_NUM_D01
-            #if SPI_4_PIN_NUM_D01 != POWER_PIN_NUM_D01
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D01 already set to a different value than POWER_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D01
             #define SPI_4_PIN_NUM_D01 POWER_PIN_NUM_D01
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4) && defined(SD_PIN_NUM_D01) && (SD_PIN_NUM_D01 != -1)
-        #ifdef SPI_4_PIN_NUM_D01
-            #if SPI_4_PIN_NUM_D01 != SD_PIN_NUM_D01
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D01 already set to a different value than SD_PIN_NUM_D01"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D01
             #define SPI_4_PIN_NUM_D01 SD_PIN_NUM_D01
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4) && defined(EXPANDER_PIN_NUM_D01) && (EXPANDER_PIN_NUM_D01 != -1)
+        #ifndef SPI_4_PIN_NUM_D01
+            #define SPI_4_PIN_NUM_D01 EXPANDER_PIN_NUM_D01
         #endif
     #endif
 
@@ -2959,36 +3988,32 @@
     // Consolidate D02 for SPI_4
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4) && defined(LCD_PIN_NUM_D02) && (LCD_PIN_NUM_D02 != -1)
-        #define SPI_4_PIN_NUM_D02 LCD_PIN_NUM_D02
+        #ifndef SPI_4_PIN_NUM_D02
+            #define SPI_4_PIN_NUM_D02 LCD_PIN_NUM_D02
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4) && defined(TOUCH_PIN_NUM_D02) && (TOUCH_PIN_NUM_D02 != -1)
-        #ifdef SPI_4_PIN_NUM_D02
-            #if SPI_4_PIN_NUM_D02 != TOUCH_PIN_NUM_D02
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D02 already set to a different value than TOUCH_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D02
             #define SPI_4_PIN_NUM_D02 TOUCH_PIN_NUM_D02
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4) && defined(POWER_PIN_NUM_D02) && (POWER_PIN_NUM_D02 != -1)
-        #ifdef SPI_4_PIN_NUM_D02
-            #if SPI_4_PIN_NUM_D02 != POWER_PIN_NUM_D02
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D02 already set to a different value than POWER_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D02
             #define SPI_4_PIN_NUM_D02 POWER_PIN_NUM_D02
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4) && defined(SD_PIN_NUM_D02) && (SD_PIN_NUM_D02 != -1)
-        #ifdef SPI_4_PIN_NUM_D02
-            #if SPI_4_PIN_NUM_D02 != SD_PIN_NUM_D02
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D02 already set to a different value than SD_PIN_NUM_D02"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D02
             #define SPI_4_PIN_NUM_D02 SD_PIN_NUM_D02
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4) && defined(EXPANDER_PIN_NUM_D02) && (EXPANDER_PIN_NUM_D02 != -1)
+        #ifndef SPI_4_PIN_NUM_D02
+            #define SPI_4_PIN_NUM_D02 EXPANDER_PIN_NUM_D02
         #endif
     #endif
 
@@ -3000,36 +4025,32 @@
     // Consolidate D03 for SPI_4
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4) && defined(LCD_PIN_NUM_D03) && (LCD_PIN_NUM_D03 != -1)
-        #define SPI_4_PIN_NUM_D03 LCD_PIN_NUM_D03
+        #ifndef SPI_4_PIN_NUM_D03
+            #define SPI_4_PIN_NUM_D03 LCD_PIN_NUM_D03
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4) && defined(TOUCH_PIN_NUM_D03) && (TOUCH_PIN_NUM_D03 != -1)
-        #ifdef SPI_4_PIN_NUM_D03
-            #if SPI_4_PIN_NUM_D03 != TOUCH_PIN_NUM_D03
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D03 already set to a different value than TOUCH_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D03
             #define SPI_4_PIN_NUM_D03 TOUCH_PIN_NUM_D03
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4) && defined(POWER_PIN_NUM_D03) && (POWER_PIN_NUM_D03 != -1)
-        #ifdef SPI_4_PIN_NUM_D03
-            #if SPI_4_PIN_NUM_D03 != POWER_PIN_NUM_D03
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D03 already set to a different value than POWER_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D03
             #define SPI_4_PIN_NUM_D03 POWER_PIN_NUM_D03
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4) && defined(SD_PIN_NUM_D03) && (SD_PIN_NUM_D03 != -1)
-        #ifdef SPI_4_PIN_NUM_D03
-            #if SPI_4_PIN_NUM_D03 != SD_PIN_NUM_D03
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D03 already set to a different value than SD_PIN_NUM_D03"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D03
             #define SPI_4_PIN_NUM_D03 SD_PIN_NUM_D03
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4) && defined(EXPANDER_PIN_NUM_D03) && (EXPANDER_PIN_NUM_D03 != -1)
+        #ifndef SPI_4_PIN_NUM_D03
+            #define SPI_4_PIN_NUM_D03 EXPANDER_PIN_NUM_D03
         #endif
     #endif
 
@@ -3041,36 +4062,32 @@
     // Consolidate D04 for SPI_4
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4) && defined(LCD_PIN_NUM_D04) && (LCD_PIN_NUM_D04 != -1)
-        #define SPI_4_PIN_NUM_D04 LCD_PIN_NUM_D04
+        #ifndef SPI_4_PIN_NUM_D04
+            #define SPI_4_PIN_NUM_D04 LCD_PIN_NUM_D04
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4) && defined(TOUCH_PIN_NUM_D04) && (TOUCH_PIN_NUM_D04 != -1)
-        #ifdef SPI_4_PIN_NUM_D04
-            #if SPI_4_PIN_NUM_D04 != TOUCH_PIN_NUM_D04
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D04 already set to a different value than TOUCH_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D04
             #define SPI_4_PIN_NUM_D04 TOUCH_PIN_NUM_D04
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4) && defined(POWER_PIN_NUM_D04) && (POWER_PIN_NUM_D04 != -1)
-        #ifdef SPI_4_PIN_NUM_D04
-            #if SPI_4_PIN_NUM_D04 != POWER_PIN_NUM_D04
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D04 already set to a different value than POWER_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D04
             #define SPI_4_PIN_NUM_D04 POWER_PIN_NUM_D04
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4) && defined(SD_PIN_NUM_D04) && (SD_PIN_NUM_D04 != -1)
-        #ifdef SPI_4_PIN_NUM_D04
-            #if SPI_4_PIN_NUM_D04 != SD_PIN_NUM_D04
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D04 already set to a different value than SD_PIN_NUM_D04"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D04
             #define SPI_4_PIN_NUM_D04 SD_PIN_NUM_D04
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4) && defined(EXPANDER_PIN_NUM_D04) && (EXPANDER_PIN_NUM_D04 != -1)
+        #ifndef SPI_4_PIN_NUM_D04
+            #define SPI_4_PIN_NUM_D04 EXPANDER_PIN_NUM_D04
         #endif
     #endif
 
@@ -3082,36 +4099,32 @@
     // Consolidate D05 for SPI_4
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4) && defined(LCD_PIN_NUM_D05) && (LCD_PIN_NUM_D05 != -1)
-        #define SPI_4_PIN_NUM_D05 LCD_PIN_NUM_D05
+        #ifndef SPI_4_PIN_NUM_D05
+            #define SPI_4_PIN_NUM_D05 LCD_PIN_NUM_D05
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4) && defined(TOUCH_PIN_NUM_D05) && (TOUCH_PIN_NUM_D05 != -1)
-        #ifdef SPI_4_PIN_NUM_D05
-            #if SPI_4_PIN_NUM_D05 != TOUCH_PIN_NUM_D05
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D05 already set to a different value than TOUCH_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D05
             #define SPI_4_PIN_NUM_D05 TOUCH_PIN_NUM_D05
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4) && defined(POWER_PIN_NUM_D05) && (POWER_PIN_NUM_D05 != -1)
-        #ifdef SPI_4_PIN_NUM_D05
-            #if SPI_4_PIN_NUM_D05 != POWER_PIN_NUM_D05
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D05 already set to a different value than POWER_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D05
             #define SPI_4_PIN_NUM_D05 POWER_PIN_NUM_D05
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4) && defined(SD_PIN_NUM_D05) && (SD_PIN_NUM_D05 != -1)
-        #ifdef SPI_4_PIN_NUM_D05
-            #if SPI_4_PIN_NUM_D05 != SD_PIN_NUM_D05
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D05 already set to a different value than SD_PIN_NUM_D05"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D05
             #define SPI_4_PIN_NUM_D05 SD_PIN_NUM_D05
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4) && defined(EXPANDER_PIN_NUM_D05) && (EXPANDER_PIN_NUM_D05 != -1)
+        #ifndef SPI_4_PIN_NUM_D05
+            #define SPI_4_PIN_NUM_D05 EXPANDER_PIN_NUM_D05
         #endif
     #endif
 
@@ -3123,36 +4136,32 @@
     // Consolidate D06 for SPI_4
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4) && defined(LCD_PIN_NUM_D06) && (LCD_PIN_NUM_D06 != -1)
-        #define SPI_4_PIN_NUM_D06 LCD_PIN_NUM_D06
+        #ifndef SPI_4_PIN_NUM_D06
+            #define SPI_4_PIN_NUM_D06 LCD_PIN_NUM_D06
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4) && defined(TOUCH_PIN_NUM_D06) && (TOUCH_PIN_NUM_D06 != -1)
-        #ifdef SPI_4_PIN_NUM_D06
-            #if SPI_4_PIN_NUM_D06 != TOUCH_PIN_NUM_D06
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D06 already set to a different value than TOUCH_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D06
             #define SPI_4_PIN_NUM_D06 TOUCH_PIN_NUM_D06
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4) && defined(POWER_PIN_NUM_D06) && (POWER_PIN_NUM_D06 != -1)
-        #ifdef SPI_4_PIN_NUM_D06
-            #if SPI_4_PIN_NUM_D06 != POWER_PIN_NUM_D06
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D06 already set to a different value than POWER_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D06
             #define SPI_4_PIN_NUM_D06 POWER_PIN_NUM_D06
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4) && defined(SD_PIN_NUM_D06) && (SD_PIN_NUM_D06 != -1)
-        #ifdef SPI_4_PIN_NUM_D06
-            #if SPI_4_PIN_NUM_D06 != SD_PIN_NUM_D06
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D06 already set to a different value than SD_PIN_NUM_D06"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D06
             #define SPI_4_PIN_NUM_D06 SD_PIN_NUM_D06
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4) && defined(EXPANDER_PIN_NUM_D06) && (EXPANDER_PIN_NUM_D06 != -1)
+        #ifndef SPI_4_PIN_NUM_D06
+            #define SPI_4_PIN_NUM_D06 EXPANDER_PIN_NUM_D06
         #endif
     #endif
 
@@ -3164,36 +4173,32 @@
     // Consolidate D07 for SPI_4
 
     #if defined(LCD_SPI_HOST) && (LCD_SPI_HOST == SPI_4) && defined(LCD_PIN_NUM_D07) && (LCD_PIN_NUM_D07 != -1)
-        #define SPI_4_PIN_NUM_D07 LCD_PIN_NUM_D07
+        #ifndef SPI_4_PIN_NUM_D07
+            #define SPI_4_PIN_NUM_D07 LCD_PIN_NUM_D07
+        #endif
     #endif
 
     #if defined(TOUCH_SPI_HOST) && (TOUCH_SPI_HOST == SPI_4) && defined(TOUCH_PIN_NUM_D07) && (TOUCH_PIN_NUM_D07 != -1)
-        #ifdef SPI_4_PIN_NUM_D07
-            #if SPI_4_PIN_NUM_D07 != TOUCH_PIN_NUM_D07
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D07 already set to a different value than TOUCH_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D07
             #define SPI_4_PIN_NUM_D07 TOUCH_PIN_NUM_D07
         #endif
     #endif
 
     #if defined(POWER_SPI_HOST) && (POWER_SPI_HOST == SPI_4) && defined(POWER_PIN_NUM_D07) && (POWER_PIN_NUM_D07 != -1)
-        #ifdef SPI_4_PIN_NUM_D07
-            #if SPI_4_PIN_NUM_D07 != POWER_PIN_NUM_D07
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D07 already set to a different value than POWER_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D07
             #define SPI_4_PIN_NUM_D07 POWER_PIN_NUM_D07
         #endif
     #endif
 
     #if defined(SD_SPI_HOST) && (SD_SPI_HOST == SPI_4) && defined(SD_PIN_NUM_D07) && (SD_PIN_NUM_D07 != -1)
-        #ifdef SPI_4_PIN_NUM_D07
-            #if SPI_4_PIN_NUM_D07 != SD_PIN_NUM_D07
-                #error "Pin conflict on SPI_4: SPI_4_PIN_NUM_D07 already set to a different value than SD_PIN_NUM_D07"
-            #endif
-        #else
+        #ifndef SPI_4_PIN_NUM_D07
             #define SPI_4_PIN_NUM_D07 SD_PIN_NUM_D07
+        #endif
+    #endif
+
+    #if defined(EXPANDER_SPI_HOST) && (EXPANDER_SPI_HOST == SPI_4) && defined(EXPANDER_PIN_NUM_D07) && (EXPANDER_PIN_NUM_D07 != -1)
+        #ifndef SPI_4_PIN_NUM_D07
+            #define SPI_4_PIN_NUM_D07 EXPANDER_PIN_NUM_D07
         #endif
     #endif
 
@@ -3213,33 +4218,33 @@
 // ------------- I2C_1 consolidation -------------
 #ifdef I2C_1
 
-#if (defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_1)) || (defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_1)) || (defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_1))
+#if (defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_1)) || (defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_1)) || (defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_1)) || (defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_1))
     #define I2C_1_HOST_USED
 
     
     // Consolidate SCL for I2C_1
 
     #if defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_1) && defined(LCD_PIN_NUM_SCL) && (LCD_PIN_NUM_SCL != -1)
-        #define I2C_1_PIN_NUM_SCL LCD_PIN_NUM_SCL
+        #ifndef I2C_1_PIN_NUM_SCL
+            #define I2C_1_PIN_NUM_SCL LCD_PIN_NUM_SCL
+        #endif
     #endif
 
     #if defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_1) && defined(TOUCH_PIN_NUM_SCL) && (TOUCH_PIN_NUM_SCL != -1)
-        #ifdef I2C_1_PIN_NUM_SCL
-            #if I2C_1_PIN_NUM_SCL != TOUCH_PIN_NUM_SCL
-                #error "Pin conflict on I2C_1: I2C_1_PIN_NUM_SCL already set to a different value than TOUCH_PIN_NUM_SCL"
-            #endif
-        #else
+        #ifndef I2C_1_PIN_NUM_SCL
             #define I2C_1_PIN_NUM_SCL TOUCH_PIN_NUM_SCL
         #endif
     #endif
 
     #if defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_1) && defined(POWER_PIN_NUM_SCL) && (POWER_PIN_NUM_SCL != -1)
-        #ifdef I2C_1_PIN_NUM_SCL
-            #if I2C_1_PIN_NUM_SCL != POWER_PIN_NUM_SCL
-                #error "Pin conflict on I2C_1: I2C_1_PIN_NUM_SCL already set to a different value than POWER_PIN_NUM_SCL"
-            #endif
-        #else
+        #ifndef I2C_1_PIN_NUM_SCL
             #define I2C_1_PIN_NUM_SCL POWER_PIN_NUM_SCL
+        #endif
+    #endif
+
+    #if defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_1) && defined(EXPANDER_PIN_NUM_SCL) && (EXPANDER_PIN_NUM_SCL != -1)
+        #ifndef I2C_1_PIN_NUM_SCL
+            #define I2C_1_PIN_NUM_SCL EXPANDER_PIN_NUM_SCL
         #endif
     #endif
 
@@ -3251,26 +4256,26 @@
     // Consolidate SDA for I2C_1
 
     #if defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_1) && defined(LCD_PIN_NUM_SDA) && (LCD_PIN_NUM_SDA != -1)
-        #define I2C_1_PIN_NUM_SDA LCD_PIN_NUM_SDA
+        #ifndef I2C_1_PIN_NUM_SDA
+            #define I2C_1_PIN_NUM_SDA LCD_PIN_NUM_SDA
+        #endif
     #endif
 
     #if defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_1) && defined(TOUCH_PIN_NUM_SDA) && (TOUCH_PIN_NUM_SDA != -1)
-        #ifdef I2C_1_PIN_NUM_SDA
-            #if I2C_1_PIN_NUM_SDA != TOUCH_PIN_NUM_SDA
-                #error "Pin conflict on I2C_1: I2C_1_PIN_NUM_SDA already set to a different value than TOUCH_PIN_NUM_SDA"
-            #endif
-        #else
+        #ifndef I2C_1_PIN_NUM_SDA
             #define I2C_1_PIN_NUM_SDA TOUCH_PIN_NUM_SDA
         #endif
     #endif
 
     #if defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_1) && defined(POWER_PIN_NUM_SDA) && (POWER_PIN_NUM_SDA != -1)
-        #ifdef I2C_1_PIN_NUM_SDA
-            #if I2C_1_PIN_NUM_SDA != POWER_PIN_NUM_SDA
-                #error "Pin conflict on I2C_1: I2C_1_PIN_NUM_SDA already set to a different value than POWER_PIN_NUM_SDA"
-            #endif
-        #else
+        #ifndef I2C_1_PIN_NUM_SDA
             #define I2C_1_PIN_NUM_SDA POWER_PIN_NUM_SDA
+        #endif
+    #endif
+
+    #if defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_1) && defined(EXPANDER_PIN_NUM_SDA) && (EXPANDER_PIN_NUM_SDA != -1)
+        #ifndef I2C_1_PIN_NUM_SDA
+            #define I2C_1_PIN_NUM_SDA EXPANDER_PIN_NUM_SDA
         #endif
     #endif
 
@@ -3295,11 +4300,32 @@
         #warning "LCD_I2C_PULLUP and POWER_I2C_PULLUP mismatch on I2C_1"
     #endif
 
+    #if defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_1) && \
+        defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_1) && \
+        defined(LCD_I2C_PULLUP) && defined(EXPANDER_I2C_PULLUP) && \
+        (LCD_I2C_PULLUP != EXPANDER_I2C_PULLUP)
+        #warning "LCD_I2C_PULLUP and EXPANDER_I2C_PULLUP mismatch on I2C_1"
+    #endif
+
     #if defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_1) && \
         defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_1) && \
         defined(TOUCH_I2C_PULLUP) && defined(POWER_I2C_PULLUP) && \
         (TOUCH_I2C_PULLUP != POWER_I2C_PULLUP)
         #warning "TOUCH_I2C_PULLUP and POWER_I2C_PULLUP mismatch on I2C_1"
+    #endif
+
+    #if defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_1) && \
+        defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_1) && \
+        defined(TOUCH_I2C_PULLUP) && defined(EXPANDER_I2C_PULLUP) && \
+        (TOUCH_I2C_PULLUP != EXPANDER_I2C_PULLUP)
+        #warning "TOUCH_I2C_PULLUP and EXPANDER_I2C_PULLUP mismatch on I2C_1"
+    #endif
+
+    #if defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_1) && \
+        defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_1) && \
+        defined(POWER_I2C_PULLUP) && defined(EXPANDER_I2C_PULLUP) && \
+        (POWER_I2C_PULLUP != EXPANDER_I2C_PULLUP)
+        #warning "POWER_I2C_PULLUP and EXPANDER_I2C_PULLUP mismatch on I2C_1"
     #endif
 
     #if defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_1) && defined(LCD_I2C_PULLUP) && (LCD_I2C_PULLUP)
@@ -3320,6 +4346,12 @@
         #endif
     #endif
 
+    #if defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_1) && defined(EXPANDER_I2C_PULLUP) && (EXPANDER_I2C_PULLUP)
+        #ifndef I2C_1_PULLUP
+            #define I2C_1_PULLUP 1
+        #endif
+    #endif
+
 #endif
 
 #endif // I2C_1
@@ -3327,33 +4359,33 @@
 // ------------- I2C_2 consolidation -------------
 #ifdef I2C_2
 
-#if (defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_2)) || (defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_2)) || (defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_2))
+#if (defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_2)) || (defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_2)) || (defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_2)) || (defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_2))
     #define I2C_2_HOST_USED
 
     
     // Consolidate SCL for I2C_2
 
     #if defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_2) && defined(LCD_PIN_NUM_SCL) && (LCD_PIN_NUM_SCL != -1)
-        #define I2C_2_PIN_NUM_SCL LCD_PIN_NUM_SCL
+        #ifndef I2C_2_PIN_NUM_SCL
+            #define I2C_2_PIN_NUM_SCL LCD_PIN_NUM_SCL
+        #endif
     #endif
 
     #if defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_2) && defined(TOUCH_PIN_NUM_SCL) && (TOUCH_PIN_NUM_SCL != -1)
-        #ifdef I2C_2_PIN_NUM_SCL
-            #if I2C_2_PIN_NUM_SCL != TOUCH_PIN_NUM_SCL
-                #error "Pin conflict on I2C_2: I2C_2_PIN_NUM_SCL already set to a different value than TOUCH_PIN_NUM_SCL"
-            #endif
-        #else
+        #ifndef I2C_2_PIN_NUM_SCL
             #define I2C_2_PIN_NUM_SCL TOUCH_PIN_NUM_SCL
         #endif
     #endif
 
     #if defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_2) && defined(POWER_PIN_NUM_SCL) && (POWER_PIN_NUM_SCL != -1)
-        #ifdef I2C_2_PIN_NUM_SCL
-            #if I2C_2_PIN_NUM_SCL != POWER_PIN_NUM_SCL
-                #error "Pin conflict on I2C_2: I2C_2_PIN_NUM_SCL already set to a different value than POWER_PIN_NUM_SCL"
-            #endif
-        #else
+        #ifndef I2C_2_PIN_NUM_SCL
             #define I2C_2_PIN_NUM_SCL POWER_PIN_NUM_SCL
+        #endif
+    #endif
+
+    #if defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_2) && defined(EXPANDER_PIN_NUM_SCL) && (EXPANDER_PIN_NUM_SCL != -1)
+        #ifndef I2C_2_PIN_NUM_SCL
+            #define I2C_2_PIN_NUM_SCL EXPANDER_PIN_NUM_SCL
         #endif
     #endif
 
@@ -3365,26 +4397,26 @@
     // Consolidate SDA for I2C_2
 
     #if defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_2) && defined(LCD_PIN_NUM_SDA) && (LCD_PIN_NUM_SDA != -1)
-        #define I2C_2_PIN_NUM_SDA LCD_PIN_NUM_SDA
+        #ifndef I2C_2_PIN_NUM_SDA
+            #define I2C_2_PIN_NUM_SDA LCD_PIN_NUM_SDA
+        #endif
     #endif
 
     #if defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_2) && defined(TOUCH_PIN_NUM_SDA) && (TOUCH_PIN_NUM_SDA != -1)
-        #ifdef I2C_2_PIN_NUM_SDA
-            #if I2C_2_PIN_NUM_SDA != TOUCH_PIN_NUM_SDA
-                #error "Pin conflict on I2C_2: I2C_2_PIN_NUM_SDA already set to a different value than TOUCH_PIN_NUM_SDA"
-            #endif
-        #else
+        #ifndef I2C_2_PIN_NUM_SDA
             #define I2C_2_PIN_NUM_SDA TOUCH_PIN_NUM_SDA
         #endif
     #endif
 
     #if defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_2) && defined(POWER_PIN_NUM_SDA) && (POWER_PIN_NUM_SDA != -1)
-        #ifdef I2C_2_PIN_NUM_SDA
-            #if I2C_2_PIN_NUM_SDA != POWER_PIN_NUM_SDA
-                #error "Pin conflict on I2C_2: I2C_2_PIN_NUM_SDA already set to a different value than POWER_PIN_NUM_SDA"
-            #endif
-        #else
+        #ifndef I2C_2_PIN_NUM_SDA
             #define I2C_2_PIN_NUM_SDA POWER_PIN_NUM_SDA
+        #endif
+    #endif
+
+    #if defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_2) && defined(EXPANDER_PIN_NUM_SDA) && (EXPANDER_PIN_NUM_SDA != -1)
+        #ifndef I2C_2_PIN_NUM_SDA
+            #define I2C_2_PIN_NUM_SDA EXPANDER_PIN_NUM_SDA
         #endif
     #endif
 
@@ -3409,11 +4441,32 @@
         #warning "LCD_I2C_PULLUP and POWER_I2C_PULLUP mismatch on I2C_2"
     #endif
 
+    #if defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_2) && \
+        defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_2) && \
+        defined(LCD_I2C_PULLUP) && defined(EXPANDER_I2C_PULLUP) && \
+        (LCD_I2C_PULLUP != EXPANDER_I2C_PULLUP)
+        #warning "LCD_I2C_PULLUP and EXPANDER_I2C_PULLUP mismatch on I2C_2"
+    #endif
+
     #if defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_2) && \
         defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_2) && \
         defined(TOUCH_I2C_PULLUP) && defined(POWER_I2C_PULLUP) && \
         (TOUCH_I2C_PULLUP != POWER_I2C_PULLUP)
         #warning "TOUCH_I2C_PULLUP and POWER_I2C_PULLUP mismatch on I2C_2"
+    #endif
+
+    #if defined(TOUCH_I2C_HOST) && (TOUCH_I2C_HOST == I2C_2) && \
+        defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_2) && \
+        defined(TOUCH_I2C_PULLUP) && defined(EXPANDER_I2C_PULLUP) && \
+        (TOUCH_I2C_PULLUP != EXPANDER_I2C_PULLUP)
+        #warning "TOUCH_I2C_PULLUP and EXPANDER_I2C_PULLUP mismatch on I2C_2"
+    #endif
+
+    #if defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_2) && \
+        defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_2) && \
+        defined(POWER_I2C_PULLUP) && defined(EXPANDER_I2C_PULLUP) && \
+        (POWER_I2C_PULLUP != EXPANDER_I2C_PULLUP)
+        #warning "POWER_I2C_PULLUP and EXPANDER_I2C_PULLUP mismatch on I2C_2"
     #endif
 
     #if defined(LCD_I2C_HOST) && (LCD_I2C_HOST == I2C_2) && defined(LCD_I2C_PULLUP) && (LCD_I2C_PULLUP)
@@ -3429,6 +4482,12 @@
     #endif
 
     #if defined(POWER_I2C_HOST) && (POWER_I2C_HOST == I2C_2) && defined(POWER_I2C_PULLUP) && (POWER_I2C_PULLUP)
+        #ifndef I2C_2_PULLUP
+            #define I2C_2_PULLUP 1
+        #endif
+    #endif
+
+    #if defined(EXPANDER_I2C_HOST) && (EXPANDER_I2C_HOST == I2C_2) && defined(EXPANDER_I2C_PULLUP) && (EXPANDER_I2C_PULLUP)
         #ifndef I2C_2_PULLUP
             #define I2C_2_PULLUP 1
         #endif

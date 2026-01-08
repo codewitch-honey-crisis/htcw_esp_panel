@@ -94,6 +94,13 @@ void panel_sd_end();
 /// @return True if successfully mounted, otherwise false
 bool panel_sd_init(bool format_on_fail, size_t max_files, size_t alloc_unit_size);
 #endif
+#ifdef EXPANDER
+/// @brief Initializes the I/O expander
+void panel_expander_init(void);
+/// @brief Returns the handle for the I/O expander 
+/// @return The I/O expander handle
+void* panel_expander_handle(void);
+#endif
 #ifdef __cplusplus
 }
 #endif
