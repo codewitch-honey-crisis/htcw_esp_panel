@@ -23,6 +23,7 @@
 #define LCD_INVERT_COLOR 1
 #define LCD_SWAP_XY 1
 #define LCD_DIVISOR 2
+#define LCD_BCKL_PWM_CHANNEL 0
 #define BUTTON_MASK (BUTTON_PIN(0)|BUTTON_PIN(35))
 #define BUTTON_ON_LEVEL 0
 #endif // TTGO_T1

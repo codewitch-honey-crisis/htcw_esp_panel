@@ -39,6 +39,15 @@ void* panel_lcd_transfer_buffer(void);
 /// @return A pointer to the secondary transfer buffer, of size LCD_TRANSFER_SIZE
 void* panel_lcd_transfer_buffer2(void);
 #endif
+#ifdef LCD_PIN_NUM_BCKL
+#if LCD_PIN_NUM_BCKL > -1
+#ifdef LCD_BCKL_PWM_CHANNEL
+void panel_lcd_backlight(uint8_t level);
+#else
+void panel_lcd_backlight(bool on);
+#endif
+#endif
+#endif
 #endif
 #if LCD_SYNC_TRANSFER == 0
 /// @brief Called when a transfer is complete. To be implemented by the panel_lcd_init() caller

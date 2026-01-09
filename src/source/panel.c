@@ -31,6 +31,9 @@
 #if LCD_BUS == PANEL_BUS_RGB
 #include "esp_lcd_panel_rgb.h"
 #endif
+#ifdef LCD_BCKL_PWM_CHANNEL
+#include "driver/ledc.h"
+#endif
 #ifdef EXPANDER
 #include "esp_io_expander.h"
 #endif
@@ -328,12 +331,34 @@ void panel_lcd_init(void) {
     }
 #ifdef LCD_PIN_NUM_BCKL
 #if LCD_PIN_NUM_BCKL >= 0
+#ifdef LCD_BCKL_PWM_CHANNEL
+    ledc_timer_config_t ledc_timer;
+    memset(&ledc_timer,0,sizeof(ledc_timer)); 
+    ledc_timer.speed_mode       = LEDC_LOW_SPEED_MODE;
+    ledc_timer.duty_resolution  = LEDC_TIMER_8_BIT;
+    ledc_timer.timer_num        = LEDC_TIMER_0;
+    ledc_timer.freq_hz          = 5000;
+    ledc_timer.clk_cfg          = LEDC_AUTO_CLK;
+    ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
+    ledc_channel_config_t ledc_cfg;
+    memset(&ledc_cfg,0,sizeof(ledc_cfg));
+    ledc_cfg.channel = LCD_BCKL_PWM_CHANNEL;
+    ledc_cfg.duty = (!LCD_BCKL_ON_LEVEL)*255;
+    ledc_cfg.hpoint = 0;
+    ledc_cfg.speed_mode = LEDC_LOW_SPEED_MODE;
+    ledc_cfg.gpio_num = LCD_PIN_NUM_BCKL;
+    ledc_cfg.timer_sel = LEDC_TIMER_0;
+    ledc_cfg.flags.output_invert= 0;
+    ledc_cfg.intr_type = LEDC_INTR_DISABLE;
+    ESP_ERROR_CHECK(ledc_channel_config(&ledc_cfg));
+#else
     gpio_config_t bk_gpio_config;
     memset(&bk_gpio_config,0,sizeof(gpio_config_t));
     bk_gpio_config.mode = GPIO_MODE_OUTPUT;
     bk_gpio_config.pin_bit_mask = 1ULL << LCD_PIN_NUM_BCKL;
     ESP_ERROR_CHECK(gpio_config(&bk_gpio_config));
     gpio_set_level((gpio_num_t)LCD_PIN_NUM_BCKL, LCD_BCKL_OFF_LEVEL);
+#endif
 #endif
 #endif
     // Turn on the power for MIPI DSI PHY, so it can go from "No Power" state to "Shutdown" state
@@ -766,7 +791,12 @@ void panel_lcd_init(void) {
     esp_lcd_panel_disp_on_off(lcd_handle, true);
 #ifdef LCD_PIN_NUM_BCKL
 #if LCD_PIN_NUM_BCKL >= 0
+#ifdef LCD_BCKL_PWM_CHANNEL
+    ledc_set_duty(LEDC_LOW_SPEED_MODE,(ledc_channel_t)LCD_BCKL_PWM_CHANNEL,LCD_BCKL_ON_LEVEL*255);
+    ledc_update_duty(LEDC_LOW_SPEED_MODE,(ledc_channel_t)LCD_BCKL_PWM_CHANNEL);
+#else
     gpio_set_level((gpio_num_t)LCD_PIN_NUM_BCKL, LCD_BCKL_ON_LEVEL);
+#endif
 #endif
 #endif
 #if LCD_TRANSFER_SIZE > 0
@@ -793,6 +823,24 @@ void panel_lcd_init(void) {
 void* panel_lcd_transfer_buffer(void) { return draw_buffer; }
 #if LCD_SYNC_TRANSFER == 0
 void* panel_lcd_transfer_buffer2(void) { return draw_buffer2; }
+#endif
+#endif
+#ifdef LCD_PIN_NUM_BCKL
+#if LCD_PIN_NUM_BCKL > -1
+#ifdef LCD_BCKL_PWM_CHANNEL
+void panel_lcd_backlight(uint8_t level) {
+#if LCD_BCKL_ON_LEVEL == 0
+    ledc_set_duty(LEDC_LOW_SPEED_MODE,(ledc_channel_t)LCD_BCKL_PWM_CHANNEL,255-level);
+#else
+    ledc_set_duty(LEDC_LOW_SPEED_MODE,(ledc_channel_t)LCD_BCKL_PWM_CHANNEL,level);
+#endif
+    ledc_update_duty(LEDC_LOW_SPEED_MODE,(ledc_channel_t)LCD_BCKL_PWM_CHANNEL);
+}
+#else
+void panel_lcd_backlight(bool on) {
+    gpio_set_level((gpio_num_t)LCD_PIN_NUM_BCKL,on?LCD_BCKL_ON_LEVEL:!LCD_BCKL_ON_LEVEL);
+}
+#endif
 #endif
 #endif
 #endif

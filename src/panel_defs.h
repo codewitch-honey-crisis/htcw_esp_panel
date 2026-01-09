@@ -114,6 +114,14 @@
 #endif
 #endif
 #endif
+#ifdef LCD_PIN_NUM_BCKL
+#if LCD_PIN_NUM_BCKL > -1
+#define LCD_BCKL
+#ifdef LCD_BCKL_PWM_CHANNEL
+#define LCD_BCKL_PWM
+#endif
+#endif
+#endif
 #ifndef LCD_FULLSCREEN_TRANSFER
 #define LCD_FULLSCREEN_TRANSFER 0
 #endif
