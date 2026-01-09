@@ -73,6 +73,9 @@
 #define LCD_HEIGHT LCD_VRES
 #endif
 #endif
+#ifndef LCD_COLOR_SPACE
+#define LCD_COLOR_SPACE LCD_COLOR_RGB
+#endif
 #ifndef LCD_BIT_DEPTH
 #define LCD_BIT_DEPTH 16
 #endif
