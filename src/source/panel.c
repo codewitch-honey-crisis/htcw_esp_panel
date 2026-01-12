@@ -410,9 +410,10 @@ void panel_lcd_init(void) {
     i80_cfg.data_gpio_nums[15] = LCD_PIN_NUM_D15;
     i80_cfg.bus_width = 16;
 #endif  // LCD_PIN_NUM_D15
+    i80_cfg.dma_burst_size = 64;
     i80_cfg.max_transfer_bytes = LCD_TRANSFER_SIZE+8;
     ESP_ERROR_CHECK(esp_lcd_new_i80_bus(&i80_cfg, &i80_bus));
-    esp_lcd_panel_io_i80_config_t i80_io_cfg;
+    esp_lcd_panel_io_i80_config_t i80_io_cfg;    
     memset(&i80_io_cfg, 0, sizeof(i80_io_cfg));
     i80_io_cfg.cs_gpio_num = LCD_PIN_NUM_CS;
     i80_io_cfg.pclk_hz = LCD_CLOCK_HZ;
@@ -804,14 +805,14 @@ void panel_lcd_init(void) {
 #ifdef LCD_TRANSFER_IN_SPIRAM
     heap_caps |= MALLOC_CAP_SPIRAM;
 #else
-    heap_caps |= MALLOC_CAP_INTERNAL;
+    heap_caps |= MALLOC_CAP_INTERNAL | MALLOC_CAP_DMA;
 #endif
     // it's recommended to allocate the draw buffer from internal memory, for better performance
     draw_buffer = heap_caps_malloc(LCD_TRANSFER_SIZE, heap_caps);
     if(draw_buffer==NULL) {
         ESP_ERROR_CHECK(ESP_ERR_NO_MEM);
     }
-#if LCD_SYNC_TRANSFER > 0
+#if LCD_SYNC_TRANSFER == 0
     draw_buffer2 = heap_caps_malloc(LCD_TRANSFER_SIZE, heap_caps);
     if(draw_buffer2==NULL) {
         ESP_ERROR_CHECK(ESP_ERR_NO_MEM);
