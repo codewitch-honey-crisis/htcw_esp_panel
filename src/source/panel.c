@@ -378,8 +378,8 @@ void panel_lcd_init(void) {
     esp_lcd_i80_bus_handle_t i80_bus = NULL;
     esp_lcd_i80_bus_config_t i80_cfg;
     memset(&i80_cfg, 0, sizeof(i80_cfg));
-    i80_cfg.clk_src = LCD_CLK_SRC_PLL160M;
-    i80_cfg.dc_gpio_num = LCD_PIN_NUM_RS;
+    i80_cfg.clk_src = LCD_CLK_SRC_DEFAULT;
+    i80_cfg.dc_gpio_num = LCD_PIN_NUM_DC;
     i80_cfg.wr_gpio_num = LCD_PIN_NUM_WR;
 #ifndef LCD_PIN_NUM_D15    
     i80_cfg.data_gpio_nums[0] = LCD_PIN_NUM_D00;
@@ -410,15 +410,13 @@ void panel_lcd_init(void) {
     i80_cfg.data_gpio_nums[15] = LCD_PIN_NUM_D15;
     i80_cfg.bus_width = 16;
 #endif  // LCD_PIN_NUM_D15
-    i80_cfg.max_transfer_bytes = LCD_TRANSFER_SIZE;
+    i80_cfg.max_transfer_bytes = LCD_TRANSFER_SIZE+8;
     ESP_ERROR_CHECK(esp_lcd_new_i80_bus(&i80_cfg, &i80_bus));
     esp_lcd_panel_io_i80_config_t i80_io_cfg;
     memset(&i80_io_cfg, 0, sizeof(i80_io_cfg));
     i80_io_cfg.cs_gpio_num = LCD_PIN_NUM_CS;
     i80_io_cfg.pclk_hz = LCD_CLOCK_HZ;
     i80_io_cfg.trans_queue_depth = 20;
-    i80_io_cfg.dc_levels.dc_idle_level = 0;
-    i80_io_cfg.dc_levels.dc_idle_level = 0;
 #ifdef LCD_DC_ON_LEVEL
     i80_io_cfg.dc_levels.dc_cmd_level = !LCD_DC_ON_LEVEL;
 #else
@@ -427,8 +425,10 @@ void panel_lcd_init(void) {
     i80_io_cfg.dc_levels.dc_dummy_level = 0;
 #ifdef LCD_DC_ON_LEVEL
     i80_io_cfg.dc_levels.dc_data_level = LCD_DC_ON_LEVEL;
+    i80_io_cfg.dc_levels.dc_idle_level = LCD_DC_ON_LEVEL;
 #else
     i80_io_cfg.dc_levels.dc_data_level = 1;
+    i80_io_cfg.dc_levels.dc_idle_level = 1;
 #endif
     i80_io_cfg.lcd_cmd_bits = LCD_CMD_BITS;
     i80_io_cfg.lcd_param_bits = LCD_PARAM_BITS;
@@ -440,7 +440,7 @@ void panel_lcd_init(void) {
     io_config.flags.swap_color_bytes = false;
 #endif  // LCD_SWAP_COLOR_BYTES
 #ifdef LCD_CS_ON_LEVEL
-    i80_io_cfg.flags.cs_active_high = LCD_CS_ON_LEVEL;
+    i80_io_cfg.flags.cs_active_high = !LCD_CS_ON_LEVEL;
 #else
     i80_io_cfg.flags.cs_active_high = 0;
 #endif

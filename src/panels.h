@@ -246,7 +246,7 @@
 #define BUTTON_ON_LEVEL 0
 #endif // M5STACK_S3_ATOM
 
-#ifdef MATOUCH_ESP_DISPLAY_PARALLEL_35 // Untested. Mine died eventually
+#ifdef MATOUCH_ESP_DISPLAY_PARALLEL_35 // Works, but with display artifacts could be a bug in the i8080 facilities in esp-idf 5.4.1?
 #ifdef PANEL_DEPENDENCIES
 // lib_deps = codewitch-honey-crisis/htcw_esp_lcd_panel_ili9488
 //      codewitch-honey-crisis/htcw_esp_lcd_touch_ft6x36
@@ -278,14 +278,17 @@
 #define LCD_HRES 320
 #define LCD_VRES 480
 #define LCD_COLOR_SPACE LCD_COLOR_BGR
+#define LCD_REVERSE_COLOR_BITS 0
+#define LCD_SWAP_COLOR_BYTES 1
+#define LCD_BIT_DEPTH 16
 #define LCD_CLOCK_HZ (20 * 1000 * 1000)
 #define LCD_GAP_X 0
 #define LCD_GAP_Y 0
-#define LCD_MIRROR_X 1
+#define LCD_MIRROR_X 0
 #define LCD_MIRROR_Y 1
 #define LCD_INVERT_COLOR 0
 #define LCD_SWAP_XY 1
-#define LCD_SWAP_COLOR_BYTES 1
+#define LCD_DATA_ENDIAN_LITTLE 0
 #define TOUCH_I2C_HOST I2C_1
 #define TOUCH_PIN_NUM_SCL 39
 #define TOUCH_PIN_NUM_SDA 38
@@ -293,6 +296,8 @@
 #define TOUCH_I2C_ADDRESS ESP_LCD_TOUCH_IO_I2C_FT6x36_ADDRESS
 #define TOUCH_UPDATE_LIMIT_MS 13
 #define TOUCH_CMD_BITS 8
+#define TOUCH_MIRROR_X 0
+#define TOUCH_MIRROR_Y 0
 #define TOUCH_PARAM_BITS 0
 #define TOUCH_DISABLE_CONTROL_PHASE 1
 #define TOUCH_CLOCK_HZ (200*1000)
