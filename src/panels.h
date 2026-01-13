@@ -855,6 +855,27 @@ st7703_vendor_config_t vendor_config = { \
 #define SD_CLOCK_HZ (40*1000*1000)
 #endif // FREENOVE_S3_DEVKIT
 
+#ifdef IDEASPARK_19
+#define LCD_INIT esp_lcd_new_panel_st7789
+#define LCD_HRES 170
+#define LCD_VRES 320
+#define LCD_INVERT_COLOR 1
+#define LCD_GAP_Y 35
+#define LCD_SWAP_XY 1
+#define LCD_MIRROR_Y 1
+#define LCD_DIVISOR 4
+#define LCD_SPI_HOST SPI_3
+#define LCD_CLOCK_HZ ((uint32_t)(40*(1000*1000)))
+#define LCD_PIN_NUM_RST 4
+#define LCD_PIN_NUM_BCKL 32
+#define LCD_PIN_NUM_MOSI 23
+#define LCD_PIN_NUM_CLK 18
+#define LCD_PIN_NUM_CS 15
+#define LCD_PIN_NUM_DC 2
+#define BUTTON_MASK BUTTON_PIN(0)
+#define BUTTON_ON_LEVEL 0
+#endif
+
 // END devices
 
 #endif // PANELS_H

@@ -994,7 +994,7 @@ uint64_t panel_button_read_all(void) {
     uint64_t result = 0;
     for(int i = 0;i<GPIO_NUM_MAX;++i) {
         uint64_t mask = ((uint64_t)1)<<i;
-        if(mask & BUTTON_MASK) {
+        if(0!=(mask & (BUTTON_MASK))) {
             if(panel_button_read(i)) {
                 result |= mask;
             }
