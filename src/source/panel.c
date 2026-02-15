@@ -929,7 +929,7 @@ void panel_touch_init(void) {
 #ifndef LEGACY_I2C
     i2c_master_bus_handle_t i2c_bus_handle;
     ESP_ERROR_CHECK(i2c_master_get_bus_handle((i2c_port_num_t)TOUCH_I2C_HOST,&i2c_bus_handle));
-    ESP_ERROR_CHECK(esp_lcd_new_panel_io_i2c_v2((i2c_master_bus_handle_t)i2c_bus_handle, &touch_i2c_cfg, &touch_io_handle));
+    ESP_ERROR_CHECK(esp_lcd_new_panel_io_i2c((i2c_master_bus_handle_t)i2c_bus_handle, &touch_i2c_cfg, &touch_io_handle));
 #else
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_i2c_v1((uint32_t)TOUCH_I2C_HOST, &touch_i2c_cfg, &touch_io_handle));
 #endif

@@ -1,19 +1,19 @@
 #ifndef PANEL_H
 #define PANEL_H
-#include "driver/spi_master.h"
+#include <driver/spi_master.h>
 #ifdef LEGACY_I2C
-    #include "driver/i2c.h"
+    #include <driver/i2c.h>
 #else
-    #include "driver/i2c_master.h"
+    #include <driver/i2c_master.h>
 #endif
 #include "panel_maxes.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #ifdef SD_BUS
-#include "esp_vfs_fat.h"
-#include "sdmmc_cmd.h"
-#include "driver/sdmmc_host.h"
+#include <esp_vfs_fat.h>
+#include <sdmmc_cmd.h>
+#include <driver/sdmmc_host.h>
 #endif
 
 #ifdef __cplusplus
