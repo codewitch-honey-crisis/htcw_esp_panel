@@ -295,9 +295,14 @@ static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_handle_t panel, const esp_
 #endif
     return true;
 }
+IRAM_ATTR __attribute__((weak)) void panel_lcd_on_vsync() {
+
+}
+
 #if LCD_VSYNC > 0
 // LCD Panel API calls this
 static IRAM_ATTR bool on_vsync(esp_lcd_panel_handle_t panel, const esp_lcd_rgb_panel_event_data_t *edata, void *user_ctx) {
+    panel_lcd_on_vsync();
     vsync_count = 0;
     return true;
 }
@@ -325,6 +330,23 @@ static IRAM_ATTR bool on_flush_complete(esp_lcd_panel_handle_t panel, esp_lcd_dp
     return true;
 }
 #endif
+#if LCD_BUS == PANEL_BUS_RGB || LCD_BUS == PANEL_BUS_MIPI
+#ifdef LCD_FRAMEBUFFER_COUNT
+static const size_t lcd_framebuffers_size = LCD_FRAMEBUFFER_COUNT;
+static void* lcd_framebuffers[LCD_FRAMEBUFFER_COUNT];
+#else
+static const size_t lcd_framebuffers_size = 1;
+static void* lcd_framebuffers[1];
+#endif
+void* panel_lcd_framebuffer(size_t index) {
+    if(index>lcd_framebuffers_size) {
+        return NULL;
+    }
+    return lcd_framebuffers[index];
+}
+#endif
+
+
 void panel_lcd_init(void) {
     if(lcd_handle!=NULL) {
         ESP_LOGW(TAG,"lcd_init() was already called");
@@ -755,7 +777,7 @@ void panel_lcd_init(void) {
 #endif
 #if LCD_BUS == PANEL_BUS_MIPI 
     esp_lcd_dpi_panel_event_callbacks_t mipi_cbs = {
-        .on_color_trans_done = on_flush_complete,
+        .on_color_trans_done = on_flush_complete
     };
     ESP_ERROR_CHECK(esp_lcd_dpi_panel_register_event_callbacks(lcd_handle, &mipi_cbs, NULL));
 #endif
@@ -800,6 +822,32 @@ void panel_lcd_init(void) {
     gpio_set_level((gpio_num_t)LCD_PIN_NUM_BCKL, LCD_BCKL_ON_LEVEL);
 #endif
 #endif
+#endif
+#if LCD_BUS == PANEL_BUS_RGB 
+    switch(lcd_framebuffers_size) {
+        case 1:
+            ESP_ERROR_CHECK(esp_lcd_rgb_panel_get_frame_buffer(lcd_handle,lcd_framebuffers_size,&lcd_framebuffers[0]));
+            break;
+        case 2:
+            ESP_ERROR_CHECK(esp_lcd_rgb_panel_get_frame_buffer(lcd_handle,lcd_framebuffers_size,&lcd_framebuffers[0],&lcd_framebuffers[1]));
+            break;
+        case 3:
+            ESP_ERROR_CHECK(esp_lcd_rgb_panel_get_frame_buffer(lcd_handle,lcd_framebuffers_size,&lcd_framebuffers[0],&lcd_framebuffers[1],&lcd_framebuffers[2]));
+            break;
+    }
+#endif
+#if LCD_BUS == PANEL_BUS_MIPI 
+    switch(lcd_framebuffers_size) {
+        case 1:
+            ESP_ERROR_CHECK(esp_lcd_dpi_panel_get_frame_buffer(lcd_handle,lcd_framebuffers_size,&lcd_framebuffers[0]));
+            break;
+        case 2:
+            ESP_ERROR_CHECK(esp_lcd_dpi_panel_get_frame_buffer(lcd_handle,lcd_framebuffers_size,&lcd_framebuffers[0],&lcd_framebuffers[1]));
+            break;
+        case 3:
+            ESP_ERROR_CHECK(esp_lcd_dpi_panel_get_frame_buffer(lcd_handle,lcd_framebuffers_size,&lcd_framebuffers[0],&lcd_framebuffers[1],&lcd_framebuffers[2]));
+            break;
+    }
 #endif
 #if LCD_TRANSFER_SIZE > 0
     uint32_t heap_caps = MALLOC_CAP_8BIT;

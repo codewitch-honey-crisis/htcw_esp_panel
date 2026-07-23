@@ -49,6 +49,14 @@ void panel_lcd_backlight(bool on);
 #endif
 #endif
 #endif
+#if LCD_BUS == PANEL_BUS_RGB || LCD_BUS == PANEL_BUS_MIPI
+void* panel_lcd_framebuffer(size_t index);
+#endif
+#if LCD_BUS == PANEL_BUS_RGB
+#ifdef LCD_VSYNC
+void panel_lcd_on_vsync();
+#endif
+#endif
 #if LCD_SYNC_TRANSFER == 0
 /// @brief Called when a transfer is complete. To be implemented by the panel_lcd_init() caller
 void panel_lcd_flush_complete(void);
