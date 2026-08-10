@@ -1017,8 +1017,8 @@ void panel_touch_read(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y,uint1
 #if defined(LCD_BUS) && (TOUCH_WIDTH!=LCD_WIDTH||TOUCH_HEIGHT!=LCD_HEIGHT || TOUCH_LEFT_OVERHANG!=0 ||TOUCH_RIGHT_OVERHANG!=0||TOUCH_TOP_OVERHANG!=0||TOUCH_BOTTOM_OVERHANG!=0)
     for(size_t i = 0;i<*in_out_count;++i) {
         // the panel may have a different res than the screen
-        out_x[i]=(out_x[i]*(TOUCH_WIDTH-TOUCH_LEFT_OVERHANG-TOUCH_RIGHT_OVERHANG))/(LCD_WIDTH);
-        out_y[i]=(out_y[i]*(TOUCH_HEIGHT-TOUCH_TOP_OVERHANG-TOUCH_BOTTOM_OVERHANG))/LCD_HEIGHT;
+        out_x[i]=(out_x[i]*LCD_WIDTH/(TOUCH_WIDTH-TOUCH_LEFT_OVERHANG-TOUCH_RIGHT_OVERHANG));
+        out_y[i]=(out_y[i]*LCD_HEIGHT/(TOUCH_HEIGHT-TOUCH_TOP_OVERHANG-TOUCH_BOTTOM_OVERHANG));
     }
 #endif
 }
