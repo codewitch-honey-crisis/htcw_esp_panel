@@ -875,6 +875,13 @@ void* panel_lcd_transfer_buffer(void) { return draw_buffer; }
 void* panel_lcd_transfer_buffer2(void) { return draw_buffer2; }
 #endif
 #endif
+void* panel_lcd_io_handle(void) {
+    return lcd_io_handle;
+}
+void* panel_lcd_handle(void) {
+    return lcd_handle;
+}
+
 #ifdef LCD_PIN_NUM_BCKL
 #if LCD_PIN_NUM_BCKL > -1
 #ifdef LCD_BCKL_PWM_CHANNEL
@@ -1033,6 +1040,12 @@ void panel_touch_update(void) {
 #if defined(TOUCH_UPDATE_LIMIT_MS) && TOUCH_UPDATE_LIMIT_TS > 0
     }
 #endif
+}
+void* panel_touch_io_handle(void) {
+    return touch_io_handle;
+}
+void* panel_touch_handle(void) {
+    return touch_handle;
 }
 #endif
 

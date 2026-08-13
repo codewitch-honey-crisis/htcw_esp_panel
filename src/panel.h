@@ -38,6 +38,12 @@ void* panel_lcd_transfer_buffer(void);
 /// @brief Returns the secondary transfer buffer 
 /// @return A pointer to the secondary transfer buffer, of size LCD_TRANSFER_SIZE
 void* panel_lcd_transfer_buffer2(void);
+/// @brief Retrieves the I/O handle for the LCD
+/// @return The I/O handle
+void* panel_lcd_io_handle(void);
+/// @brief Retrieves the handle for the LCD
+/// @return The handle
+void* panel_lcd_handle(void);
 #endif
 #ifdef LCD_PIN_NUM_BCKL
 #if LCD_PIN_NUM_BCKL > -1
@@ -82,6 +88,13 @@ void panel_touch_read(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y, uint
 /// @param out_y The y array
 /// @param out_strength The strength array
 void panel_touch_read_raw(size_t* in_out_count,uint16_t* out_x,uint16_t* out_y, uint16_t* out_strength);
+/// @brief Retrieves the I/O handle for the touch panel
+/// @return The I/O handle
+void* panel_touch_io_handle(void);
+/// @brief Retrieves the handle for the touch panel
+/// @return The handle
+void* panel_touch_handle(void);
+
 #endif
 #ifdef BUTTON
 /// @brief Initializes the buttons
