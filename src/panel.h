@@ -97,6 +97,15 @@ uint64_t panel_button_read_all(void);
 #ifdef POWER
 /// @brief Initializes the power subsystem
 void panel_power_init(void);
+/// @brief Indicates the battery level or zero if not supported
+/// @return The battery level as a percentage between 0 and 100, inclusive
+int panel_power_battery_level(void);
+/// @brief Indicates whether external power is plugged in or false if not supported
+/// @return A boolean indicating whether or not the power is external
+bool panel_power_ac_in(void);
+/// @brief Indicated whether the battery is charging or false if not supported
+/// @return A boolean indicating whether the battery is charging
+bool panel_power_charging(void);
 #endif
 #ifdef SD_BUS
 /// @brief Returns the handle for the mounted SD card

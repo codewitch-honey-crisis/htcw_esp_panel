@@ -185,6 +185,9 @@
 #define POWER_CLOCK_HZ (200*1000) 
 #define POWER_I2C_PULLUP 1
 #define POWER_INIT m5_stack_core2_power_init(0)
+#define POWER_BATTERY_LEVEL return m5_stack_core2_power_battery_level();
+#define POWER_AC_IN return m5_stack_core2_power_ac_in();
+#define POWER_CHARGING return m5_stack_core2_power_charging();
 #define SD_SPI_HOST SPI_3
 #define SD_PIN_NUM_CS 4
 #define SD_PIN_NUM_MOSI 23

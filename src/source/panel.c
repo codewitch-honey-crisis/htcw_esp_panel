@@ -1083,6 +1083,27 @@ void panel_power_init(void) {
     POWER_INIT;
 #endif
 }
+int panel_power_battery_level(void) {
+#ifdef POWER_BATTERY_LEVEL
+    POWER_BATTERY_LEVEL;
+#else
+    return 0;
+#endif
+}
+bool panel_power_ac_in(void) {
+#ifdef POWER_AC_IN
+    POWER_AC_IN;
+#else
+    return false;
+#endif
+}
+bool panel_power_charging(void) {
+#ifdef POWER_CHARGING
+    POWER_CHARGING;
+#else
+    return false;
+#endif
+}
 #endif
 #ifdef SD_BUS
 static sdmmc_card_t* sd_card_handle = NULL;
