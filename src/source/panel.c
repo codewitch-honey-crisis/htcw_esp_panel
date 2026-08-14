@@ -876,7 +876,11 @@ void* panel_lcd_transfer_buffer2(void) { return draw_buffer2; }
 #endif
 #endif
 void* panel_lcd_io_handle(void) {
+#if LCD_BUS != PANEL_BUS_RGB || defined(LCD_INIT)
     return lcd_io_handle;
+#else
+    return NULL;
+#endif
 }
 void* panel_lcd_handle(void) {
     return lcd_handle;
