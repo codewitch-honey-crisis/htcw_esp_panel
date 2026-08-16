@@ -3,6 +3,7 @@
 #undef PANEL_DEPENDENCIES
 #include <memory.h>
 #include "esp_log.h"
+#include "esp_heap_caps.h"
 #include "driver/gpio.h"
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_ops.h"
@@ -372,7 +373,7 @@ void panel_lcd_init(void) {
     ledc_cfg.gpio_num = LCD_PIN_NUM_BCKL;
     ledc_cfg.timer_sel = LEDC_TIMER_0;
     ledc_cfg.flags.output_invert= 0;
-    ledc_cfg.intr_type = LEDC_INTR_DISABLE;
+    //ledc_cfg.intr_type = LEDC_INTR_DISABLE;
     ESP_ERROR_CHECK(ledc_channel_config(&ledc_cfg));
 #else
     gpio_config_t bk_gpio_config;
