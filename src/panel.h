@@ -119,6 +119,8 @@ bool panel_power_ac_in(void);
 /// @brief Indicated whether the battery is charging or false if not supported
 /// @return A boolean indicating whether the battery is charging
 bool panel_power_charging(void);
+/// @brief Turns the panel off if supported. If supported, this function does not return.
+void panel_power_off(void);
 #endif
 #ifdef SD_BUS
 /// @brief Returns the handle for the mounted SD card

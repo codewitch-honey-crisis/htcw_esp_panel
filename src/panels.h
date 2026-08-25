@@ -4,6 +4,9 @@
 // BEGIN devices (add more)
 
 #ifdef TTGO_T1 // Works
+#ifdef PANEL_DEPENDENCIES
+#include "ttgo_power.h" // codewitch-honey-crisis/htcw_ttgo_power
+#endif
 #define LCD_SPI_HOST    SPI_3
 #define LCD_PIN_NUM_MOSI 19
 #define LCD_PIN_NUM_CLK 18
@@ -26,6 +29,11 @@
 #define LCD_BCKL_PWM_CHANNEL 0
 #define BUTTON_MASK (BUTTON_PIN(0)|BUTTON_PIN(35))
 #define BUTTON_ON_LEVEL 0
+#define POWER_INIT ttgo_power_init()
+#define POWER_BATTERY_LEVEL return ttgo_power_level();
+#define POWER_AC_IN return !ttgo_power_enabled();
+#define POWER_CHARGING return false;
+#define POWER_OFF ttgo_power_enable(0);
 #endif // TTGO_T1
 
 #ifdef T_DISPLAY_S3 // untested, mine bricked
@@ -188,6 +196,7 @@
 #define POWER_BATTERY_LEVEL return m5_stack_core2_power_battery_level();
 #define POWER_AC_IN return m5_stack_core2_power_ac_in();
 #define POWER_CHARGING return m5_stack_core2_power_charging();
+#define POWER_OFF m5_stack_core2_power_power_off();
 #define SD_SPI_HOST SPI_3
 #define SD_PIN_NUM_CS 4
 #define SD_PIN_NUM_MOSI 23

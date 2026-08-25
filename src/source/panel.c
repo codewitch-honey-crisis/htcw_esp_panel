@@ -1122,6 +1122,11 @@ bool panel_power_charging(void) {
     return false;
 #endif
 }
+void panel_power_off(void) {
+#ifdef POWER_OFF
+    POWER_OFF;
+#endif
+}
 #endif
 #ifdef SD_BUS
 static sdmmc_card_t* sd_card_handle = NULL;
