@@ -7,7 +7,7 @@ endif()
 idf_component_register(
     SRCS "./src/source/panel.c"
     INCLUDE_DIRS "." "./src" ${MAIN_INCLUDE}
-    REQUIRES driver freertos fatfs esp_lcd
+    REQUIRES driver freertos esp_driver_ledc fatfs esp_lcd
 )
 
 # Hack: Add include directories from any LCD/touch driver components

@@ -8,6 +8,9 @@
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_vendor.h"
+#ifdef LCD_BCKL_PWM_CHANNEL
+#include "driver/ledc.h"
+#endif
 #ifdef PANEL_USE_SPI
 #include "driver/spi_master.h"
 #endif
